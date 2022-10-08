@@ -11,7 +11,7 @@ In this assignment we are going to deliver the following sections.
    * [2-3. Assumption](#2-3-assumption)
    * [2-4. Requirements](#2-4-requirements)
    * [2-5. Wish List (Not implemented)](#2-5-wish-list-not-implemented)
-   * 
+ 
 - [I.3. System Design Documents](./SystemDesignDocuments.md)
    * [3-1. How to proceed?](#3-1-how-to-proceed)
    * [3-2. System Architecture](#3-2-system-architecture)
