@@ -36,6 +36,11 @@ All actors, can access to their <ins>dashboard</ins> via a <ins>login</ins> mech
 
 Last but not least, we are not going to deliver the <ins>chat</ins>, <ins>commenting</ins> and <ins>rating</ins> features. We will discuss them in our design phase, however, in the implementation phase we exclude them for the first phase.   
 
+<p align="center">
+<img src="./images/image1.jpg" alt="System High-Level Design" width="400"/>
+<br/><span>System High-Level Design</span>
+</p>
+
 ### 2-3. Assumption
 
 In this section, we discuss the pre-existing conditions that we assumed are there in place before starting the development and we build our design by assuming them.
