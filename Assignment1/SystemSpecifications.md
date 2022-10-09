@@ -20,13 +20,33 @@ In **system specifications document** we are going to speak about the five piece
 
 ### 2-1. Business Case
 
+By spreading the internet and the smart phones, everyday some new  applications are appeared to change the way that we deal with daily basis problem. Although, the need for new applications are growing constantly through out the world, however, the number of IT companies are not even in different part of the world. Therefore, it is needed to have some systems to connect clients to providers through out the world. Our **B2B Research Matchmaking** is a bridge between clients and providers. 
+
+**Providers** can reveal their abilities by providing their resume and some topics that they are interested in and have enough power for implementing projects in that area. 
+
+In the other side our **Clients** can search in our database, review the resume of different providers, select them and bid a price for a specific project. 
+
+If any deal happen during this process, then the selected **Provider** can enjoy *70%* of the deal, the **Client** can have a nice functional application on time, and **the System** can continue its operation using the rest of the *30%* of the deal.  
+
 ### 2-2. System Description
 
 ### 2-3. Assumption
 
+In this section, we discuss the pre-existing conditions that we assumed are there in place before starting the development and we build our design by assuming them.
+
+1. In our GUI, we won't provide any <ins>login mechanism</ins> for our actors. We would have a database which keeps records of our **Providers** and **Clients**. When already registered users want to login, they can just select their name from a list and press on the <ins>login</ins> key and then sign in. We assumed they don't abuse this situation and each use only login to his or her account.  
+2. For persisting the data, we will use one of the embedded databases in Java. A few of the dominant providers are available for choosing (i.e., [H2](http://www.h2database.com/html/main.html), [HyperSQL](http://hsqldb.org/), [Apache Derby](http://db.apache.org/derby/), [Berkley DB](https://www.oracle.com/database/technologies/related/berkeleydb.html), [Java DB](https://www.oracle.com/technetwork/java/javadb/overview/index.html), [ObjectDB](http://www.objectdb.com/), and so forth. However, in this stage we don't know which database will be selected. We will select one due to the performance, price, and the license. 
+3. We have a specific policy and guideline for using any OSS component during our implementation. If we need to leverage any OSS component, we must make sure that we fulfill these steps:
+   1. First of all we only accept libraries and components that have MIT license.
+   2. If any OSS component does not have MIT license we must not use them. 
+   3. We must provide an static copy of the jar file in a separate folder in the lib directory. For example, for using a jar file as `xyz.jar`, we must make a sub folder `xyz` inside the `\lib` directory and put the jar file in it.  
+   4. We must provide the license file beside of the jar file. 
+   5. We must avoid copy/paste any snippet of code from any website or mailing list, specially [Stackoverflow.com](https://stackoverflow.com/).
+
+
 ### 2-4. Requirements
 
-In this section, you can find the requirements. Each party (i.e. agent) has been coded by **bold** style. Each action/verb has been declared by *italic* style. Finally, each attribute has been identified by <ins>underline</ins> style.
+In this section, you can find the requirements. Each actor (i.e. agent) has been coded by **bold** style. Each action/verb has been declared by *italic* style. Finally, each attribute has been identified by <ins>underline</ins> style.
 
 1. Ability to *sign up* as **Provider** and **Client**.
 2. Ability to be a **Guest** and *visit* the app.
