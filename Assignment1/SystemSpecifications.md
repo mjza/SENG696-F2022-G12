@@ -1,5 +1,3 @@
-[:arrow_backward: Back to the previous menu :point_left:](./README.md)
-<hr/>
 
 # I.2. System Specifications
 
