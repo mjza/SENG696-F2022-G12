@@ -26,32 +26,35 @@ In **system specifications document** we are going to speak about the five piece
 
 ### 2-4. Requirements
 
-1. Ability to sign up as **Provider** and **Client**
-2. Ability to be a **Guest** and visit the app
-3. For Providers: ability to submit name, website, logo, resume, special keywords, hourly compensation
-4. Providers can get a verified icon if they send their proof of business to the system. The system should make sure that every piece of information is correct and then accept the request
-5. For Guests: ability to search keywords and get a list of available Providers
-6. A contract should be sent to a Provider the moment they sign up
-7. Provider should be able to accept or reject the contract
-8. Upon rejection, the Provider will be automatically converted to a Client, losing their resume, website, special keywords and hourly compensation information
-9. When a Guest visits the app, they can only see the name, website, logo, resume, and special keywords of Providers. They cannot see their hourly compensation. Also, they cannot place a bid for the Provider
-10. Signed-up Agents (Providers and Clients) can see every piece of information available on the system
-11. Providers can choose between Basic and Premium plans. Premium subscribers will appear first on the search list, regardless of their approval ratings or hourly compensation
-12. The sorting algorithm always puts Premium Providers on top, then verified Providers, and then the rest. Between each group, Providers should be sorted based on their approval ratings by default (can be changed)
-13. A Client is able to change the sorting of results upon searching a keyword (e.g. Clients’ approvals, number of projects done, the amount of hourly compensation)
-14. A Client can request a Provider and place a bid. The bid can be a different value that the hourly compensation of the Provider
-15. Provider can accept or reject a bid
-16. A rejection from the Provider will be directly sent to the Client
-17. Accepting a request from the Provider will go through the system first, and not directly to the Client
-18. The system, upon receiving an accept confirmation, will pull up a contract and send it to both Provider and Client
-19. Provider and Client can accept or reject the contract
-20. Any money transfer will be handled by the system. The system will receive 30% of any transaction. This info should be in the contract
-21. Ability to watch the progress of the project for the both sides (Provider and Client)
-22. The tracking page will show the tentative deadline, progress so far, and estimated time of completion based on the current pace
-23. A chat room page will be created for Client and Provider once a project gets accepted
-24. Any change request from the Client must first get accepted by the Provider after a project begins. Deadlines could change based on Provider’s request
-25. When a project is done, the Client can leave a comment and rating for the Provider
-26. A Provider can also leave a comment and rating for the Client. Providers can see the past ratings of a Client when there is a new bid
-27. The app **must** have a GUI
+In this section, you can find the requirements. Each party (i.e. agent) has been coded by **bold** style. Each action/verb has been declared by *italic* style. Finally, each attribute has been identified by <ins>underline</ins> style.
+
+1. Ability to *sign up* as **Provider** and **Client**.
+2. Ability to be a **Guest** and *visit* the app.
+3. For **Providers**: ability to *submit* <ins>name</ins>, <ins>website</ins>, <ins>logo</ins>, <ins>resume</ins>, <ins>special keywords</ins>, <ins>hourly compensation</ins>.
+4. **Providers** *can get* a <ins>verified icon</ins> if they *send* their <ins>proof of business</ins> to **the System**. <br/>**The System** should *make sure* that every piece of information *is correct* and then *accept* the request.
+5. For **Guests**: ability to *search* <ins>keywords</ins> and *get* a <ins>list of available Providers</ins>.
+6. A <ins>contract</ins> should be *sent* to a **Provider** the moment they *sign up*. 
+7. **Provider** should be able to *accept* or *reject* the <ins>contract</ins>.
+8. Upon <ins>rejection</ins>, the **Provider** will be automatically *converted* to a **Client**, *losing* their <ins>resume</ins>, <ins>website</ins>, <ins>special keywords</ins> and <ins>hourly compensation information</ins>.
+9.  When a **Guest** *visits* the **App**, they can only *see* the <ins>name</ins>, <ins>website</ins>, <ins>logo</ins>, <ins>resume</ins>, and <ins>special keywords</ins> of **Providers**. They *cannot see* their <ins>hourly compensation</ins>. Also, they *cannot place* a <ins>bid</ins> for the **Provider**.
+10. Signed-up Agents (**Providers** and **Clients**) *can see* <ins>every piece of information</ins> available on **the system**.
+11. **Providers** *can choose* between <ins>Basic</ins> and <ins>Premium plans</ins>. <br/><ins>Premium subscribers</ins> will *appear* first on <ins>the search list</ins>, regardless of their <ins>approval ratings</ins> or <ins>hourly compensation</ins>.
+12. The <ins>sorting algorithm</ins> always *puts* <ins>Premium</ins> **Providers** on top, then <ins>verified</ins> **Providers**, and then the rest. Between each group, **Providers** should be *sorted* based on their <ins>approval ratings</ins> by default (can be changed).
+13. A **Client** is able to *change* the sorting of <ins>results</ins> upon searching a <ins>keyword</ins> (e.g. **Clients’** <ins>approvals</ins>, <ins>number of projects done</ins>, the <ins>amount of hourly compensation</ins>).
+14. A **Client** *can request* a **Provider** and *place* a <ins>bid</ins>. The <ins>bid</ins> *can be a different* <ins>value</ins> than <ins>the hourly compensation</ins> of the **Provider**.
+15. **Provider** *can accept* or *reject* a <ins>bid</ins>.
+16. A *rejection* from the **Provider** will be directly *sent* to the **Client**.
+17. *Accepting* a <ins>request</ins> from the **Provider** will go through **the System** first, and not directly to the **Client**.
+18. **The System**, upon *receiving* an <ins>accept confirmation</ins>, will *pull up* a <ins>contract</ins> and *send* it to both **Provider** and **Client**.
+19. **Provider** and **Client** *can accept* or *reject* the <ins>contract</ins>.
+20. Any *money transfer* will be *handled* by **the System**. <br/> **The System** will *receive* 30% of any <ins>transaction</ins>. This <ins>info</ins> should *be* in the <ins>contract</ins>.
+21. Ability to *watch* the <ins>progress</ins> of the project for the both sides (**Provider** and **Client**).
+22. The <ins>tracking page</ins> will *show* the <ins>tentative deadline</ins>, <ins>progress so far</ins>, and <ins>estimated time of completion</ins> based on the current pace.
+23. A <ins>chat room page</ins> will *be created* for **Client** and **Provider** once a project *gets accepted*.
+24. Any <ins>change request</ins> from the **Client** must first *get accepted* by the **Provider** after a project <ins>begins</ins>. <ins>Deadlines</ins> could *change* based on **Provider’s** request
+25. When a project *is done*, the **Client** *can leave* a <ins>comment</ins> and <ins>rating</ins> for the **Provider**,
+26. A **Provider** *can also leave* a <ins>comment</ins> and <ins>rating</ins> for the **Client**. **Provider**s *can see* the <ins>past ratings</ins> of a **Client** when there is a <ins>new bid</ins>.
+27. The app **must** have a <ins>GUI<ins>.
 
 ### 2-5. Wish List (Not implemented)
+It seems we can implement all requirements, except the number 21 till 26. Basically, it means we assume all parties are satisfied from each other and there is no need for monitoring or rating. Therefore, we hope to be able to implement items 1 to 20 and also number 27 that requests a mandatory GUI. And we put items 21 to 26 in our wish list. 
