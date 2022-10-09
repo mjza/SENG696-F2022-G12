@@ -19,7 +19,7 @@ The files are located in different folders related to each assignment. Briefly, 
 [I. Assignment 1](./Assignment1/)
    - I.1. Project Definition :point_right: [PDF](./Assignment1/ProjectDefinition.pdf) - [MD](./Assignment1/ProjectDefinition.md)
    - I.2. System Specifications :point_right: [PDF](./Assignment1/SystemSpecifications.pdf) - [MD](./Assignment1/SystemSpecifications.md)
-   - I.3. System Design Documents :point_right: [PDF](./Assignment1/SystemDesignDocuments.pdf) - [MD](./Assignment1/SystemDesignDocuments.md)     
+   - I.3. System Design Document :point_right: [PDF](./Assignment1/SystemDesignDocument.pdf) - [MD](./Assignment1/SystemDesignDocument.md)     
 
 [II. Assignment 2](./Assignment2/)
    - II.4. Detailed Design Document :point_right: [PDF](./Assignment2/DetailedDesignDocument.pdf) - [MD](./Assignment2/DetailedDesignDocument.md)
