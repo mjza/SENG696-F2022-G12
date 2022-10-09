@@ -28,6 +28,14 @@ If any deal happen during this process, then the selected **Provider** can enjoy
 
 ### 2-2. System Description
 
+**The System** contains four agents. First, **the Host** or as it has been called in the requirements **the System**. This agent is responsible to *store* <ins>data</ins>, *moderate* <ins>messages</ins> and *connect* the other agents. Then **Providers**, which *provide* services by *introducing* themselves via <ins>yellow pages</ins>. In contrast, we have **Clients** which *search* and *consume* services. Finally, we have **Guests** that are a limited version of **Clients** which are more for *discovering* and *evaluating* the main functionality and examining the quality of data in our <ins>database</ins>. If a **Guest** find the information and services interesting, they *can register* and *become* a **Client**. Being a **Client** means they can start *biding* **Providers**.
+
+As mentioned before, **the System** *charges* providers with *30%* <ins>commission</ins>. Therefore, besides of <ins>registration</ins> and <ins>searching</ins> modules, there must be an <ins>accounting</ins> module which *keeps track of* <ins>financial transactions</ins>.
+
+All actors, can access to their <ins>dashboard</ins> via a <ins>login</ins> mechanism which is not delivered in the first phase. In fact, we mock the <ins>login</ins> by simulating the <ins>sign in</ins> mechanism.
+
+Last but not least, we are not going to deliver the <ins>chat</ins>, <ins>commenting</ins> and <ins>rating</ins> features. We will discuss them in our design phase, however, in the implementation phase we exclude them for the first phase.   
+
 ### 2-3. Assumption
 
 In this section, we discuss the pre-existing conditions that we assumed are there in place before starting the development and we build our design by assuming them.
