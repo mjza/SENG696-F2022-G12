@@ -18,4 +18,8 @@ Our project includes three main steps. Each Step will be delivered as a separate
 2. **Step 2**: Data interaction modeling and low-level design
 3. **Step 3**: Implementation using JADE framework
 
-For implementation we selected Java language, thus, we are going to use the JADE framework. Regarding the methodology we are going to use GAIA methodology for analysis and design our agent-based system.
+For implementation we selected Java language, thus, we are going to use the JADE framework. Regarding the methodology we are going to use GAIA methodology for analysis and design our agent-based system. 
+
+We chose the GAIA methodology since it can be used with a variety of multi-agent systems and is broad in nature. It deals with both the macro-level (societal) and the micro-level (agent) aspects of systems. 
+
+GAIA is interested in how a community of agents works together to accomplish system-level objectives. What must be done by each individual agent in order to do this is another area of concern.
