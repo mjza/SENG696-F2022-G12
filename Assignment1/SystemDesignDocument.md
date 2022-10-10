@@ -19,6 +19,13 @@ In the **system design document**, we are going to speak about the six pieces of
 
 ### 3-1. Goal Hierarchy
 
+Using GAIA, we think of each agent as having the resources of a computational
+process. It is presumable that the objective is to create a system that maximizes a particular global quality metric. From the perspective of the system's constituent parts, nevertheless, this structure might not be ideal.
+
+The GAIA approach encourages developers to see creating software systems as an organizational design process with software agents serving as its building blocks. Therefore, in our analysis phase, first we focus on identifying roles and their properties as shown in the following figure. 
+
+![Role detection process](./images/image2.png)
+
 
 
 ### 3-2. System Architecture
