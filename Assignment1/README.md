@@ -13,7 +13,7 @@ In this assignment we are going to deliver the following sections.
    * [2-5. Wish List (Not implemented)](./SystemSpecifications.md#2-5-wish-list-not-implemented)
  
 - [I.3. System Design Document](./SystemDesignDocument.md) :point_right: [PDF](./SystemDesignDocument.pdf)
-   * [3-1. How to proceed?](./SystemDesignDocument.md#3-1-how-to-proceed)
+   * [3-1. Goal Hierarchy](./SystemDesignDocument.md#3-1-goal-hierarchy)
    * [3-2. System Architecture](./SystemDesignDocument.md#3-2-system-architecture)
    * [3-3. Roles Identification](./SystemDesignDocument.md#3-3-roles-identification)
    * [3-4. Agents Description](./SystemDesignDocument.md#3-4-agents-description)
