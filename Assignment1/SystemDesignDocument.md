@@ -25,7 +25,7 @@ process. It is presumable that the objective is to create a system that maximize
 The GAIA approach encourages developers to see creating software systems as an organizational design process with software agents serving as its building blocks. Therefore, in our analysis phase, we planned to extract 5 models from the requirements.
 
 <p align="center">
-<img src="./images/image3.jpg" alt="Goal Hierarchy" width="400"/>
+<img src="./images/image3.jpg" alt="Goal Hierarchy" width="600"/>
 <br/><span>Goal Hierarchy</span>
 </p>
 
