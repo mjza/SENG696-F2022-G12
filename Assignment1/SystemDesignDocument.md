@@ -110,4 +110,22 @@ Here is a figure that illustrates our agent model.
 
 ### 3-5. Agents Internal Architecture
 
+Here is a figure that illustrates the internal communication between the agents:
+
+<p align="center">
+<img src="./images/image7.jpg" alt="Agent internal architecture" width="600"/>
+<br/><span>Agents Internal Architecture</span>
+</p>
+
 ### 3-6. Technology Overview
+
+1. Regarding the technology we are going to use JAVA and JADE framework for implementation. 
+2. For persisting the information, we will use one of the JAVA internal databases, however, it is not yet clear which one at the moment. We need to clarify it later during the implementation with respect to compatibility with JADE. What we can clearly stated now is, we are going to use one of the following databases: 
+   - [H2](http://www.h2database.com/html/main.html)
+   - [HyperSQL](http://hsqldb.org/) 
+   - [Apache Derby](http://db.apache.org/derby/)
+   - [Berkley DB](https://www.oracle.com/database/technologies/related/berkeleydb.html)
+   - [Java DB](https://www.oracle.com/technetwork/java/javadb/overview/index.html)
+   - [ObjectDB](http://www.objectdb.com/)
+3. Regarding IDE we are going to use Eclipse version 2022-06.
+4. For archiving the code, we use [this GitHub](https://github.com/mjza/SENG696-F2022-G12/tree/main/Assignment3) repository.   
