@@ -90,6 +90,17 @@ Therefore, here is a table that demonstrates the detected roles.
 
 ### 3-4. Agents Description
 
+We detected and designed 8 agents for this system as following:
+
+1. **Access Agent**: This agent is responsible for registration, login and logout of users. If user provides correct credentials it generates a session in the database. 
+2. **Search Agent**: This agents is responsible for applying suitable query on the database, list providers based on the ordering rules which mentioned in the requirements.
+3. **Presenter Agent**: This agent is responsible to show search results and other data related to each user in the GUI. We can assume this agent as the UI manager. 
+4. **Booking Agent**: This agent manage bids and contracts. It means this agent handles transactions tills forming a project.
+5. **Transaction Agent**: This agent is responsible to convert a project state from *pending* to *active* upon receiving money from the **Client**. Also, as soon as a change to the project confirmed, it changes the state to *pending* again. It also calculates and conveys the portion of the **Provider** from the earnings. A project's state cannot change after it is been flagged as *completed*.  
+6. **Chatroom Agent**: This agent conveys messages between two parties of a project and shows a history of old messages.
+7. **Monitoring Agent**: This agent is responsible to records the amount of progress, and estimate the delivery time based on the current pace.  
+8. **Feedback Agent**: Finally, this agent is responsible to moderates rating and comments after a project is in *completed* state.
+
 Here is a figure that illustrates our agent model. 
 
 <p align="center">
