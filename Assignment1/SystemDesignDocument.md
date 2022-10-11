@@ -29,8 +29,38 @@ The GAIA approach encourages developers to see creating software systems as an o
 <br/><span>Goal Hierarchy</span>
 </p>
 
-
 ### 3-2. System Architecture
+
+Here is a high-level design of our system. 
+
+<p align="center">
+<img src="./images/image4.jpg" alt="System Architecture" width="600"/>
+<br/><span>System Architecture</span>
+</p>
+
+If we want to go in more details, we would like to demonstrate our database structure first:
+
+<p align="center">
+<img src="./images/image5.jpg" alt="DB Architecture" width="600"/>
+<br/><span>Database Architecture</span>
+</p>
+
+The user starts the journey by the login page. If he or she wants, they can just login as a guest and access the system with limited search functionality. 
+Otherwise, if they don't have an account, they can move to register page and register as a **Provider** or **Client** by providing required information. 
+
+After a successful login, user will be redirected to his or her dashboard. 
+
+In the dashboard 
+
+1. There is a list of current projects for monitoring, reporting, payment, and or requesting/confirming a change.
+
+2. There is a list of past projects for commenting or rating the other party.
+
+3. There is a pending list that shows list of projects that needs some sort of actions. For example, accepting or rejecting a bid, or confirming a contract. After any action, the list of projects will be updated.
+
+Also, there is an option for **Clients** only to bid after selecting a **Provider** from the search list.
+
+Finally, user can logout of the system for safety.  
 
 ### 3-3. Roles Identification
 
@@ -59,6 +89,13 @@ Therefore, here is a table that demonstrates the detected roles.
 |11|Feedback Handler|Read and write feedback data|Handles the comments and ratings of projects|Checks if user has worked with feedback receiver via a contract in the past. Checks if user has not yet deliver a feedback related to an experience.|Feedback|
 
 ### 3-4. Agents Description
+
+Here is a figure that illustrates our agent model. 
+
+<p align="center">
+<img src="./images/image6.jpg" alt="Agent Model" width="600"/>
+<br/><span>Agent Model</span>
+</p>
 
 ### 3-5. Agents Internal Architecture
 
