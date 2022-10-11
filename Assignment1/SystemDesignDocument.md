@@ -22,18 +22,26 @@ In the **system design document**, we are going to speak about the six pieces of
 Using GAIA, we think of each agent as having the resources of a computational
 process. It is presumable that the objective is to create a system that maximizes a particular global quality metric. From the perspective of the system's constituent parts, nevertheless, this structure might not be ideal.
 
-The GAIA approach encourages developers to see creating software systems as an organizational design process with software agents serving as its building blocks. Therefore, in our analysis phase, first we focus on identifying roles and their properties as shown in the following figure.
+The GAIA approach encourages developers to see creating software systems as an organizational design process with software agents serving as its building blocks. Therefore, in our analysis phase, we planned to extract 5 models from the requirements.
 
 <p align="center">
-<img src="./images/image2.jpg" alt="System High-Level Design" width="400"/>
-<br/><span>Role detection process</span>
+<img src="./images/image3.jpg" alt="Goal Hierarchy" width="400"/>
+<br/><span>Goal Hierarchy</span>
 </p>
+
 
 ### 3-2. System Architecture
 
 ### 3-3. Roles Identification
 
-Here is a table that demonstrates the detected roles. 
+One of the main steps in GAIA methodology is to identifying roles based on the following chart. 
+
+<p align="center">
+<img src="./images/image2.jpg" alt="Role detection process" width="400"/>
+<br/><span>Role detection process</span>
+</p>
+
+Therefore, here is a table that demonstrates the detected roles. 
 
 | :point_right: |Role|By means of?|What?|What?|How?|
 |-|-|-|-|-|-|
