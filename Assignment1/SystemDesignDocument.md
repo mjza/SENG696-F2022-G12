@@ -35,23 +35,20 @@ The GAIA approach encourages developers to see creating software systems as an o
 
 Here is a table that demonstrates the detected roles. 
 
-| :point_right: |Role|Why?|By means of?|What? (Responsibility)| |How?|
-|-|-|-|-|-|-|-|
-|Row#|Role Name|Description|Permissions|Liveness Property|Safety Property|Protocols|
-|1|Registration|Handles the process of sign up for Providers and Clients|Read and Write user data|Register = (Request.register, Client)|Create a profile in the system|RegisterUser|
-|2|Authentication|handling the process of authentication to find if the user is logged in or not, also it can detect whether the user is provider, client or guest|read user data, authenticate user|ReqeustAccess = (Request. Access, Client)|Grant system access|AuthenticateUser|
-|3|Project Change Handler|handling the process of changing in projects|read project change data, write project change data|ReqeustChange = (Request. Change, project)|Deliver the changed project|ChangeProject|
-|4|Provider Search|handling the process of searching provider by different Criteria|read provider data|RequestQuotes = (Request. Quotes, ProviderList)|Deliver a list of providers|SearchProviders|
-|5|Project Creation|handling the process of creating the project based on the client request|write project data|RequestProject = (Request. Project, Project)|Generating a project|CreateProjects|
-|6|Plan Checker|1) handling the process of begin registered in one of plans. 2) It proposes different plan options|1) write user's plan 2) read: user's plan 3) modify: user 's plan|RequestPlan = (Request.Plan, Plan)|Prcoess the requested plan|CheckPlans|
-|7|Bid Handler|handling the process of creating, accepting, or rejecting a bid|write bid data, read bid data|RequestBid = (Request.Bid, Bid)|Process with the bid|HandleBids|
-|8|Message Handler|handling the process of sending messages between users based on different events|write message data, read message data|RequestMessage = (Request. Message, MessageList)|Deliver a list of messages|DeliverMessages|
-|9|Contract Handler|handling the process of creating contracts|write contract data, read contract data|RequestContract = (Request. Contract, Contract)|creating a contract|CreateProjects|
-|10|Payment Handler|handling the process of Payments|write payment data, read payment data|RequestPayment = (Request. Payment, Transaction)|Process with the payment|TransferMoney|
-|11|Project Tracker|handling the process of tracking project progress, deadline and estimations|read project tracking data, write project tracking data|RequestTracking = (Reqeust. Tracking, Progress)|Deliver the progress of projects|TrackProjects|
-|12|Feedback Handler|handling the process of handling comments and ratings of projects estimations|read feedback data, write feedback data|RequestFeedback = (Request. Feedback, Feedback)|Generate the feedback|DeliverFeedbacks|
-|13|GUI|handling interactions between users and multiple systems| |ReqeustInteraction = (Request. Interaction,|Handle user interaction in the System| |
-
+| :point_right: |Role|By means of?|What?|What?|How?|
+|-|-|-|-|-|-|
+|Row#|Role Name|Permissions|Liveness Property|Safety Property|Protocols|
+|1|Sign Up|Read and Write users data|Handles the process of sign up for Providers and Clients|Checks validity of user data.|Registration|
+|2|Sign In|Read users data, Authenticate user, Create Session|Handles the process of authentication. If user exists then creates a session. Also, create guest session for Guests.|Checks for active users, and apply SQL injection guards|Authenticator|
+|3|Search Engine|Read providers data|Apply a query on Keywords column of providers table|Deliver a list of providers based on the data that user allowed to access.|SearchEngine|
+|4|Bid Handler|Read and write on bids data|Handles the process of creating, accepting, or rejecting a bid|Checks if Clients have any waiting bid or not. Only one bid per Provider is allowed. |Bid|
+|5|Contract Creation|Read and Write contracts data|Handles the process of creating contracts and sends the contract to both sides after Provider accepts the bid.|Checks if there is no contracts waiting for acceptance for these 2 parties. |CreateContract|
+|6|Project Creation|Read and Write projects data, Read contracts data|Handles the process of creating the project based on the Client request after accepting contracts by both side.|Checks both Provider and Client have been accepted the contract and there is no project in database. |CreateProject|
+|7|Payment Handler|Reads and write payment data|Handles the process of Payments|Checks if payments has not yet been done, Checks if payment is equal to what we have in Contract.|TransferMoney|
+|8|Project Tracker|Reads and write projects progress data|Handles the process of tracking project progress, deadline and estimations|Checks if project is still active.|TrackProject|
+|9|Project Change Handler|Read and write projects data|Handles the process of changing a project, upon the Client request. Delivers the changed requirement/contract to Provider.|Checks if there is no change request in database. |ChangeProject|
+|10|Message Handler|Read and write messages data|Handles the process of sending messages between Provider and Client in a specific chatroom|Checks if user belongs to a chatroom|Message|
+|11|Feedback Handler|Read and write feedback data|Handles the comments and ratings of projects|Checks if user has worked with feedback receiver via a contract in the past. Checks if user has not yet deliver a feedback related to an experience.|Feedback|
 
 ### 3-4. Agents Description
 
