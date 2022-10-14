@@ -15,12 +15,12 @@
 
 ## 3. System Design Document
 
-In the **system design document**, we are going to speak about the six pieces of information by following an agent-based development methodology (i.e., GAIA), and create the analysis and design documents specified by the GAIA methodology.This section includes: [Goal Hierarchy](#3-1-goal-hierarchy), [Agent System Architecture](#3-2-system-architecture), [Role Identification](#3-3-roles-identification), [Agent Description](#3-4-agents-description),  [Agent Internal Architecture](#3-5-agents-internal-architecture), and finally [Technology Overview](#3-6-technology-overview).
+In the **system design document**, we are going to speak about the six pieces of information following an agent-based development methodology (i.e., GAIA), and create the analysis and design documents specified by the GAIA methodology.This section includes: [Goal Hierarchy](#3-1-goal-hierarchy), [Agent System Architecture](#3-2-system-architecture), [Role Identification](#3-3-roles-identification), [Agent Description](#3-4-agents-description),  [Agent Internal Architecture](#3-5-agents-internal-architecture), and finally [Technology Overview](#3-6-technology-overview).
 
 ### 3-1. Goal Hierarchy
 
-Using GAIA, we think of each agent as having the resources of a computational
-process. It is presumable that the objective is to create a system that maximizes a particular global quality metric. From the perspective of the system's constituent parts, nevertheless, this structure might not be ideal.
+Using GAIA, we think of each agent as an entity with the resources of a computational
+processor. It is presumed that the objective is to create a system that maximizes a particular global quality metric. From the perspective of the system's constituent parts, nevertheless, this structure might not be ideal.
 
 The GAIA approach encourages developers to see creating software systems as an organizational design process with software agents serving as its building blocks. Therefore, in our analysis phase, we planned to extract 5 models from the requirements.
 
@@ -38,15 +38,15 @@ Here is a high-level design of our system.
 <br/><span>System Architecture</span>
 </p>
 
-If we want to go in more details, we would like to demonstrate our database structure first:
+If we want to go in more details, we should demonstrate our database structure first:
 
 <p align="center">
 <img src="./images/image5.jpg" alt="DB Architecture" width="600"/>
 <br/><span>Database Architecture</span>
 </p>
 
-The user starts the journey by the login page. If he or she wants, they can just login as a guest and access the system with limited search functionality. 
-Otherwise, if they don't have an account, they can move to register page and register as a **Provider** or **Client** by providing required information. 
+The user starts the journey with the login page. If he or she wants, they can just login as a guest and access the system with limited search functionality. 
+Otherwise, if they don't have an account, they can move to register page and register as a **Provider** or **Client** by providing the required information. 
 
 After a successful login, user will be redirected to his or her dashboard. 
 
@@ -60,7 +60,7 @@ In the dashboard
 
 Also, there is an option for **Clients** only to bid after selecting a **Provider** from the search list.
 
-Finally, user can logout of the system for safety.  
+Finally, user can logout of the system for safety reasons.  
 
 ### 3-3. Roles Identification
 
@@ -119,7 +119,7 @@ Here is a figure that illustrates the internal communication between the agents:
 
 ### 3-6. Technology Overview
 
-1. Regarding the technology we are going to use JAVA and JADE framework for implementation. 
+1. Regarding the technology; we are going to use JAVA and JADE framework for implementation. 
 2. For persisting the information, we will use one of the JAVA internal databases, however, it is not yet clear which one at the moment. We need to clarify it later during the implementation with respect to compatibility with JADE. What we can clearly stated now is, we are going to use one of the following databases: 
    - [H2](http://www.h2database.com/html/main.html)
    - [HyperSQL](http://hsqldb.org/) 
@@ -127,5 +127,5 @@ Here is a figure that illustrates the internal communication between the agents:
    - [Berkley DB](https://www.oracle.com/database/technologies/related/berkeleydb.html)
    - [Java DB](https://www.oracle.com/technetwork/java/javadb/overview/index.html)
    - [ObjectDB](http://www.objectdb.com/)
-3. Regarding IDE we are going to use Eclipse version 2022-06.
+3. Regarding IDE we are going to use Eclipse version 2022-06 and VScode version 2022-06.
 4. For archiving the code, we use [this GitHub](https://github.com/mjza/SENG696-F2022-G12/tree/main/Assignment3) repository.   
