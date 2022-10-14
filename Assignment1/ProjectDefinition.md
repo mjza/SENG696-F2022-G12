@@ -3,17 +3,17 @@
 
 ***B2B Matchmaking System***
 
-In the today world, applications on our smart phones, smart watches, tablets, and laptops are going to be an inseparable part of our life. Specially by spreading the internet throughout the world (e.g., appearing 5G networks, or the satellite internet, and or free WiFi spots) and having smart devices with powerful processors and large memories, people can access to data almost everywhere, do any processes on their mobiles and so on. 
+Applications on our smart phones, smart watches, tablets, and computers will become an indispensable aspect of our lives in the modern world. People may access data practically anywhere, perform any tasks on their mobile devices, and other things by expanding the internet throughout the world (e.g., by establishing 5G networks, satellite internet, or free WiFi spots) and having smart gadgets with powerful processors and vast memories.
 
-Therefore, the methods and tools that help us to deal with daily basis problems are changing rapidly, and governments and societies are going to be more and more electronical. This means we need more application to manage our works remotely or have more useful and versatile pocket devices (i.e. smart phones). 
+Governments and societies will become more and more electronic as a result of the rapid change in the techniques and tools we use to solve problems on a daily basis. This means that either we need more applications or more functional and flexible portable devices for managing our job remotely (i.e. smart phones).
 
-Although, the need for new applications on our computing devices (i.e., from a small smart watch till a powerful professional laptop) are increasing constantly, however, the number of IT companies which provide services for application development requests are not increased with a same pace or distributed even in all parts of the world. Therefore, it is needed to have some kind of matchmaking systems to connect **clients** to **providers** in this little global communication village. 
+Although, the need for new applications on our computing devices (i.e., from a small smartwatch till a powerful professional laptop) is increasing constantly, however, the number of IT companies which provide services for application development requests hasn't increased with the same pace or distributed even in all parts of the world. Therefore, it is necessary to have some kind of matchmaking systems to connect **clients** to **providers** in this little global communication village.
 
-Our **B2B Matchmaking System** is a bridge between **clients** and **providers**. **Providers** are those IT companies that can consult and develop different variety of software systems, and **clients** are any type of customers that can order and pay for a development process. Our system tries to list best matches for our clients based on their interesting keywords.
+Our **B2B Matchmaking System** is a bridge between **clients** and **providers**. **Providers** are those IT companies that can consult and develop different varieties of software systems, and **clients** are any type of customers that can order and pay for a development process. Our system tries to list best matches for our clients based on their interesting keywords.
 
-This problem, is the main motivation beyond our project which we aim to build a system to respond this need by using an agent-based methodology. 
+This problem, is the main motivation beyond our project which we aim to build a system that answers this need using an agent-based methodology. 
 
-Our project includes three main steps. Each Step will be delivered as a separate assignment: 
+Our project has three main steps. Each Step will be delivered as a separate assignment: 
 1. **Step 1**: Project definition and High-level analysis
 2. **Step 2**: Data interaction modeling and low-level design
 3. **Step 3**: Implementation using JADE framework
