@@ -14,15 +14,16 @@
 
 ## 2. System Specifications
 
-In the **system specifications document**, we are going to speak about the five pieces of information. First we discuss what are the reasons that such a system is needed from the business perspective in the [Business Case](#2-1-business-case) section. Then, in the [System Description](#2-2-system-description) section, we describe the main features of the application. Later, in the [Assumption](#2-3-assumption) section, we discuss the pre-existing conditions that we assumed are there in place before starting the development. In the fourth part, actually [Requirements](#2-4-requirements) we reflect the whole requirements that we have received from the customer. Finally, in the [Wish List](#2-5-wish-list-not-implemented) section, we determine which part of requirements are going to be planed for the future revisions and are not going to be delivered in our implementation. 
+In the **system specifications document**, we are going to speak about the five pieces of information. First we discuss the reasons why such a system is in demand from a business perspective in the [Business Case](#2-1-business-case) section. Then, in the [System Description](#2-2-system-description) section, we describe the main features of the application. Later, in the [Assumption](#2-3-assumption) section, we discuss the pre-existing conditions that we assumed are there in place before starting the development. In the fourth part, actually [Requirements](#2-4-requirements) we reflect the whole requirements that we have received from the customer. Finally, in the [Wish List](#2-5-wish-list-not-implemented) section, we determine which part of requirements are going to be planned for the future revisions and are not going to be delivered in our implementation. 
 
 ### 2-1. Business Case
 
-By spreading the internet and the smart phones, everyday some new  applications are appeared to change the way that we deal with daily basis problem. Although, the need for new applications are growing constantly through out the world, however, the number of IT companies are not even in different part of the world. Therefore, it is needed to have some systems to connect clients to providers through out the world. Our **B2B Research Matchmaking** is a bridge between clients and providers. 
+Due to the widespread use of the internet and smartphones, new applications are constantly emerging that are changing how we approach problems on a daily basis. The demand for new apps is increasing steadily all around the world, yet there aren't even that many IT companies in different regions. As a result, some technologies are required to link clients to suppliers around the globe. Our **B2B Research Matchmaking** serves as a link between customers and suppliers.
+
 
 **Providers** can reveal their abilities by providing their resume and some topics that they are interested in and have enough power for implementing projects in that area. 
 
-In the other side our **Clients** can search in our database, review the resume of different providers, select them and bid a price for a specific project. 
+In the other side our **Clients** can search in our database, review the resume of different providers, select them, and bid a price for a specific project. 
 
 If any deal happen during this process, then the selected **Provider** can enjoy *70%* of the deal, the **Client** can have a nice functional application on time, and **the System** can continue its operation using the rest of the *30%* of the deal.  
 
