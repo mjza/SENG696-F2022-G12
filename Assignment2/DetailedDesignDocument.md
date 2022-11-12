@@ -7,11 +7,11 @@ Our B2B Matchmaking System contains four main actors which are listed below:
 1. Admin
 2. Provider
 3. Guest
-4. Customer
+4. Client
 
 ## 4-1. Use cases
 
-In the following you can find the role of each actor in more detail and the related use case diagram:
+In the following you can find the role of each actor in more detail and the related use case diagram. Please note that message sequences also has been shown in the use case diagrams. 
 
 ### 1. Admin
 
@@ -19,7 +19,7 @@ The admin agent enables superusers to moderate and manage the system with unlimi
 
 <p align="center">
 <img src="./images/image1.jpg" alt="Admin use case diagram" width="600"/>
-<br/><span>Admin use case diagram</span>
+<br/><span>Figure 4.1: Admin use case diagram</span>
 </p>
 
 ### 2. Provider
@@ -28,7 +28,7 @@ The provider agent provides services associated with registering providers in th
 
 <p align="center">
 <img src="./images/image2.jpg" alt="Provider use case diagram" width="600"/>
-<br/><span>Provider use case diagram</span>
+<br/><span>Figure 4.2: Provider use case diagram</span>
 </p>
 
 ### 3. Guest
@@ -36,13 +36,22 @@ Guest users can only search for providers based on keywords. Therefore, the gues
 
 <p align="center">
 <img src="./images/image3.jpg" alt="Guest use case diagram" width="600"/>
-<br/><span>Guest use case diagram</span>
+<br/><span>Figure 4.3: Guest use case diagram</span>
 </p>
 
-### 4. Customer
-A customer can search the providers database and then place a bid on a provider. A contract must be signed by both parties after the bid has been accepted by the provider. Customers can check the progress of their projects and chat with related providers. The customer service agent must provide services to fulfill customers' needs.
+### 4. Client
+A customer/client can search the providers database and then place a bid on a provider. A contract must be signed by both parties after the bid has been accepted by the provider. Customers can check the progress of their projects and chat with related providers. The client service agent must provide services to fulfill customers' needs.
 
 <p align="center">
-<img src="./images/image4.jpg" alt="Customer use case diagram" width="600"/>
-<br/><span>Customer use case diagram</span>
+<img src="./images/image4.jpg" alt="Client use case diagram" width="600"/>
+<br/><span>Figure 4.4: Client use case diagram</span>
+</p>
+
+## 4-2. Class Diagram
+
+Here is a figure which illustrates the relationship between our classes. 
+
+<p align="center">
+<img src="./images/image5.jpg" alt="Class diagram" width="1200"/>
+<br/><span>Figure 4.5: Class diagram</span>
 </p>
