@@ -9,6 +9,8 @@ Our B2B Matchmaking System contains four main actors which are listed below:
 3. Guest
 4. Customer
 
+## 4-1. Use cases
+
 In the following you can find the role of each actor in more detail and the related use case diagram:
 
 ### 1. Admin
