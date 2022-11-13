@@ -1,11 +1,20 @@
 
 # Data Dictionary
 
-Session:
-
+### Session:
 | Field   |      Description      |  Type |
 |----------|:-------------:|------:|
-| Session_ID |  left-aligned | $Integer |
-| User_ID |  | Integer |
-| Start |    centered   |   Date |
-| Long | right-aligned |    Integer 
+| Session_ID |  Unique ID for Session | Integer |
+| User_ID | Unique ID for User | Integer |
+| Start |    Start Date   | Date |
+| Long | Session duration | Integer 
+
+### User:
+| Field   |      Description      |  Type |
+|----------|:-------------:|------:|
+| User_ID | Unique ID for User | Integer |
+| Name | User name | String |
+| Email |    User email address   | String |
+| Password |    User password   | String |
+| Type | User type |    UserTypeEnum
+
