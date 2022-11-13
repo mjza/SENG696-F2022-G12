@@ -1,7 +1,11 @@
 
 # Data Dictionary
-| Tables   |      Are      |  Cool |
+
+Session:
+
+| Field   |      Description      |  Type |
 |----------|:-------------:|------:|
-| col 1 is |  left-aligned | $1600 |
-| col 2 is |    centered   |   $12 |
-| col 3 is | right-aligned |    $1 
+| Session_ID |  left-aligned | $Integer |
+| User_ID |  | Integer |
+| Start |    centered   |   Date |
+| Long | right-aligned |    Integer 
