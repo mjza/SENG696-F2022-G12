@@ -2,15 +2,7 @@
 # Data Dictionary
 
 ## E-R Diagram:
-![Untitled Diagram drawio](https://user-images.githubusercontent.com/29688107/201510114-c69b884d-4202-40d8-a8d4-b6733a472066.png)
-
-### Session:
-| Field   |      Description      |  Type |
-|----------|:-------------:|:------:|
-| Session_ID |  Unique ID of Session |   Integer   |
-| User_ID |  ID for User |   Integer   |
-| Start |    Start Date   |   Date   |
-| Long | Session duration |   Integer   
+![ER_Diagram](https://user-images.githubusercontent.com/29688107/201511677-cf42171f-78b0-47c6-ab37-dc8fae1ae5bb.png)
 
 ### User:
 | Field   |      Description      |  Type |
@@ -21,13 +13,21 @@
 | Password |    User Password   |   String   |
 | Type | User Type |    String   
 
+### Session:
+| Field   |      Description      |  Type |
+|----------|:-------------:|:------:|
+| Session_ID |  Unique ID of Session |   Integer   |
+| User_ID |  ID of User |   Integer   |
+| Start |    Start Date   |   Date   |
+| Long | Session duration |   Integer   
+
 ### Resume:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
 | Resume_ID | Unique ID of Resume |   Integer   |
 | File_ID | File ID |   Integer   |
 | File_Path | Path of File |   String   |
-| Owner_ID |    Owner's ID (User_ID) of Resume   |   Integer   |
+| Owner_ID |    Owner's ID of Resume (User_ID)   |   Integer   |
 | Keywords |    User Skill Keywords   |   Keyword   |
 | Price | Hourly Wage |    Double  
 
@@ -74,7 +74,7 @@
 | ChatRoom_ID | ID of ChatRoom |   Integer   |
 | Text | Text of Message |   String   |
 | Date_Time |    Date   |   Date   |
-| Sender |    Sender's ID (User_ID) of Message   |   Integer
+| Sender |    Sender's ID of Message (User_ID)   |   Integer
 
 ### Payment:
 | Field   |      Description      |  Type |
