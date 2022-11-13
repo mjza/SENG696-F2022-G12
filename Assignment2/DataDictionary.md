@@ -7,87 +7,88 @@
 ### Session:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-| Session_ID |  Unique ID for Session |   Integer   |
-| User_ID | Unique ID for User |   Integer   |
+| Session_ID |  Unique ID of Session |   Integer   |
+| User_ID |  ID for User |   Integer   |
 | Start |    Start Date   |   Date   |
 | Long | Session duration |   Integer   
 
 ### User:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-| User_ID | Unique ID for User |   Integer   |
-| Name | User name |   String   |
-| Email |    User email address   |   String   |
+| User_ID | Unique ID of User |   Integer   |
+| Name | User Name |   String   |
+| Email |    User Email Address   |   String   |
 | Password |    User password   |   String   |
-| Type | User type |    UserTypeEnum   
+| Type | User type |    String   
 
 ### Resume:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-| Resume_ID | Unique ID for Resume |   Integer   |
+| Resume_ID | Unique ID of Resume |   Integer   |
 | File_ID | File ID |   Integer   |
-| Owner |    Owner of Resume   |   User   |
-| Keywords |    ?   |   Keyword   |
-| Price | Price |    Double  
+| File_Path | Path of File |   String   |
+| User_ID |    Owner's ID of Resume   |   Integer   |
+| Keywords |    User Skill Keywords   |   Keyword   |
+| Price | Hourly Wage |    Double  
 
 ### Bid:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  Bid_ID | Unique ID for Bid |   Integer   |
+|  Bid_ID | Unique ID of Bid |   Integer   |
 | Client | Name of Client |   User   |
-| Provider |    Name of Provider   |   User   |
+| Provider_ID |    ID of Provider   |   Integer   |
 | Price |    Price   |   Double   |
-| Confirmed_Provider |    ?   |   Integer   |
-| Confirmed_Client | ? |    Integer 
+| Confirmed_Provider |    Is Provider confirmed or Not?   |   Boolean   |
+| Confirmed_Client | Is Client confirmed or Not?  |    Boolean 
 
 ### Contract:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  Contract_ID | Unique ID for Contract |   Integer   |
-| Bid_ID | ID for Bid |   Integer   |
+|  Contract_ID | Unique ID of Contract |   Integer   |
+| Bid_ID | ID of Bid |   Integer   |
 | Start |    Start Date   |   Date   |
 | End |    End Date   |   Date   |
-| Confirmed_Provider |    ?   |   Integer   |
-| Confirmed_Client | ? |    Integer 
+| Confirmed_Provider |    Is Provider confirmed or Not?   |   Boolean   |
+| Confirmed_Client | Is Client confirmed or Not?  |    Boolean 
 
 ### Project:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  Project_ID | Unique ID for Project |   Integer   |
-| Contract_ID | ID for Contract |   Integer   |
+|  Project_ID | Unique ID of Project |   Integer   |
+| Contract_ID | ID of Contract |   Integer   |
 | Start |    Start Date   |   Date   |
 | End |    End Date   |   Date   |
-| Progress |    ?   |   Integer   
+| Progress |    Percentage of Project Progress   |   Integer   
 
 ### ChatRoom:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  ChatRoom_ID | Unique ID for ChatRoom |   Integer   |
-| Project_ID | ID for Project |   Integer   |
+|  ChatRoom_ID | Unique ID of ChatRoom |   Integer   |
+| Project_ID | ID of Project |   Integer   |
 | Closed |    Is it closed or not?   |   Boolean 
 
 ### Message:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  Message_ID | Unique ID for Message |   Integer   |
-| ChatRoom_ID | ID for ChatRoom |   Integer   |
+|  Message_ID | Unique ID of Message |   Integer   |
+| ChatRoom_ID | ID of ChatRoom |   Integer   |
 | Text | Text of Message |   String   |
 | Date_Time |    Date   |   Date   |
-| Sender |    Sender of Message   |   User
+| Sender |    Sender's ID (User_ID) of Message   |   Integer
 
 ### Payment:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  Payment_ID | Unique ID for Payment |   Integer   |
-| Project_ID | ID for Project |   Integer   |
+|  Payment_ID | Unique ID of Payment |   Integer   |
+| Project_ID | ID of Project |   Integer   |
 | Value | Amount of Paymenmt |   Double  |
 | Date |    Date of Payment   |   Date   
 
 ### Feedback:
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
-|  Payment_ID | Unique ID for Payment |   Integer   |
-| Project_ID | ID for Project |   Integer   |
-| Value | ? |   Double  |
+|  Payment_ID | Unique ID of Payment |   Integer   |
+| Project_ID | ID of Project |   Integer   |
+| Value | Score of Feedback |   Double  |
 | Date |    Date of Payment   |   Date  
 
