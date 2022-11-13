@@ -18,8 +18,8 @@
 | User_ID | Unique ID of User |   Integer   |
 | Name | User Name |   String   |
 | Email |    User Email Address   |   String   |
-| Password |    User password   |   String   |
-| Type | User type |    String   
+| Password |    User Password   |   String   |
+| Type | User Type |    String   
 
 ### Resume:
 | Field   |      Description      |  Type |
@@ -35,8 +35,8 @@
 | Field   |      Description      |  Type |
 |----------|:-------------:|:------:|
 |  Bid_ID | Unique ID of Bid |   Integer   |
-| Client | Name of Client |   User   |
-| Provider_ID |    ID of Provider   |   Integer   |
+| Client | ID of Client (User_ID) |   Integer   |
+| Provider_ID |    ID of Provider (User_ID)   |   Integer   |
 | Price |    Price   |   Double   |
 | Confirmed_Provider |    Is Provider confirmed or Not?   |   Boolean   |
 | Confirmed_Client | Is Client confirmed or Not?  |    Boolean 
