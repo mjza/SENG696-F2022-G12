@@ -56,6 +56,35 @@
 | End |    End Date   |   Date   |
 | Progress |    ?   |   Integer   
 
+### ChatRoom:
+| Field   |      Description      |  Type |
+|----------|:-------------:|:------:|
+|  ChatRoom_ID | Unique ID for ChatRoom |   Integer   |
+| Project_ID | ID for Project |   Integer   |
+| Closed |    Is it closed or not?   |   Boolean 
 
+### Message:
+| Field   |      Description      |  Type |
+|----------|:-------------:|:------:|
+|  Message_ID | Unique ID for Message |   Integer   |
+| ChatRoom_ID | ID for ChatRoom |   Integer   |
+| Text | Text of Message |   String   |
+| Date_Time |    Date   |   Date   |
+| Sender |    Sender of Message   |   User
 
+### Payment:
+| Field   |      Description      |  Type |
+|----------|:-------------:|:------:|
+|  Payment_ID | Unique ID for Payment |   Integer   |
+| Project_ID | ID for Project |   Integer   |
+| Value | Amount of Paymenmt |   Double  |
+| Date |    Date of Payment   |   Date   
+
+### Feedback:
+| Field   |      Description      |  Type |
+|----------|:-------------:|:------:|
+|  Payment_ID | Unique ID for Payment |   Integer   |
+| Project_ID | ID for Project |   Integer   |
+| Value | ? |   Double  |
+| Date |    Date of Payment   |   Date  
 
