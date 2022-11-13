@@ -27,7 +27,7 @@
 | Resume_ID | Unique ID of Resume |   Integer   |
 | File_ID | File ID |   Integer   |
 | File_Path | Path of File |   String   |
-| User_ID |    Owner's ID of Resume   |   Integer   |
+| Owner_ID |    Owner's ID (User_ID) of Resume   |   Integer   |
 | Keywords |    User Skill Keywords   |   Keyword   |
 | Price | Hourly Wage |    Double  
 
