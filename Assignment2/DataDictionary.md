@@ -1,5 +1,5 @@
 
-# Data Dictionary
+# 5. Data Dictionary
 
 ## E-R Diagram:
 ![ER_Diagram](https://user-images.githubusercontent.com/29688107/201511677-cf42171f-78b0-47c6-ab37-dc8fae1ae5bb.png)

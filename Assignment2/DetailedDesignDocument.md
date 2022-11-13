@@ -1,7 +1,7 @@
 
-# Detailed Design Document
+# 4. Detailed Design Document
 
-## Actors
+## 4-0. Actors
 
 Our B2B Matchmaking System contains four main actors which are listed below:
 1. Admin
