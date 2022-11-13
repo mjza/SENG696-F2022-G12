@@ -1,7 +1,7 @@
 
 # Data Dictionary
 
-## TAS: E-R Diagram
+## E-R Diagram:
 ![Untitled Diagram drawio](https://user-images.githubusercontent.com/29688107/201510114-c69b884d-4202-40d8-a8d4-b6733a472066.png)
 
 ### Session:
