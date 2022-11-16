@@ -1,7 +1,6 @@
 package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.behaviours.OneShotBehaviour;
-import jade.core.behaviours.TickerBehaviour;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +13,15 @@ import ca.ucalagary.seng696.g12.gui.MainGui;
 
 public class SystemAgent extends EnhancedAgent {
 
-    private MainGui mainGui;
+    /**
+	 * The serial version must be increased by each update.  
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Section for class attributes
+	 */
+	private MainGui mainGui;
     private static List<Provider> providers = new ArrayList<>();
     private static List<Customer> customers = new ArrayList<>();
     
