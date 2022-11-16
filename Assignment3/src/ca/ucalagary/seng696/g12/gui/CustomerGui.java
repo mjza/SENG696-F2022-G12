@@ -5,8 +5,8 @@ import jade.core.AID;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
-import ca.ucalagary.seng696.g12.agent.CustomerAgent;
-import ca.ucalagary.seng696.g12.agent.SystemAgent;
+import ca.ucalagary.seng696.g12.agents.CustomerAgent;
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 

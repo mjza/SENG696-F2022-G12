@@ -2,7 +2,7 @@ package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
 
-import ca.ucalagary.seng696.g12.agent.SystemAgent;
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -60,7 +60,7 @@ public class MainGui {
         button_guest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GuestGui guestGui = new GuestGui(SystemAgent.providers);
+                GuestGui guestGui = new GuestGui(SystemAgent.getProviders());
                 guestGui.showGui();
             }
         });

@@ -2,7 +2,7 @@ package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
 
-import ca.ucalagary.seng696.g12.agent.ProviderAgent;
+import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 
 import java.awt.*;

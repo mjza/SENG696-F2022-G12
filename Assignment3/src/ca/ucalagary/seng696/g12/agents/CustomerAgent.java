@@ -1,4 +1,4 @@
-package ca.ucalagary.seng696.g12.agent;
+package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;

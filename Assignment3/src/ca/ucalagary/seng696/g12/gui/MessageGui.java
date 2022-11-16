@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import ca.ucalagary.seng696.g12.agent.ProviderAgent;
+import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.settings.Constants;
 import jade.core.Agent;

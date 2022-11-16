@@ -2,7 +2,7 @@ package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
 
-import ca.ucalagary.seng696.g12.agent.SystemAgent;
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.dictionary.User;
 
 import java.awt.*;

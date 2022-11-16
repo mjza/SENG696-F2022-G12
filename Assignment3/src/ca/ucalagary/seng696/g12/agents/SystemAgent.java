@@ -1,4 +1,4 @@
-package ca.ucalagary.seng696.g12.agent;
+package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
@@ -14,15 +14,37 @@ import ca.ucalagary.seng696.g12.gui.MainGui;
 
 public class SystemAgent extends EnhancedAgent {
 
-    MainGui maingui;
-    public static List<Provider> providers = new ArrayList<>();
-    static List<Customer> customers = new ArrayList<>();
-
+    private MainGui mainGui;
+    private static List<Provider> providers = new ArrayList<>();
+    private static List<Customer> customers = new ArrayList<>();
+    
+    /**
+     * The constructor initializes the system.
+     * Reads list of providers and customers from DB. 
+     * Loads their data to the system. 
+     */
     public SystemAgent() {
         addMockUsers();
     }
+    
+    /**
+     * Gets a list of providers. 
+     * @return providers
+     */
+	public static List<Provider> getProviders() {
+		return providers;
+	}
+	
+	/**
+	 * Gets a list of customers
+	 * @return customers
+	 */
+	public static List<Customer> getCustomers() {
+		return customers;
+	}
 
-    public static Provider getProvider(String name) {
+
+	public static Provider getProvider(String name) {
         for (Provider provider : providers) {
             if (provider.getUsername().equals(name)) {
                 return provider;
@@ -77,13 +99,16 @@ public class SystemAgent extends EnhancedAgent {
 
     @Override
     protected void setup() {
+    	
+    	System.out.println("Hello! System Agent " + getAID().getName() + " is ready.");
+    	
         addBehaviour(new OneShotBehaviour() {
             @Override
             public void action() {
                 System.out.println("UserManagers-agent " + getAID().getName() + "is ready.");
 
-                maingui = new MainGui(SystemAgent.this);
-                maingui.showGui();
+                mainGui = new MainGui(SystemAgent.this);
+                mainGui.showGui();
 
                 Collections.sort(providers, (provider1, provider2) -> {
                     boolean b1 = provider1.isPremium;
@@ -97,7 +122,7 @@ public class SystemAgent extends EnhancedAgent {
 
     @Override
     protected void takeDown() {
-        maingui.dispose();
+        mainGui.dispose();
         System.out.println("UserManagers-agent " + getAID().getName() + "is terminating.");
     }
 
@@ -105,17 +130,17 @@ public class SystemAgent extends EnhancedAgent {
         if (role.equals(User.CUSTOMER)) {
             Customer customer = SystemAgent.getCustomer(userName);
             if (customer != null){
-                createAgent("Customer:" + customer.getUsername(), "ca.ucalagary.seng696.g12.agent.CustomerAgent");
+                createAgent("Customer:" + customer.getUsername(), "ca.ucalagary.seng696.g12.agents.CustomerAgent");
             }
             else {
-                maingui.showWrongCredential();
+                mainGui.showWrongCredential();
             }
         } else {
             Provider provider = SystemAgent.getProvider(userName);
             if (provider != null) {
-                createAgent("Provider:" + provider.getUsername(), "ca.ucalagary.seng696.g12.agent.ProviderAgent");
+                createAgent("Provider:" + provider.getUsername(), "ca.ucalagary.seng696.g12.agents.ProviderAgent");
             } else {
-                maingui.showWrongCredential();
+                mainGui.showWrongCredential();
             }
         }
     }
