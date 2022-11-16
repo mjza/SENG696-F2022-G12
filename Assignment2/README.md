@@ -6,6 +6,7 @@ In this assignment we are going to deliver the following sections.
 
 [II.4. Detailed Design Document](./DetailedDesignDocument.md)
    * [4-1. Use cases](./DetailedDesignDocument.md#4-1-use-cases)
+   * [4-2. Class Diagram](./DetailedDesignDocument.md#4-2-class-diagram)
 
 [II.5. Data Dictionary](./DataDictionary.md)
    * [5-1. Data Specification](./DataDictionary.md#5-1-data-specification)
