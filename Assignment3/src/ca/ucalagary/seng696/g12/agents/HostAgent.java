@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. 
  */
-package ca.ucalagary.seng696.g12;
+package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.Agent;
 
-public class Host extends Agent{
+public class HostAgent extends Agent{
 	// It is used for tracking changes on each class.
 	// TODO: Increase it before applying any changes. 
 	private static final long serialVersionUID = 1L;
 
 	protected void setup() {
 		// Printout a welcome message
-		System.out.println("Hello! Buyer-agent " + getAID().getName() + " is ready.");
+		System.out.println("Hello! Host Agent " + getAID().getName() + " is ready.");
 	}
 }
