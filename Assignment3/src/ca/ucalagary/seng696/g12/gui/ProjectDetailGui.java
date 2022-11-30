@@ -2,7 +2,7 @@ package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
 
-import ca.ucalagary.seng696.g12.agents.CustomerAgent;
+import ca.ucalagary.seng696.g12.agents.ClientAgent;
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.settings.Constants;
@@ -18,7 +18,7 @@ public class ProjectDetailGui {
     JLabel label = new JLabel();
     JLabel jLabel = new JLabel("The next label");
 
-    ProjectDetailGui(CustomerAgent agent, Project project) {
+    ProjectDetailGui(ClientAgent agent, Project project) {
 
         project.connectGUI(this);
 
@@ -89,7 +89,7 @@ public class ProjectDetailGui {
         jLabel.setText(text.toString());
     }
 
-    private String showDialog(Project project, CustomerAgent agent) {
+    private String showDialog(Project project, ClientAgent agent) {
         JFrame frame = new JFrame();
         JPanel panel = new JPanel();
         frame.setSize(400, 400);
@@ -153,7 +153,7 @@ public class ProjectDetailGui {
 
                 String messageText = jTextFieldMessage.getText();
                 project.chatUpdate(messageText);
-                agent.sendMessage(project.getCustomer(), messageText, project.getName(), Constants.PROVIDER_SEND_MESSAGE);
+                agent.sendMessage(project.getClient(), messageText, project.getName(), Constants.PROVIDER_SEND_MESSAGE);
                 updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getMessagesHistory());
 
             }
@@ -169,7 +169,7 @@ public class ProjectDetailGui {
             public void actionPerformed(ActionEvent e) {
                 String messageText = "10";
                 project.progress(10);
-                agent.sendMessage(project.getCustomer(), messageText, project.getName(), Constants.PROGRESS_);
+                agent.sendMessage(project.getClient(), messageText, project.getName(), Constants.PROGRESS_);
                 updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getMessagesHistory());
             }
         });

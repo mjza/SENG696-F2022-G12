@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ca.ucalagary.seng696.g12.dictionary.Customer;
+import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 import ca.ucalagary.seng696.g12.dictionary.User;
 import ca.ucalagary.seng696.g12.gui.MainGui;
@@ -23,11 +23,11 @@ public class SystemAgent extends EnhancedAgent {
 	 */
 	private MainGui mainGui;
     private static List<Provider> providers = new ArrayList<>();
-    private static List<Customer> customers = new ArrayList<>();
+    private static List<Client> clients = new ArrayList<>();
     
     /**
      * The constructor initializes the system.
-     * Reads list of providers and customers from DB. 
+     * Reads list of providers and clients from DB. 
      * Loads their data to the system. 
      */
     public SystemAgent() {
@@ -43,11 +43,11 @@ public class SystemAgent extends EnhancedAgent {
 	}
 	
 	/**
-	 * Gets a list of customers
-	 * @return customers
+	 * Gets a list of clients
+	 * @return clients
 	 */
-	public static List<Customer> getCustomers() {
-		return customers;
+	public static List<Client> getClients() {
+		return clients;
 	}
 
 
@@ -60,10 +60,10 @@ public class SystemAgent extends EnhancedAgent {
         return null;
     }
 
-    public static Customer getCustomer(String name) {
-        for (Customer customer : customers) {
-            if (customer.getUsername().equals(name)) {
-                return customer;
+    public static Client getClient(String name) {
+        for (Client client : clients) {
+            if (client.getUsername().equals(name)) {
+                return client;
             }
         }
         return null;
@@ -91,16 +91,16 @@ public class SystemAgent extends EnhancedAgent {
         providers.add(p);
         providers.add(new Provider("P3", "3", "provider", "C", 3));
 
-        customers.add(new Customer("C1", "1", "customer", 2));
-        customers.add(new Customer("C2", "2", "customer", 6));
-        customers.add(new Customer("C3", "3", "customer", 8));
+        clients.add(new Client("C1", "1", "client", 2));
+        clients.add(new Client("C2", "2", "client", 6));
+        clients.add(new Client("C3", "3", "client", 8));
     }
 
     public void register(String userName, String password, String role, String skill) {
         if (role.equals("provider")) {
             providers.add(new Provider(userName, password, role, skill, 0));
         } else {
-            customers.add(new Customer(userName, password, role, 0));
+            clients.add(new Client(userName, password, role, 0));
         }
     }
 
@@ -134,10 +134,10 @@ public class SystemAgent extends EnhancedAgent {
     }
 
     public void login(String userName, String password, String role) {
-        if (role.equals(User.CUSTOMER)) {
-            Customer customer = SystemAgent.getCustomer(userName);
-            if (customer != null){
-                createAgent("Customer:" + customer.getUsername(), "ca.ucalagary.seng696.g12.agents.CustomerAgent");
+        if (role.equals(User.CLIENT)) {
+            Client client = SystemAgent.getClient(userName);
+            if (client != null){
+                createAgent("Client:" + client.getUsername(), "ca.ucalagary.seng696.g12.agents.ClientAgent");
             }
             else {
                 mainGui.showWrongCredential();

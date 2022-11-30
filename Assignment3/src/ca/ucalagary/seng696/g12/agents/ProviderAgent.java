@@ -84,11 +84,11 @@ public class ProviderAgent extends EnhancedAgent {
 
     }
 
-    public void sendMessage(AID customer, String messageText, String projectName, String conversationID) {
+    public void sendMessage(AID client, String messageText, String projectName, String conversationID) {
         ACLMessage message = new ACLMessage(Constants.CHAT);
         message.setConversationId(conversationID);
         message.setContent(projectName + ":" + messageText);
-        message.addReceiver(customer);
+        message.addReceiver(client);
         send(message);
     }
 
@@ -131,7 +131,7 @@ public class ProviderAgent extends EnhancedAgent {
         Provider p = getProvider();
         p.setRole(User.PROVIDER);
         providerGui.dispose();
-        createAgent("Customer:" + p.getUsername(), "ca.ucalagary.seng696.g12.agents.CustomerAgent");
+        createAgent("Client:" + p.getUsername(), "ca.ucalagary.seng696.g12.agents.ClientAgent");
         takeDown();
     }
 }

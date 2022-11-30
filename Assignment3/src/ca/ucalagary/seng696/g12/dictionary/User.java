@@ -8,7 +8,7 @@ public class User {
     private int rating;
 
     public static final String PROVIDER = "provider";
-    public static final String CUSTOMER = "customer";
+    public static final String CLIENT = "client";
 
     User(String username, String password, String role, int rating) {
         this.username = username;

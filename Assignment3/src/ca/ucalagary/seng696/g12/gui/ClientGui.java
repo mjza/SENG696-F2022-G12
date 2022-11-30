@@ -5,7 +5,7 @@ import jade.core.AID;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
-import ca.ucalagary.seng696.g12.agents.CustomerAgent;
+import ca.ucalagary.seng696.g12.agents.ClientAgent;
 import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
@@ -26,7 +26,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class CustomerGui {
+public class ClientGui {
 
     JFrame jFrame;
     AID selectedProvider = null;
@@ -35,9 +35,9 @@ public class CustomerGui {
     DefaultListModel<String> projectsListModel;
     JLabel creditLabel;
     List<Provider> currentProviders = new ArrayList<>();
-    CustomerAgent myAgent;
+    ClientAgent myAgent;
 
-    public CustomerGui(CustomerAgent myAgent, Set<AID> providers, List<Project> projects) {
+    public ClientGui(ClientAgent myAgent, Set<AID> providers, List<Project> projects) {
         this.myAgent = myAgent;
         System.out.println("number of providers: ");
         System.out.println(providers.size());
@@ -143,7 +143,7 @@ public class CustomerGui {
                 JList list = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
-                    ProjectDetailGui projectDetailGui = new ProjectDetailGui(myAgent, CustomerGui.this.projects.get(index));
+                    ProjectDetailGui projectDetailGui = new ProjectDetailGui(myAgent, ClientGui.this.projects.get(index));
                     projectDetailGui.showGui();
                     System.out.println("Clicked: " + index);
                 }

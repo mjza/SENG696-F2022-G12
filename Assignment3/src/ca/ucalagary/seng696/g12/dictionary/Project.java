@@ -14,17 +14,17 @@ public class Project {
     private int bid;
     private ArrayList<String> messagesHistory = new ArrayList<>();
     private AID provider;
-    private AID customer;
+    private AID client;
     private String deadline;
     private ProjectDetailGui projectDetailGui;
     private boolean done = false;
 
-    public Project(String name, String description, int bid, AID provider, AID customer, String deadline) {
+    public Project(String name, String description, int bid, AID provider, AID client, String deadline) {
         this.name = name;
         this.bid = bid;
         this.description = description;
         this.provider = provider;
-        this.customer = customer;
+        this.client = client;
         this.deadline = deadline;
     }
 
@@ -102,8 +102,8 @@ public class Project {
         return provider;
     }
 
-    public AID getCustomer() {
-        return customer;
+    public AID getClient() {
+        return client;
     }
 
     public void connectGUI(ProjectDetailGui projectDetailGui) {

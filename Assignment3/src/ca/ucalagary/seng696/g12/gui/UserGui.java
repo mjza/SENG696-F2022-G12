@@ -33,7 +33,7 @@ public class UserGui {
         HintTextField textField_userName = new HintTextField("UserName");
         HintTextField textField_password = new HintTextField("Password");
 
-        String[] type = {User.CUSTOMER, User.PROVIDER};
+        String[] type = {User.CLIENT, User.PROVIDER};
         JComboBox comboBox_userType = new JComboBox(type);
 
         JButton button_login = new JButton("Login");

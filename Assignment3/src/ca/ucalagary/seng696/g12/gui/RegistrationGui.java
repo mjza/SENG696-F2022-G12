@@ -38,7 +38,7 @@ public class RegistrationGui {
         HintTextField textField_password = new HintTextField("Password");
 
 
-        String[] type = {User.PROVIDER, User.CUSTOMER};
+        String[] type = {User.PROVIDER, User.CLIENT};
         JComboBox comboBox_userType = new JComboBox(type);
 
         String[] skills = {"Java", "PHP", "Python", "Go", "C"};

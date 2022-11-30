@@ -9,20 +9,20 @@ import java.util.List;
 import java.util.Set;
 
 import ca.ucalagary.seng696.g12.dictionary.Project;
-import ca.ucalagary.seng696.g12.gui.CustomerGui;
+import ca.ucalagary.seng696.g12.gui.ClientGui;
 import ca.ucalagary.seng696.g12.settings.Constants;
 
-public class CustomerAgent extends EnhancedAgent {
+public class ClientAgent extends EnhancedAgent {
     List<Project> projects;
     int currentNumber = 0;
-    CustomerGui gui;
+    ClientGui gui;
     private int credit = 1000;
     @Override
     protected void setup() {
-        System.out.println("Hello! CustomerAgent " + getAID().getName() + " is here!");
+        System.out.println("Hello! ClientAgent " + getAID().getName() + " is here!");
         Set<AID> providers = searchForService("project-provide");
         projects = new ArrayList<>();
-        gui = new CustomerGui(this, providers, projects);
+        gui = new ClientGui(this, providers, projects);
         gui.showGui();
 //        addBehaviour(new MessageHandlingBehaviour(this));
         addBehaviour(new CyclicBehaviour() {
@@ -89,7 +89,7 @@ public class CustomerAgent extends EnhancedAgent {
 
     public void sendMessage(AID provider, String p, String projectName, int performative) {
         ACLMessage message = new ACLMessage(performative);
-        message.setConversationId(Constants.CUSTOMER_SEND_MESSAGE);
+        message.setConversationId(Constants.CLIENT_SEND_MESSAGE);
         message.setContent(projectName + ":" + p);
         message.addReceiver(provider);
         send(message);
