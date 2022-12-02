@@ -41,6 +41,9 @@ public class MainGUI {
     
     /** The j frame. */
     JFrame jFrame;
+    
+    /** The login J panel. */
+    JPanel loginJPanel;
 
     /**
      * Instantiates a new main GUI.
@@ -64,12 +67,32 @@ public class MainGUI {
                 	systemAgent.killAgent(systemAgent.getLocalName());
             }
         });
-        // Set the main panel 
-        JPanel jPanel = new JPanel();
-        //BoxLayout layout = new BoxLayout(jPanel, BoxLayout.Y_AXIS);
-        //jPanel.setLayout(layout);
-        jPanel.setLayout(new GridBagLayout());
-        jFrame.getContentPane().add(jPanel,BorderLayout.CENTER);
+        jFrame.getContentPane().add(getLoginJPanel(),BorderLayout.CENTER);        
+    }
+
+    /**
+     * Show GUI.
+     */
+    public void showGUI() {
+    	// Set the location to center 
+        this.jFrame.setLocationRelativeTo(null);
+    	// Show the jFrame
+        this.jFrame.setVisible(true);
+    }
+
+    /**
+     * Dispose.
+     */
+    public void dispose() {
+        this.jFrame.dispose();
+    }
+    
+    private JPanel getLoginJPanel() {
+    	if(this.loginJPanel != null)
+    		return this.loginJPanel;
+    	JPanel loginJPanel = new JPanel();
+    	this.loginJPanel = loginJPanel;
+        loginJPanel.setLayout(new GridBagLayout());        
         // A container for ordering items in rows 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;//set the x location of the grid for the next component
@@ -77,31 +100,31 @@ public class MainGUI {
         // Set header 
         JLabel title = new JLabel("Login to B2B MMS");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jPanel.add(title, gbc);
+        loginJPanel.add(title, gbc);
         // Username lable
         JLabel usenameLabel = new JLabel("Username:");
         usenameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         usenameLabel.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 1;//change the y location      
-        jPanel.add(usenameLabel, gbc);        
+        loginJPanel.add(usenameLabel, gbc);        
         // Username textbox
         JTextField userNameTextField = new JTextField();
         userNameTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         userNameTextField.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 2;//change the y location
-        jPanel.add(userNameTextField, gbc);
+        loginJPanel.add(userNameTextField, gbc);
         // Password label
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         passwordLabel.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 3;//change the y location      
-        jPanel.add(passwordLabel, gbc);
+        loginJPanel.add(passwordLabel, gbc);
         // Password textbox        
         JPasswordField passwordTextField = new JPasswordField();        
         passwordTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         passwordTextField.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 4;//change the y location
-        jPanel.add(passwordTextField, gbc);
+        loginJPanel.add(passwordTextField, gbc);
         // Login button 
         JButton loginBtn = new JButton("Login");
         loginBtn.addActionListener(new ActionListener() {
@@ -121,7 +144,7 @@ public class MainGUI {
         loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginBtn.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 5;//change the y location
-        jPanel.add(loginBtn, gbc);
+        loginJPanel.add(loginBtn, gbc);
         // Register button
         JButton registerBtn = new JButton("Register");        
         registerBtn.addActionListener(new ActionListener() {
@@ -135,7 +158,7 @@ public class MainGUI {
         registerBtn.setPreferredSize(new Dimension(200, 24));
         //jPanel.add(Box.createRigidArea(new Dimension(10,10)));
         gbc.gridy = 6;//change the y location
-        jPanel.add(registerBtn, gbc);
+        loginJPanel.add(registerBtn, gbc);
         // Guest login 
         JButton guestBtn = new JButton("Visit as a guest");
         guestBtn.addActionListener(new ActionListener() {
@@ -148,31 +171,15 @@ public class MainGUI {
         guestBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         guestBtn.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 7;//change the y location
-        jPanel.add(guestBtn, gbc);        
-    }
-
-    /**
-     * Show GUI.
-     */
-    public void showGUI() {
-    	// Set the location to center 
-        this.jFrame.setLocationRelativeTo(null);
-    	// Show the jFrame
-        this.jFrame.setVisible(true);
-    }
-
-    /**
-     * Dispose.
-     */
-    public void dispose() {
-        this.jFrame.dispose();
-    }
+        loginJPanel.add(guestBtn, gbc);        
+        return loginJPanel;
+    } 
 
     /**
      * Show wrong credential.
      */
     public void showWrongCredential() {
-        JOptionPane.showMessageDialog(jFrame, "Wrong Credential", "ERROR",
+        JOptionPane.showMessageDialog(jFrame, "Please check your username and password.", "ERROR",
                 JOptionPane.ERROR_MESSAGE);
     }
     
