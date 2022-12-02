@@ -14,7 +14,7 @@ import java.util.List;
 
 
 
-public class ProviderGui {
+public class ProviderGUI {
 
     JFrame jFrame;
     DefaultListModel<String> projectsListModel;
@@ -23,7 +23,7 @@ public class ProviderGui {
     JLabel premiumLabel;
     ProviderAgent myAgent;
 
-    public ProviderGui(ProviderAgent myAgent, List<Project> projects) {
+    public ProviderGUI(ProviderAgent myAgent, List<Project> projects) {
     	this.myAgent = myAgent;
         jFrame = new JFrame("Welcome " + myAgent.getLocalName());
 
@@ -88,8 +88,8 @@ public class ProviderGui {
                 JList list = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
-                    ProjectDetailGui projectDetailGui = new ProjectDetailGui(myAgent, projects.get(index));
-                    projectDetailGui.showGui();
+                    ProjectDetailGUI projectDetailGUI = new ProjectDetailGUI(myAgent, projects.get(index));
+                    projectDetailGUI.showGUI();
                     System.out.println("Clicked: " + index);
                 }
             }
@@ -101,7 +101,7 @@ public class ProviderGui {
         jFrame.add(jPanel);
     }
 
-    public void showGui() {
+    public void showGUI() {
         jFrame.setVisible(true);
     }
 

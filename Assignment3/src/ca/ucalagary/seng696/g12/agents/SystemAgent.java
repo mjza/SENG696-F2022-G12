@@ -6,11 +6,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ca.ucalagary.seng696.g12.databases.DBUtils;
 import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 import ca.ucalagary.seng696.g12.dictionary.User;
-import ca.ucalagary.seng696.g12.gui.MainGui;
+import ca.ucalagary.seng696.g12.gui.MainGUI;
 
+/**
+ * The Class SystemAgent.
+ */
 public class SystemAgent extends EnhancedAgent {
 
     /**
@@ -18,11 +22,13 @@ public class SystemAgent extends EnhancedAgent {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Section for class attributes
-	 */
-	private MainGui mainGui;
+	/** Section for class attributes. */
+	private MainGUI mainGUI;
+    
+    /** The providers. */
     private static List<Provider> providers = new ArrayList<>();
+    
+    /** The clients. */
     private static List<Client> clients = new ArrayList<>();
     
     /**
@@ -31,7 +37,7 @@ public class SystemAgent extends EnhancedAgent {
      * Loads their data to the system. 
      */
     public SystemAgent() {
-        addMockUsers();
+    	DBUtils.initDB();
     }
     
     /**
@@ -43,23 +49,30 @@ public class SystemAgent extends EnhancedAgent {
 	}
 	
 	/**
-	 * Gets a list of clients
+	 * Gets a list of clients.
+	 *
 	 * @return clients
 	 */
 	public static List<Client> getClients() {
 		return clients;
 	}
 
-
-	public static Provider getProvider(String name) {
-        for (Provider provider : providers) {
-            if (provider.getUsername().equals(name)) {
-                return provider;
-            }
-        }
-        return null;
+	/**
+	 * Gets the provider.
+	 *
+	 * @param name the name
+	 * @return the provider
+	 */
+	public static Provider getProvider(String username) {
+        return DBUtils.getProvider(username);
     }
 
+    /**
+     * Gets the client.
+     *
+     * @param name the name
+     * @return the client
+     */
     public static Client getClient(String name) {
         for (Client client : clients) {
             if (client.getUsername().equals(name)) {
@@ -69,10 +82,17 @@ public class SystemAgent extends EnhancedAgent {
         return null;
     }
 
+    /**
+     * Search provider.
+     *
+     * @param text the text
+     * @param providersList the providers list
+     * @return the list
+     */
     public static List<Provider> searchProvider(String text, List<Provider> providersList) {
         List<Provider> searchedProviders = new ArrayList<>();
         for (Provider provider : providersList) {
-            if (provider.getUsername().contains(text) || provider.getSkill().contains(text) || provider.isPremium) {
+            if (provider.getUsername().contains(text) || provider.getKeywords().contains(text) || provider.isPremium) {
                 searchedProviders.add(provider);
             }
         }
@@ -82,41 +102,63 @@ public class SystemAgent extends EnhancedAgent {
             return (b1 != b2) ? (b1) ? -1 : 1 : 0;
         });
         return searchedProviders;
-    }
+    }    
 
-    private void addMockUsers() {
-        Provider p = new Provider("P2", "2", "provider", "PHP", 4);
-        p.setPremium();
-        providers.add(new Provider("P1", "1", "provider", "Java", 5));
-        providers.add(p);
-        providers.add(new Provider("P3", "3", "provider", "C", 3));
-
-        clients.add(new Client("C1", "1", "client", 2));
-        clients.add(new Client("C2", "2", "client", 6));
-        clients.add(new Client("C3", "3", "client", 8));
-    }
-
-    public void register(String userName, String password, String role, String skill) {
-        if (role.equals("provider")) {
-            providers.add(new Provider(userName, password, role, skill, 0));
+    /**
+     * Register.
+     *
+     * @param userName the user name
+     * @param password the password
+     * @param type the type
+     * @param keywords the keywords
+     */
+    public void register(String userName, String password, String type, String keywords) {
+        if (type.equals("provider")) {
+          //  providers.add(new Provider(userName, password, type, keywords, 0));
         } else {
-            clients.add(new Client(userName, password, role, 0));
+           // clients.add(new Client(userName, password, type, 0));
+        }
+    }
+    
+    /**
+     * Login.
+     *
+     * @param userName the user name
+     * @param password the password
+     * @param type the type
+     */
+    public void login(String userName, String password) {
+    	String type = DBUtils.getUserType(userName, password);
+        if ("C".equalsIgnoreCase(type)) {            
+           createAgent("Client:" + userName, "ca.ucalagary.seng696.g12.agents.ClientAgent");            
+        } else if ("P".equalsIgnoreCase(type)){            
+           createAgent("Provider:" + userName, "ca.ucalagary.seng696.g12.agents.ProviderAgent");            
+        } else {
+        	mainGUI.showWrongCredential();
         }
     }
 
+    /**
+     * Setup.
+     */
     @Override
     protected void setup() {
     	
-    	System.out.println("Hello! System Agent " + getAID().getName() + " is ready.");
+    	System.out.println("System Agent " + getAID().getName() + " is ready.");
     	
         addBehaviour(new OneShotBehaviour() {
-            @Override
+            /**
+			 * The serial version must be increased by each update
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void action() {
                 System.out.println("UserManagers-agent " + getAID().getName() + "is ready.");
 
-                mainGui = new MainGui(SystemAgent.this);
-                mainGui.showGui();
-
+                mainGUI = new MainGUI(SystemAgent.this);
+                mainGUI.showGUI();
+                
                 Collections.sort(providers, (provider1, provider2) -> {
                     boolean b1 = provider1.isPremium;
                     boolean b2 = provider2.isPremium;
@@ -127,28 +169,12 @@ public class SystemAgent extends EnhancedAgent {
         });
     }
 
+    /**
+     * Take down.
+     */
     @Override
     protected void takeDown() {
-        mainGui.dispose();
+        mainGUI.dispose();
         System.out.println("UserManagers-agent " + getAID().getName() + "is terminating.");
-    }
-
-    public void login(String userName, String password, String role) {
-        if (role.equals(User.CLIENT)) {
-            Client client = SystemAgent.getClient(userName);
-            if (client != null){
-                createAgent("Client:" + client.getUsername(), "ca.ucalagary.seng696.g12.agents.ClientAgent");
-            }
-            else {
-                mainGui.showWrongCredential();
-            }
-        } else {
-            Provider provider = SystemAgent.getProvider(userName);
-            if (provider != null) {
-                createAgent("Provider:" + provider.getUsername(), "ca.ucalagary.seng696.g12.agents.ProviderAgent");
-            } else {
-                mainGui.showWrongCredential();
-            }
-        }
-    }
+    }    
 }

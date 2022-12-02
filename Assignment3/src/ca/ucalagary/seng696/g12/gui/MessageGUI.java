@@ -13,12 +13,12 @@ import ca.ucalagary.seng696.g12.settings.Constants;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
-public class MessageGui {
+public class MessageGUI {
 
     JFrame jFrame;
     JTextArea jTextAreaMessages;
 
-    public MessageGui(Agent myAgent, ACLMessage reply, ACLMessage msg, Boolean isProposal) {
+    public MessageGUI(Agent myAgent, ACLMessage reply, ACLMessage msg, Boolean isProposal) {
         String content = msg.getContent();
         jFrame = new JFrame("Proposal (" + myAgent.getLocalName() + ")");
 
@@ -57,7 +57,7 @@ public class MessageGui {
                     myAgent.send(reply);
                     String c[] = content.split(":");
                     Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),"");
-                    ((ProviderAgent)myAgent).providerGui.addProject(project);
+                    ((ProviderAgent)myAgent).providerGUI.addProject(project);
                     dispose();
                 }
             });
@@ -97,7 +97,7 @@ public class MessageGui {
         jTextAreaMessages.setText(message);
     }
 
-    public void showGui() {
+    public void showGUI() {
         jFrame.setVisible(true);
     }
 

@@ -24,14 +24,14 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class GuestGui {
+public class GuestGUI {
 
     JFrame jFrame;
     DefaultListModel<String> providersList;
 
     List<Provider> currentProviders = new ArrayList<>();
 
-    public GuestGui(List<Provider> providers) {
+    public GuestGUI(List<Provider> providers) {
         System.out.println("number of providers: ");
         System.out.println(providers.size());
 
@@ -101,7 +101,7 @@ public class GuestGui {
         jFrame.add(jPanel);
     }
 
-    public void showGui() {
+    public void showGUI() {
         jFrame.setVisible(true);
     }
 

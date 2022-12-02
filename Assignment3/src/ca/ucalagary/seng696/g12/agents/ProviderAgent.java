@@ -10,14 +10,14 @@ import java.util.List;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 import ca.ucalagary.seng696.g12.dictionary.User;
-import ca.ucalagary.seng696.g12.gui.MessageGui;
-import ca.ucalagary.seng696.g12.gui.ProviderGui;
+import ca.ucalagary.seng696.g12.gui.MessageGUI;
+import ca.ucalagary.seng696.g12.gui.ProviderGUI;
 import ca.ucalagary.seng696.g12.settings.Constants;
 
 public class ProviderAgent extends EnhancedAgent {
     private List<Project> projects;
     ArrayList<Integer> ratings=new ArrayList<>();
-    public ProviderGui providerGui;
+    public ProviderGUI providerGUI;
     private double rate = 0.0;
     private int credit = 1000;
 
@@ -45,8 +45,8 @@ public class ProviderAgent extends EnhancedAgent {
                     switch (msg.getPerformative()) {
                         case Constants.OFFER:
                             reply = msg.createReply();
-                            MessageGui msgGui = new MessageGui(myAgent, reply, msg, true);
-                            msgGui.showGui();
+                            MessageGUI msgGUI = new MessageGUI(myAgent, reply, msg, true);
+                            msgGUI.showGUI();
                         case Constants.CHAT:
                             for (Project project : projects) {
                                 if (project.getName().equals(projectName)) {
@@ -61,7 +61,7 @@ public class ProviderAgent extends EnhancedAgent {
                                     p.setDone();
                                 }
                             }
-                            providerGui.updateProjects(projects);
+                            providerGUI.updateProjects(projects);
                             int bid = Integer.parseInt(contents[1]);
                             ProviderAgent.this.addCredit(bid);
                         case Constants.DONE:
@@ -79,8 +79,8 @@ public class ProviderAgent extends EnhancedAgent {
             }
         });
 //        addBehaviour(new MessageHandlingBehaviour(this));
-        providerGui = new ProviderGui(this,projects);
-        providerGui.showGui();
+        providerGUI = new ProviderGUI(this,projects);
+        providerGUI.showGUI();
 
     }
 
@@ -112,7 +112,7 @@ public class ProviderAgent extends EnhancedAgent {
     }
     public void addCredit(int x) {
         credit += x;
-        providerGui.updateCredit();
+        providerGUI.updateCredit();
     }
     public Provider getProvider(){
         return SystemAgent.getProvider(this.getLocalName().split(":")[1]);
@@ -124,13 +124,13 @@ public class ProviderAgent extends EnhancedAgent {
         addCredit(-Constants.PREMIUM_PRICE);
         Provider p = getProvider();
         p.setPremium();
-        providerGui.updatePremium();
+        providerGUI.updatePremium();
         return true;
     }
     public void withdraw(){
         Provider p = getProvider();
-        p.setRole(User.PROVIDER);
-        providerGui.dispose();
+        p.setType(User.PROVIDER);
+        providerGUI.dispose();
         createAgent("Client:" + p.getUsername(), "ca.ucalagary.seng696.g12.agents.ClientAgent");
         takeDown();
     }

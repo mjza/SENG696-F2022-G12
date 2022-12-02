@@ -9,21 +9,21 @@ import java.util.List;
 import java.util.Set;
 
 import ca.ucalagary.seng696.g12.dictionary.Project;
-import ca.ucalagary.seng696.g12.gui.ClientGui;
+import ca.ucalagary.seng696.g12.gui.ClientGUI;
 import ca.ucalagary.seng696.g12.settings.Constants;
 
 public class ClientAgent extends EnhancedAgent {
     List<Project> projects;
     int currentNumber = 0;
-    ClientGui gui;
+    ClientGUI GUI;
     private int credit = 1000;
     @Override
     protected void setup() {
         System.out.println("Hello! ClientAgent " + getAID().getName() + " is here!");
         Set<AID> providers = searchForService("project-provide");
         projects = new ArrayList<>();
-        gui = new ClientGui(this, providers, projects);
-        gui.showGui();
+        GUI = new ClientGUI(this, providers, projects);
+        GUI.showGUI();
 //        addBehaviour(new MessageHandlingBehaviour(this));
         addBehaviour(new CyclicBehaviour() {
             public void action() {
@@ -45,7 +45,7 @@ public class ClientAgent extends EnhancedAgent {
                             reply = new ACLMessage(Constants.CHAT);
                             reply.addReceiver(msg.getSender());
                             content = project.getContract();
-                            gui.addProject(project);
+                            GUI.addProject(project);
                         case Constants.REFUSE:
                             content = null;
                             c = msg.getContent().split(":");
@@ -118,7 +118,7 @@ public class ClientAgent extends EnhancedAgent {
                 p.setDone();
             }
         }
-        gui.updateProjects(projects);
+        GUI.updateProjects(projects);
     	addCredit(-1 * project.getBid());
     }
     public int getCredit() {
@@ -126,7 +126,7 @@ public class ClientAgent extends EnhancedAgent {
     }
     public void addCredit(int x) {
         credit += x;
-        gui.updateCredit();
+        GUI.updateCredit();
     	
     }
 }

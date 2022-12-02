@@ -23,8 +23,8 @@ package ca.ucalagary.seng696.g12.gui;
 //            String content = msg.getContent();
 //            System.out.println("Received a chat message:" + content);
 //            reply = msg.createReply();
-//            MessageGui msgGui = new MessageGui(myAgent, reply, msg, false);
-//            msgGui.showGui();
+//            MessageGUI msgGUI = new MessageGUI(myAgent, reply, msg, false);
+//            msgGUI.showGUI();
 //        }
 //	}
 //}

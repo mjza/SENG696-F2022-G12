@@ -9,23 +9,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RegistrationGui {
+public class RegistrationGUI {
 
     JFrame jFrame;
-    SystemAgent userManagersAgent;
+    SystemAgent systemAgent;
 
-    public RegistrationGui(SystemAgent userManagerAgent) {
+    public RegistrationGUI(SystemAgent systemAgent) {
 
         this.jFrame = new JFrame();
 //        this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 //            @Override
 //            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 //                super.windowClosing(windowEvent);
-//                userManagerAgent.killAgent(userManagerAgent.getLocalName());
+//                systemAgent.killAgent(systemAgent.getLocalName());
 //            }
 //        });
 
-        this.userManagersAgent = userManagerAgent;
+        this.systemAgent = systemAgent;
         this.jFrame.setSize(600, 600);
         JPanel jpanel = new JPanel();
         GroupLayout layout = new GroupLayout(jpanel);
@@ -41,8 +41,8 @@ public class RegistrationGui {
         String[] type = {User.PROVIDER, User.CLIENT};
         JComboBox comboBox_userType = new JComboBox(type);
 
-        String[] skills = {"Java", "PHP", "Python", "Go", "C"};
-        JComboBox comboBox_skills = new JComboBox(skills);
+        String[] keywordss = {"Java", "PHP", "Python", "Go", "C"};
+        JComboBox comboBox_keywordss = new JComboBox(keywordss);
 
         JButton button_register = new JButton("Register");
 
@@ -51,9 +51,9 @@ public class RegistrationGui {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (comboBox_userType.getSelectedIndex() == 1) {
-                    comboBox_skills.setVisible(false);
+                    comboBox_keywordss.setVisible(false);
                 } else {
-                    comboBox_skills.setVisible(true);
+                    comboBox_keywordss.setVisible(true);
                 }
             }
         });
@@ -74,7 +74,7 @@ public class RegistrationGui {
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                userManagerAgent.register(textField_userName.getText(), textField_password.getText(), comboBox_userType.getSelectedItem().toString(), comboBox_skills.getSelectedItem().toString());
+                systemAgent.register(textField_userName.getText(), textField_password.getText(), comboBox_userType.getSelectedItem().toString(), comboBox_keywordss.getSelectedItem().toString());
                 System.out.println("User: " + textField_userName.getText() + " is registered successfully");
                 dispose();
             }
@@ -82,7 +82,7 @@ public class RegistrationGui {
 //        textField_userName.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        textField_password.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        comboBox_userType.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        comboBox_skills.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        comboBox_keywordss.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        jTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        jCheckBox_agree.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        button_register.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -96,7 +96,7 @@ public class RegistrationGui {
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(comboBox_userType)
-                                        .addComponent(comboBox_skills)
+                                        .addComponent(comboBox_keywordss)
                                         .addComponent(jCheckBox_agree))
 
         ));
@@ -107,7 +107,7 @@ public class RegistrationGui {
                 .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(textField_password)
-                                .addComponent(comboBox_skills))
+                                .addComponent(comboBox_keywordss))
                                         .addComponent(jTextArea)
                                         .addComponent(jCheckBox_agree)
                                         .addComponent(button_register)
@@ -120,7 +120,7 @@ public class RegistrationGui {
        this.jFrame.add(jpanel);
     }
 
-    public void showGui() {
+    public void showGUI() {
         this.jFrame.setVisible(true);
     }
 

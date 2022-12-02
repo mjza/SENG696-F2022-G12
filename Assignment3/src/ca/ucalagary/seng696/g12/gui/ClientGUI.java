@@ -26,7 +26,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class ClientGui {
+public class ClientGUI {
 
     JFrame jFrame;
     AID selectedProvider = null;
@@ -37,7 +37,7 @@ public class ClientGui {
     List<Provider> currentProviders = new ArrayList<>();
     ClientAgent myAgent;
 
-    public ClientGui(ClientAgent myAgent, Set<AID> providers, List<Project> projects) {
+    public ClientGUI(ClientAgent myAgent, Set<AID> providers, List<Project> projects) {
         this.myAgent = myAgent;
         System.out.println("number of providers: ");
         System.out.println(providers.size());
@@ -143,8 +143,8 @@ public class ClientGui {
                 JList list = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
-                    ProjectDetailGui projectDetailGui = new ProjectDetailGui(myAgent, ClientGui.this.projects.get(index));
-                    projectDetailGui.showGui();
+                    ProjectDetailGUI projectDetailGUI = new ProjectDetailGUI(myAgent, ClientGUI.this.projects.get(index));
+                    projectDetailGUI.showGUI();
                     System.out.println("Clicked: " + index);
                 }
             }
@@ -215,7 +215,7 @@ public class ClientGui {
         jFrame.add(jPanel);
     }
 
-    public void showGui() {
+    public void showGUI() {
         jFrame.setVisible(true);
     }
 

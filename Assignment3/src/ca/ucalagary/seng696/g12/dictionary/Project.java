@@ -5,7 +5,7 @@ import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
 
-import ca.ucalagary.seng696.g12.gui.ProjectDetailGui;
+import ca.ucalagary.seng696.g12.gui.ProjectDetailGUI;
 
 public class Project {
     private String name;
@@ -16,7 +16,7 @@ public class Project {
     private AID provider;
     private AID client;
     private String deadline;
-    private ProjectDetailGui projectDetailGui;
+    private ProjectDetailGUI projectDetailGUI;
     private boolean done = false;
 
     public Project(String name, String description, int bid, AID provider, AID client, String deadline) {
@@ -82,15 +82,15 @@ public class Project {
         if (progressPercentage < permittedProgress) {
             progress += progressPercentage;
         }
-        if (projectDetailGui != null) {
-            projectDetailGui.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(), this.getMessagesHistory());
+        if (projectDetailGUI != null) {
+            projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(), this.getMessagesHistory());
         }
     }
 
     public void chatUpdate(String chatMessage) {
         messagesHistory.add(chatMessage);
-        if (projectDetailGui != null) {
-            projectDetailGui.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(), this.getMessagesHistory());
+        if (projectDetailGUI != null) {
+            projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(), this.getMessagesHistory());
         }
     }
 
@@ -106,13 +106,13 @@ public class Project {
         return client;
     }
 
-    public void connectGUI(ProjectDetailGui projectDetailGui) {
-        this.projectDetailGui = projectDetailGui;
+    public void connectGUI(ProjectDetailGUI projectDetailGUI) {
+        this.projectDetailGUI = projectDetailGUI;
     }
 
     public void disposeGUI() {
-        if(this.projectDetailGui!=null){
-            this.projectDetailGui.disposeGUI();
+        if(this.projectDetailGUI!=null){
+            this.projectDetailGUI.disposeGUI();
         }
     }
 }

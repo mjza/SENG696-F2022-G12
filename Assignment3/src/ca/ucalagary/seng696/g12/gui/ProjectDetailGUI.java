@@ -12,13 +12,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ProjectDetailGui {
+public class ProjectDetailGUI {
 
     JFrame jFrame;
     JLabel label = new JLabel();
     JLabel jLabel = new JLabel("The next label");
 
-    ProjectDetailGui(ClientAgent agent, Project project) {
+    ProjectDetailGUI(ClientAgent agent, Project project) {
 
         project.connectGUI(this);
 
@@ -123,7 +123,7 @@ public class ProjectDetailGui {
         return ratingTextField.getText();
     }
 
-    ProjectDetailGui(ProviderAgent agent, Project project) {
+    ProjectDetailGUI(ProviderAgent agent, Project project) {
 
         project.connectGUI(this);
 
@@ -177,7 +177,7 @@ public class ProjectDetailGui {
     }
 
 
-    public void showGui() {
+    public void showGUI() {
         jFrame.setVisible(true);
     }
 
