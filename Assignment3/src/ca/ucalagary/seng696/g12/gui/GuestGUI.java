@@ -62,7 +62,7 @@ public class GuestGUI {
         }
         JList<String> list = new JList<>(providersList);
 
-        list.setCellRenderer(new MyRenderer());
+        list.setCellRenderer(new ProviderListField(currentProviders));
 
         JPanel providerPanel = new JPanel();
         providerPanel.setLayout(new BorderLayout());
@@ -116,21 +116,5 @@ public class GuestGUI {
 
     public void dispose() {
         this.jFrame.dispose();
-    }
-
-    class MyRenderer extends DefaultListCellRenderer {
-        /**
-		 * The serial version must be increased by each update. 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public Component getListCellRendererComponent(JList<?> list,Object value,
-                                                      int index,boolean isSelected,boolean cellHasFocus)
-        {
-            JLabel lbl = (JLabel)super.getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);
-            if(currentProviders.get(index).isPremium) lbl.setForeground(Color.RED);
-            else lbl.setForeground(Color.BLACK);
-            return lbl;
-        }
     }
 }

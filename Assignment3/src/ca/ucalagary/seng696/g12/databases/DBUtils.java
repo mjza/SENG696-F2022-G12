@@ -153,7 +153,7 @@ public class DBUtils {
 			pstmt.setString(2, email);
 			pstmt.setString(3, password);
 			pstmt.setString(4, "P");
-			pstmt.setString(5, isPremium ? "Y" : "N");
+			pstmt.setString(5, isPremium.booleanValue() == true ? "Y" : "N");
 			pstmt.setInt(6, rating);
 			pstmt.executeUpdate();
 			conn.commit();
@@ -264,14 +264,18 @@ public class DBUtils {
 	 * Prints the resumes.
 	 */
 	public static void printResumes() {
-		ResultSet rs = DBUtils.getResumes();
+		String readResumesSQL = "SELECT ID, KEYWORDS, BODY, UPDATED_AT FROM RESUMES";
 		try {
+			Connection conn = DBUtils.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(readResumesSQL);
 			while (rs.next()) {
 				System.out.printf("%d, %s, %s, %s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			System.out.println("in connection" + ex);
 		}
+		DBUtils.closeConnection();
 	}
 
 	/**
@@ -328,7 +332,7 @@ public class DBUtils {
 				String name = rs.getString(2);
 				String username = rs.getString(3);
 				String type = rs.getString(4);
-				Boolean isPremium = rs.getBoolean(5);
+				Boolean isPremium = "Y".equals(rs.getString(5));
 				int rating = rs.getInt(6);
 				String keywords = rs.getString(7);
 				String resume = rs.getString(8);
@@ -362,25 +366,6 @@ public class DBUtils {
 		}
 		DBUtils.closeConnection();
 		return client;
-	}
-
-	/**
-	 * Gets the resumes.
-	 *
-	 * @return the resumes
-	 */
-	public static ResultSet getResumes() {
-		ResultSet rs = null;
-		String readResumesSQL = "SELECT ID, KEYWORDS, BODY, UPDATED_AT FROM RESUMES";
-		try {
-			Connection conn = DBUtils.getConnection();
-			Statement stmt = conn.createStatement();
-			rs = stmt.executeQuery(readResumesSQL);
-		} catch (SQLException ex) {
-			System.out.println("in connection" + ex);
-		}
-		DBUtils.closeConnection();
-		return rs;
 	}
 
 	/**

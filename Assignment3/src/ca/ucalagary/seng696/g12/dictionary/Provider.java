@@ -153,13 +153,13 @@ public class Provider extends User {
 	 */
 	public String getInfo(){
         String text =  "";
-        text += "Name: " + getUsername() + ",\n";
-        text += "Type: " + getType() + ",\n";
-        text += "Keywords: " + getKeywords() + ",\n";
-        text += "Resume: " + getResume() + ",\n";
-        text += "Premium: " + getIsPremium() + ",\n";
-        text += "Completed Project No: " + getDoneProjectNumber() + ",\n";
-        text += "Rating:" + getRating();
+        text += "Name: " + this.getName() + "; \n";
+        text += "Keywords: " + this.getKeywords() + "; \n";
+        text += "Premium: " + (this.getIsPremium() ? "Yes" : "No") + "; \n";
+        text += "Rating:";
+        for(int i = 0; i< this.getRating(); i++)
+        	text += "*";
+        text += " \n";
         return text;
     }
 }
