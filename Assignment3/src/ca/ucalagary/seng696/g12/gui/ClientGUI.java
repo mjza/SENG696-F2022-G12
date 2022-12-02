@@ -1,6 +1,28 @@
+/**
+ * MIT License
+ * 
+ * Copyright (c) 2022 Mahdi Jaberzadeh Ansari
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. 
+ */
 package ca.ucalagary.seng696.g12.gui;
 
-// import com.sun.tools.javac.util.StringUtils;
 import jade.core.AID;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -24,7 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 public class ClientGUI {
 
@@ -120,7 +141,7 @@ public class ClientGUI {
                     }
                 } else {
                     providersList.removeAllElements();
-                    List<Provider> searchedProviders = SystemAgent.searchProvider(searchedText, currentProviders);
+                    List<Provider> searchedProviders = SystemAgent.searchProvider(searchedText);
                     for (Provider provider : searchedProviders) {
                         if(provider.isPremium){
                         }
@@ -140,7 +161,7 @@ public class ClientGUI {
 
         projectList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                JList list = (JList) evt.getSource();
+                JList<?> list = (JList<?>) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
                     ProjectDetailGUI projectDetailGUI = new ProjectDetailGUI(myAgent, ClientGUI.this.projects.get(index));
@@ -241,7 +262,12 @@ public class ClientGUI {
     }
 
     class MyRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(JList list,Object value,
+        /**
+		 * The serial version must be increased by each update.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Component getListCellRendererComponent(JList<?> list,Object value,
                                                       int index,boolean isSelected,boolean cellHasFocus)
         {
             JLabel lbl = (JLabel)super.getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);

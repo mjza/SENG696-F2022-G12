@@ -1,9 +1,30 @@
+/**
+ * MIT License
+ * 
+ * Copyright (c) 2022 Mahdi Jaberzadeh Ansari
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. 
+ */
 package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.behaviours.OneShotBehaviour;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ca.ucalagary.seng696.g12.databases.DBUtils;
@@ -24,12 +45,7 @@ public class SystemAgent extends EnhancedAgent {
 	
 	/** Section for class attributes. */
 	private MainGUI mainGUI;
-    
-    /** The providers. */
-    private static List<Provider> providers = new ArrayList<>();
-    
-    /** The clients. */
-    private static List<Client> clients = new ArrayList<>();
+
     
     /**
      * The constructor initializes the system.
@@ -45,63 +61,38 @@ public class SystemAgent extends EnhancedAgent {
      * @return providers
      */
 	public static List<Provider> getProviders() {
-		return providers;
-	}
-	
-	/**
-	 * Gets a list of clients.
-	 *
-	 * @return clients
-	 */
-	public static List<Client> getClients() {
-		return clients;
+		return DBUtils.getProviders(null);
 	}
 
 	/**
 	 * Gets the provider.
 	 *
-	 * @param name the name
+	 * @param userName the userName
 	 * @return the provider
 	 */
-	public static Provider getProvider(String username) {
-        return DBUtils.getProvider(username);
+	public static Provider getProvider(String userName) {
+        return DBUtils.getProvider(userName);
     }
 
     /**
      * Gets the client.
      *
-     * @param name the name
+     * @param userName the userName
      * @return the client
      */
-    public static Client getClient(String name) {
-        for (Client client : clients) {
-            if (client.getUsername().equals(name)) {
-                return client;
-            }
-        }
-        return null;
+    public static Client getClient(String userName) {
+        return DBUtils.getClient(userName);
     }
 
     /**
      * Search provider.
      *
-     * @param text the text
-     * @param providersList the providers list
+     * @param keyword the keyword
      * @return the list
      */
-    public static List<Provider> searchProvider(String text, List<Provider> providersList) {
-        List<Provider> searchedProviders = new ArrayList<>();
-        for (Provider provider : providersList) {
-            if (provider.getUsername().contains(text) || provider.getKeywords().contains(text) || provider.isPremium) {
-                searchedProviders.add(provider);
-            }
-        }
-        Collections.sort(searchedProviders, (provider1, provider2) -> {
-            boolean b1 = provider1.isPremium;
-            boolean b2 = provider2.isPremium;
-            return (b1 != b2) ? (b1) ? -1 : 1 : 0;
-        });
-        return searchedProviders;
+    public static List<Provider> searchProvider(String keyword) {
+        List<Provider> providers = DBUtils.getProviders(keyword);
+        return providers;
     }    
 
     /**
@@ -129,12 +120,12 @@ public class SystemAgent extends EnhancedAgent {
      */
     public void login(String userName, String password) {
     	String type = DBUtils.getUserType(userName, password);
-        if ("C".equalsIgnoreCase(type)) {            
-           createAgent("Client:" + userName, "ca.ucalagary.seng696.g12.agents.ClientAgent");            
-        } else if ("P".equalsIgnoreCase(type)){            
-           createAgent("Provider:" + userName, "ca.ucalagary.seng696.g12.agents.ProviderAgent");            
+        if (User.CLIENT.equalsIgnoreCase(type)) {            
+           this.createAgent("Client:" + userName, "ca.ucalagary.seng696.g12.agents.ClientAgent");            
+        } else if (User.PROVIDER.equalsIgnoreCase(type)){            
+           this.createAgent("Provider:" + userName, "ca.ucalagary.seng696.g12.agents.ProviderAgent");            
         } else {
-        	mainGUI.showWrongCredential();
+        	this.mainGUI.showWrongCredential();
         }
     }
 
@@ -143,10 +134,7 @@ public class SystemAgent extends EnhancedAgent {
      */
     @Override
     protected void setup() {
-    	
-    	System.out.println("System Agent " + getAID().getName() + " is ready.");
-    	
-        addBehaviour(new OneShotBehaviour() {
+    	addBehaviour(new OneShotBehaviour() {
             /**
 			 * The serial version must be increased by each update
 			 */
@@ -154,17 +142,10 @@ public class SystemAgent extends EnhancedAgent {
 
 			@Override
             public void action() {
-                System.out.println("UserManagers-agent " + getAID().getName() + "is ready.");
-
+                System.out.println("System Agent: " + getAID().getName() + " is ready.");
+                // Show the main frame
                 mainGUI = new MainGUI(SystemAgent.this);
                 mainGUI.showGUI();
-                
-                Collections.sort(providers, (provider1, provider2) -> {
-                    boolean b1 = provider1.isPremium;
-                    boolean b2 = provider2.isPremium;
-                    return (b1 != b2) ? (b1) ? -1 : 1 : 0;
-                });
-
             }
         });
     }
@@ -174,7 +155,7 @@ public class SystemAgent extends EnhancedAgent {
      */
     @Override
     protected void takeDown() {
-        mainGUI.dispose();
-        System.out.println("UserManagers-agent " + getAID().getName() + "is terminating.");
+        this.mainGUI.dispose();
+        System.out.println("System Agent: " + getAID().getName() + " is terminating.");
     }    
 }

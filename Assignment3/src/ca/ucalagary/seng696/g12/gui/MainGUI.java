@@ -1,3 +1,26 @@
+/**
+ * MIT License
+ * 
+ * Copyright (c) 2022 Mahdi Jaberzadeh Ansari
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. 
+ */
 package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
@@ -28,7 +51,7 @@ public class MainGUI {
     	// Initiate the agent
         this.systemAgent = systemAgent;
     	// Initiate the jFrame
-        this.jFrame = new JFrame();
+        this.jFrame = new JFrame("B2B Match Making System");
         // Set size of the frame to full screen
         this.jFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);        
         this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,7 +75,7 @@ public class MainGUI {
         gbc.gridx = 0;//set the x location of the grid for the next component
         gbc.gridy = 0;//set the y location of the grid for the next component
         // Set header 
-        JLabel title = new JLabel("B2B Match Making System");
+        JLabel title = new JLabel("Login to B2B MMS");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         jPanel.add(title, gbc);
         // Username lable
@@ -62,7 +85,7 @@ public class MainGUI {
         gbc.gridy = 1;//change the y location      
         jPanel.add(usenameLabel, gbc);        
         // Username textbox
-        HintTextField userNameTextField = new HintTextField("Email");
+        JTextField userNameTextField = new JTextField();
         userNameTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         userNameTextField.setPreferredSize(new Dimension(200, 24));
         gbc.gridy = 2;//change the y location

@@ -1,3 +1,26 @@
+/**
+ * MIT License
+ * 
+ * Copyright (c) 2022 Mahdi Jaberzadeh Ansari
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. 
+ */
 package ca.ucalagary.seng696.g12.databases;
 
 import java.sql.Connection;
@@ -13,6 +36,7 @@ import java.util.List;
 
 import org.apache.derby.jdbc.*;
 
+import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 
 // TODO: Auto-generated Javadoc
@@ -20,7 +44,7 @@ import ca.ucalagary.seng696.g12.dictionary.Provider;
  * The Class DBUtils.
  */
 public class DBUtils {
-	
+
 	/**
 	 * The main method.
 	 *
@@ -52,7 +76,7 @@ public class DBUtils {
 		}
 		return conn;
 	}
-	
+
 	/**
 	 * Close connection.
 	 */
@@ -67,7 +91,7 @@ public class DBUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Inits the DB.
 	 */
@@ -75,7 +99,7 @@ public class DBUtils {
 		DBUtils.initUsersTable();
 		DBUtils.initResumesTable();
 	}
-	
+
 	/**
 	 * Inits the users table.
 	 */
@@ -114,21 +138,22 @@ public class DBUtils {
 	/**
 	 * Adds the provider.
 	 *
-	 * @param name the name
-	 * @param email the email
-	 * @param password the password
+	 * @param name      the name
+	 * @param email     the email
+	 * @param password  the password
 	 * @param isPremium the is premium
-	 * @param rating the rating
+	 * @param rating    the rating
 	 */
 	public static void addProvider(String name, String email, String password, Boolean isPremium, int rating) {
 		try {
 			Connection conn = DBUtils.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO USERS (NAME,EMAIL,PASSWORD,TYPE,PREMIUM,RATING) VALUES(?,?,?,?,?,?)");
+			PreparedStatement pstmt = conn.prepareStatement(
+					"INSERT INTO USERS (NAME,EMAIL,PASSWORD,TYPE,PREMIUM,RATING) VALUES(?,?,?,?,?,?)");
 			pstmt.setString(1, name);
 			pstmt.setString(2, email);
 			pstmt.setString(3, password);
 			pstmt.setString(4, "P");
-			pstmt.setString(5, isPremium ? "Y":"N");
+			pstmt.setString(5, isPremium ? "Y" : "N");
 			pstmt.setInt(6, rating);
 			pstmt.executeUpdate();
 			conn.commit();
@@ -141,15 +166,16 @@ public class DBUtils {
 	/**
 	 * Adds the client.
 	 *
-	 * @param name the name
-	 * @param email the email
+	 * @param name     the name
+	 * @param email    the email
 	 * @param password the password
-	 * @param rating the rating
+	 * @param rating   the rating
 	 */
 	public static void addClient(String name, String email, String password, int rating) {
 		try {
 			Connection conn = DBUtils.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO USERS (NAME,EMAIL,PASSWORD,TYPE,RATING) VALUES(?,?,?,?,?)");
+			PreparedStatement pstmt = conn
+					.prepareStatement("INSERT INTO USERS (NAME,EMAIL,PASSWORD,TYPE,RATING) VALUES(?,?,?,?,?)");
 			pstmt.setString(1, name);
 			pstmt.setString(2, email);
 			pstmt.setString(3, password);
@@ -187,7 +213,7 @@ public class DBUtils {
 			System.out.println("in connection" + ex);
 		}
 		DBUtils.closeConnection();
-		
+
 		DBUtils.addResume("1", "C++, JAVA, C#, SQLSERVER", "I did 200 projects ...");
 		DBUtils.addResume("2", "PHP, MYSQL, PHYTHON", "I am better than others ...");
 	}
@@ -195,9 +221,9 @@ public class DBUtils {
 	/**
 	 * Adds the resume.
 	 *
-	 * @param userId the user id
+	 * @param userId   the user id
 	 * @param keywords the keywords
-	 * @param body the body
+	 * @param body     the body
 	 */
 	public static void addResume(String userId, String keywords, String body) {
 		try {
@@ -238,21 +264,16 @@ public class DBUtils {
 	 * Prints the resumes.
 	 */
 	public static void printResumes() {
-		ResultSet rs = null;
-		String readResumesSQL = "SELECT ID, KEYWORDS, BODY, UPDATED_AT FROM RESUMES";
+		ResultSet rs = DBUtils.getResumes();
 		try {
-			Connection conn = DBUtils.getConnection();
-			Statement stmt = conn.createStatement();
-			rs = stmt.executeQuery(readResumesSQL);
 			while (rs.next()) {
 				System.out.printf("%d, %s, %s, %s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
 			}
-		} catch (SQLException ex) {
-			System.out.println("in connection" + ex);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		DBUtils.closeConnection();
 	}
-	
+
 	/**
 	 * Gets the provider.
 	 *
@@ -261,24 +282,23 @@ public class DBUtils {
 	 */
 	public static Provider getProvider(String username) {
 		Provider provider = null;
-		String readUsersSQL = "SELECT U.ID, U.NAME, U.TYPE, U.PREMIUM, U.RATING, R.KEYWORDS, R.BODY FROM USERS U \n" + 
-							  "LEFT JOIN RESUMES R ON \n" +
-							  " U.ID = R.ID \n" +
-							  "WHERE U.TYPE = 'P' AND U.EMAIL = '" + username + "'";
+		String readUsersSQL = "SELECT U.ID, U.NAME, U.TYPE, U.PREMIUM, U.RATING, R.KEYWORDS, R.BODY FROM USERS U \n"
+				+ "LEFT JOIN RESUMES R ON \n" + " U.ID = R.ID \n" + "WHERE U.TYPE = 'P' AND U.EMAIL = '" + username
+				+ "'";
 		try {
 			Connection conn = DBUtils.getConnection();
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(readUsersSQL);
 			while (rs.next()) {
 				int id = rs.getInt(1);
-				String name = rs.getString(2);				
+				String name = rs.getString(2);
 				String type = rs.getString(3);
 				Boolean isPremium = rs.getBoolean(4);
 				int rating = rs.getInt(5);
 				String keywords = rs.getString(5);
 				String resume = rs.getString(6);
 				provider = new Provider(id, name, username, null, type, rating, keywords, resume, isPremium);
-				
+
 			}
 		} catch (SQLException ex) {
 			System.out.println("in connection" + ex);
@@ -290,21 +310,22 @@ public class DBUtils {
 	/**
 	 * Gets the providers.
 	 *
+	 * @param keyword the keyword
 	 * @return the providers
 	 */
-	public static List<Provider> getProviders() {
+	public static List<Provider> getProviders(String keyword) {
 		List<Provider> providers = new ArrayList<>();
-		String readUsersSQL = "SELECT U.ID, U.NAME, U.EMAIL, U.TYPE, U.PREMIUM, U.RATING, R.KEYWORDS, R.RESUME FROM USERS AS U" + 
-							  "LEFT JOIN RESUME AS R ON " +
-							  " U.ID = R.ID" +
-							  "WHERE U.TYPE = 'P'";
+		String readUsersSQL = "SELECT U.ID, U.NAME, U.EMAIL, U.TYPE, U.PREMIUM, U.RATING, R.KEYWORDS, R.BODY FROM USERS AS U \n"
+				+ "LEFT JOIN RESUMES AS R ON \n" + " U.ID = R.ID \n" + "WHERE U.TYPE = 'P'\n"
+				+ (keyword != null ? " AND R.KEYWORDS LIKE '%" + keyword +"%'\n" : "")
+				+ "ORDER BY U.PREMIUM DESC";
 		try {
 			Connection conn = DBUtils.getConnection();
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(readUsersSQL);
 			while (rs.next()) {
 				int id = rs.getInt(1);
-				String name = rs.getString(2); 
+				String name = rs.getString(2);
 				String username = rs.getString(3);
 				String type = rs.getString(4);
 				Boolean isPremium = rs.getBoolean(5);
@@ -319,6 +340,28 @@ public class DBUtils {
 		}
 		DBUtils.closeConnection();
 		return providers;
+	}
+	
+	public static Client getClient(String username) {
+		Client client = null;
+		String readUsersSQL = "SELECT U.ID, U.NAME, U.TYPE, U.RATING FROM USERS U \n"
+				+ "WHERE U.TYPE = 'C' AND U.EMAIL = '" + username + "'";
+		try {
+			Connection conn = DBUtils.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(readUsersSQL);
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String type = rs.getString(3);
+				int rating = rs.getInt(4);
+				client = new Client(id, name, username, null, type, rating);
+			}
+		} catch (SQLException ex) {
+			System.out.println("in connection" + ex);
+		}
+		DBUtils.closeConnection();
+		return client;
 	}
 
 	/**
@@ -339,7 +382,7 @@ public class DBUtils {
 		DBUtils.closeConnection();
 		return rs;
 	}
-	
+
 	/**
 	 * Gets the user type.
 	 *
@@ -349,12 +392,13 @@ public class DBUtils {
 	 */
 	public static String getUserType(String username, String password) {
 		String type = null;
-		String readUsersSQL = "SELECT TYPE FROM USERS WHERE EMAIL = '" + username + "' AND PASSWORD = '" + password + "'";
+		String readUsersSQL = "SELECT TYPE FROM USERS WHERE EMAIL = '" + username + "' AND PASSWORD = '" + password
+				+ "'";
 		try {
 			Connection conn = DBUtils.getConnection();
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(readUsersSQL);
-			if(rs.getFetchSize() == 1) {
+			if (rs.getFetchSize() == 1) {
 				while (rs.next()) {
 					type = rs.getString(1);
 				}
@@ -362,7 +406,7 @@ public class DBUtils {
 		} catch (SQLException ex) {
 			System.out.println("in connection" + ex);
 		}
-		DBUtils.closeConnection();		
+		DBUtils.closeConnection();
 		return type;
 	}
 }
