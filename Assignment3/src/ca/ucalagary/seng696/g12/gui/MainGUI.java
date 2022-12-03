@@ -67,7 +67,7 @@ public class MainGUI {
                 	systemAgent.killAgent(systemAgent.getLocalName());
             }
         });
-        jFrame.getContentPane().add(getLoginJPanel(),BorderLayout.CENTER);        
+        jFrame.getContentPane().add(this.getLoginJPanel(),BorderLayout.CENTER);        
     }
 
     /**

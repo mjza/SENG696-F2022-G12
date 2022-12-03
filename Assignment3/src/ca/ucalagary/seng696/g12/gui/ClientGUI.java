@@ -93,7 +93,7 @@ public class ClientGUI {
         }
         JList<String> list = new JList<>(providersList);
 
-        list.setCellRenderer(new ProviderListField(currentProviders));
+        list.setCellRenderer(new ListCellRenderer(currentProviders));
 
         list.addListSelectionListener(new ListSelectionListener() {
             @Override

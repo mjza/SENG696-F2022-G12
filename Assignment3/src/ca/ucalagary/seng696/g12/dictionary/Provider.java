@@ -26,6 +26,7 @@ package ca.ucalagary.seng696.g12.dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Provider.
  */
@@ -58,7 +59,7 @@ public class Provider extends User {
 	 * @param rating the rating
 	 * @param keywords the keywords
 	 * @param resume the resume
-	 * @param premium the premium
+	 * @param isPremium the is premium
 	 */
     public Provider(int id, String name, String username, String password, String type, int rating, String keywords, String resume, Boolean isPremium) {
         super(id, name, username, password, type, rating);
@@ -162,4 +163,24 @@ public class Provider extends User {
         text += " \n";
         return text;
     }
+	
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
+	public static String[] getColumns() {
+		String[] columnNames = {"ID", "Name", "Email", "Keywords", "Is Premium", "Rating"};
+		return columnNames;
+	}
+	
+	/**
+	 * Gets the data.
+	 *
+	 * @return the data
+	 */
+	public String[] toArray() {
+		String[] data = {String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getKeywords(), (this.getIsPremium() ? "Yes" : "No"), String.valueOf(this.getRating())};
+		return data;
+	}
 }

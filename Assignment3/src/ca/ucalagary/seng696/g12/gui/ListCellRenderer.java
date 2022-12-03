@@ -13,7 +13,7 @@ import ca.ucalagary.seng696.g12.dictionary.Provider;
 /**
  * The Class ProviderListField.
  */
-public class ProviderListField extends DefaultListCellRenderer {
+public class ListCellRenderer extends DefaultListCellRenderer {
 	/**
 	 * The serial version must be increased by each update.
 	 */
@@ -29,7 +29,7 @@ public class ProviderListField extends DefaultListCellRenderer {
 	 *
 	 * @param providers the providers
 	 */
-	public ProviderListField(List<Provider> providers) {
+	public ListCellRenderer(List<Provider> providers) {
 		super();
 		this.providers = providers;
 	}

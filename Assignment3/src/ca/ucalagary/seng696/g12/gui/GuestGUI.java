@@ -29,92 +29,129 @@ import ca.ucalagary.seng696.g12.dictionary.Provider;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GuestGUI.
+ */
 public class GuestGUI {
 
-    JFrame jFrame;
-    DefaultListModel<String> providersList;
+	/** The j frame. */
+	private JFrame jFrame;
 
-    List<Provider> currentProviders = new ArrayList<>();
+	/** The providers. */
+	private List<Provider> providers;
 
-    public GuestGUI(List<Provider> providers) {
-        System.out.println("number of providers: ");
-        System.out.println(providers.size());
+	/** The providers list. */
+	private JTable providersJTable;
 
-        jFrame = new JFrame("Welcome Guest user");
-        jFrame.setSize(600, 600);
+	/**
+	 * Instantiates a new guest GUI.
+	 *
+	 * @param providers the providers
+	 */
+	public GuestGUI(List<Provider> providers) {
+		// Set the class providers
+		this.providers = providers;
+		// The main frame
+		this.jFrame = new JFrame("B2B Match Making System: Guest user");
+		// Set size of the frame to full screen
+		this.jFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// Set the panel inside the frame
+		jFrame.getContentPane().add(this.getGuestJPanel(), BorderLayout.CENTER);
+	}
 
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+	/**
+	 * Gets the guest J panel.
+	 *
+	 * @return the guest J panel
+	 */
+	private JPanel getGuestJPanel() {
+		
+		JPanel guestJPanel = new JPanel();
+		guestJPanel.setLayout(new BorderLayout());
+		
+		JPanel providerPanel = new JPanel();
+        providerPanel.add(new JLabel("List of Providers:"), BorderLayout.NORTH);
+		String[] columnNames = Provider.getColumns();
+		TableModel tableModel = new DefaultTableModel(columnNames, 0);
+		JTable providersJTable = new JTable(tableModel);
+        providersJTable.setFillsViewportHeight(true); 
+        this.providersJTable = providersJTable;
+        this.updateTableData(null);
+        //Create the scroll pane and add the table to it.
+        JScrollPane scrollPane = new JScrollPane(providersJTable);
+        //Add the scroll pane to center of guest panel.
+      	providerPanel.add(scrollPane, BorderLayout.CENTER); 
+		guestJPanel.add(providerPanel, BorderLayout.CENTER);
+		
+		HintTextField searchTextField = new HintTextField("Search Provider");
+		guestJPanel.add(searchTextField, BorderLayout.NORTH);
+		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+			/**
+			 * Filter providers.
+			 *
+			 * @param e the e
+			 */
+			private void filterProviders(DocumentEvent e) {
+				String searchedText = searchTextField.getText();
+				if (searchedText.isEmpty()) {
+					updateTableData(null);
+				} else {
+					updateTableData(searchedText);
+				}
+			}
+			
+			public void changedUpdate(DocumentEvent e) {
+				this.filterProviders(e);
+			}
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.setSize(600, 600);
+			public void removeUpdate(DocumentEvent e) {
+				this.filterProviders(e);
+			}
 
-        providersList = new DefaultListModel<>();
-        for (Provider provider : providers) {
-            currentProviders.add(provider);
-            String text = provider.getInfo();
-            providersList.addElement(text);
-        }
-        JList<String> list = new JList<>(providersList);
+			public void insertUpdate(DocumentEvent e) {
+				this.filterProviders(e);
+			}
+			
+		});
+			return guestJPanel;
+	}
+	
+/**
+	 * Update table data.
+	 *
+	 * @param filter the filter
+	 */
+		private void updateTableData(String filter) {
+		if(this.providersJTable != null) {
+			List<Provider> providers = SystemAgent.searchProvider(filter);
+			String[] columnNames = Provider.getColumns();
+			String[][] stringArray = providers.stream().map(p -> p.toArray()).toArray(String[][]::new);
+			DefaultTableModel tableModel = (DefaultTableModel) this.providersJTable.getModel();			
+			tableModel.setDataVector(stringArray, columnNames);
+			tableModel.fireTableDataChanged();
+		}
+	}
 
-        list.setCellRenderer(new ProviderListField(currentProviders));
+	/**
+	 * Show GUI.
+	 */
+	public void showGUI() {
+		jFrame.setVisible(true);
+	}
 
-        JPanel providerPanel = new JPanel();
-        providerPanel.setLayout(new BorderLayout());
-        providerPanel.add(new JLabel("Providers:"),BorderLayout.NORTH);
-        providerPanel.add(list,BorderLayout.CENTER);
-        leftPanel.add(providerPanel, BorderLayout.CENTER);
-
-        HintTextField searchTextField = new HintTextField("Search Provider");
-        searchTextField.setSize(new Dimension(200, 24));
-        leftPanel.add(searchTextField, BorderLayout.NORTH);
-        searchTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                searchProviders(e);
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                searchProviders(e);
-            }
-
-            public void insertUpdate(DocumentEvent e) {
-                searchProviders(e);
-            }
-
-            private void searchProviders(DocumentEvent e) {
-                String searchedText = searchTextField.getText();
-                if (searchedText.isEmpty()) {
-                    providersList.removeAllElements();
-                    for (Provider provider : currentProviders) {
-                        providersList.addElement(provider.getInfo());
-                    }
-                } else {
-                    providersList.removeAllElements();
-                    List<Provider> searchedProviders = SystemAgent.searchProvider(searchedText);
-                    for (Provider provider : searchedProviders) {
-                        providersList.addElement(provider.getInfo());
-                    }
-                }
-            }
-        });
-
-
-        jPanel.add(leftPanel, BorderLayout.CENTER);
-
-        
-        jFrame.add(jPanel);
-    }
-
-    public void showGUI() {
-        jFrame.setVisible(true);
-    }
-
-    public void dispose() {
-        this.jFrame.dispose();
-    }
+	/**
+	 * Dispose.
+	 */
+	public void dispose() {
+		this.jFrame.dispose();
+	}
 }
