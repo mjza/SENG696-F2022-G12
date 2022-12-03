@@ -25,7 +25,11 @@ package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.behaviours.OneShotBehaviour;
 
+import java.awt.Image;
+import java.net.URL;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 
 import ca.ucalagary.seng696.g12.databases.DBUtils;
 import ca.ucalagary.seng696.g12.dictionary.Client;
@@ -94,6 +98,12 @@ public class SystemAgent extends EnhancedAgent {
         List<Provider> providers = DBUtils.getProviders(keyword);
         return providers;
     } 
+    
+    public static Image getIcon() {
+    	URL resource = SystemAgent.class.getResource("/ca/ucalagary/seng696/g12/images/icon.png");
+        ImageIcon img = new ImageIcon(resource);
+        return img.getImage();
+    }
     
     /**
      * Login.

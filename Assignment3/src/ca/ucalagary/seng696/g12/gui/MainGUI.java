@@ -55,7 +55,10 @@ public class MainGUI {
         this.systemAgent = systemAgent;
     	// Initiate the jFrame
         this.jFrame = new JFrame("B2B Match Making System");
+        // set icon        
+        this.jFrame.setIconImage(SystemAgent.getIcon());
         // Set size of the frame to full screen
+        this.jFrame.setSize(1024, 768);
         this.jFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);        
         this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         // Kill the agent on close 

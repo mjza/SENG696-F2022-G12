@@ -52,6 +52,8 @@ public class GuestGUI {
 	public GuestGUI() {
 		// The main frame
 		this.jFrame = new JFrame("B2B Match Making System: Guest user");
+		// set icon
+		this.jFrame.setIconImage(SystemAgent.getIcon());
 		// Set size of the frame to full screen
 		this.jFrame.setSize(1024, 768);
 		this.jFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
