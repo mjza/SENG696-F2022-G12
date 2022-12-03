@@ -214,8 +214,8 @@ public class DBUtils {
 		}
 		DBUtils.closeConnection();
 
-		DBUtils.addResume("1", "C++, JAVA, C#, SQLSERVER", "I did 200 projects ...");
-		DBUtils.addResume("2", "PHP, MYSQL, PHYTHON", "I am better than others ...");
+		DBUtils.addResume(1, "C++, JAVA, C#, SQLSERVER", "I did 200 projects ...");
+		DBUtils.addResume(2, "PHP, MYSQL, PHYTHON", "I am better than others ...");
 	}
 
 	/**
@@ -225,11 +225,11 @@ public class DBUtils {
 	 * @param keywords the keywords
 	 * @param body     the body
 	 */
-	public static void addResume(String userId, String keywords, String body) {
+	public static void addResume(int userId, String keywords, String body) {
 		try {
 			Connection conn = DBUtils.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO RESUMES (ID,KEYWORDS,BODY) VALUES(?,?,?)");
-			pstmt.setString(1, userId);
+			pstmt.setInt(1, userId);
 			pstmt.setString(2, keywords);
 			pstmt.setString(3, body);
 			pstmt.executeUpdate();
@@ -393,5 +393,31 @@ public class DBUtils {
 		}
 		DBUtils.closeConnection();
 		return type;
+	}
+	
+	
+	/**
+	 * Gets the user id.
+	 *
+	 * @param username the username
+	 * @return the user id
+	 */
+	public static Integer getUserId(String username) {
+		Integer id = null;
+		String readUsersSQL = "SELECT ID FROM USERS WHERE EMAIL = '" + username + "'";
+		try {
+			Connection conn = DBUtils.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(readUsersSQL);
+			if (rs.getFetchSize() == 1) {
+				while (rs.next()) {
+					id = rs.getInt(1);
+				}
+			}
+		} catch (SQLException ex) {
+			System.out.println("in connection" + ex);
+		}
+		DBUtils.closeConnection();
+		return id;
 	}
 }

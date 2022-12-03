@@ -123,21 +123,7 @@ public class SystemAgent extends EnhancedAgent {
         }
     }
 
-    /**
-     * Register.
-     *
-     * @param userName the user name
-     * @param password the password
-     * @param type the type
-     * @param keywords the keywords
-     */
-    public void register(String userName, String password, String type, String keywords) {
-        if (type.equals("provider")) {
-          //  providers.add(new Provider(userName, password, type, keywords, 0));
-        } else {
-           // clients.add(new Client(userName, password, type, 0));
-        }
-    }
+    
     
     
 

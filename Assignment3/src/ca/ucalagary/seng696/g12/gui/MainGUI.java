@@ -153,7 +153,7 @@ public class MainGUI {
         registerBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegistrationGUI registrationGUI = new RegistrationGUI(systemAgent);
+                RegistrationGUI registrationGUI = new RegistrationGUI();
                 registrationGUI.showGUI();
             }
         });

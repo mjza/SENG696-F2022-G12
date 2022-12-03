@@ -26,128 +26,272 @@ package ca.ucalagary.seng696.g12.gui;
 import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.SystemAgent;
+import ca.ucalagary.seng696.g12.databases.DBUtils;
 import ca.ucalagary.seng696.g12.dictionary.User;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The Class RegistrationGUI.
+ */
 public class RegistrationGUI {
 
-    JFrame jFrame;
-    SystemAgent systemAgent;
+	/** The j frame. */
+	JFrame jFrame;
 
-    public RegistrationGUI(SystemAgent systemAgent) {
+	JPanel registerJPanel;
 
-        this.jFrame = new JFrame();
-//        this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-//                super.windowClosing(windowEvent);
-//                systemAgent.killAgent(systemAgent.getLocalName());
-//            }
-//        });
+	String type = User.PROVIDER;
 
-        this.systemAgent = systemAgent;
-        this.jFrame.setSize(600, 600);
-        JPanel jpanel = new JPanel();
-        GroupLayout layout = new GroupLayout(jpanel);
-        jpanel.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
+	/**
+	 * Instantiates a new registration GUI.
+	 */
+	public RegistrationGUI() {
+		// The main frame
+		this.jFrame = new JFrame("B2B Match Making System: Register a new user");
+		// set icon
+		this.jFrame.setIconImage(SystemAgent.getIcon());
+		// Set size of the frame to full screen
+		this.jFrame.setSize(1024, 768);
+		this.jFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// Set the panel inside the frame
+		this.jFrame.getContentPane().add(this.getRegisterJPanel(), BorderLayout.NORTH);
+	}
 
+	/**
+	 * Gets the register J panel.
+	 *
+	 * @return the register J panel
+	 */
+	private JPanel getRegisterJPanel() {
+		if (this.registerJPanel != null)
+			return this.registerJPanel;
+		JPanel registerJPanel = new JPanel();
+		this.registerJPanel = registerJPanel;
+		registerJPanel.setLayout(new GridBagLayout());
+		// A container for ordering items in rows
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;// set the x location of the grid for the next component
+		gbc.gridy = 0;// set the y location of the grid for the next component
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(10, 20, 20, 10); // padding
+		gbc.weighty = 1.0; // increase vertical space
 
-        HintTextField textField_userName = new HintTextField("UserName");
-        HintTextField textField_password = new HintTextField("Password");
+		// Type lable
+		JLabel typeLabel = new JLabel("Type:");
+		typeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(typeLabel, gbc);
+		// Type box
+		JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JRadioButton jRadioButton1 = new JRadioButton("I am a provider");
+		jRadioButton1.setBounds(120, 30, 120, 50);
+		jRadioButton1.setSelected(true);
+		JRadioButton jRadioButton2 = new JRadioButton("I am a client");
+		jRadioButton2.setBounds(250, 30, 80, 50);
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(jRadioButton1);
+		buttonGroup.add(jRadioButton2);
+		typePanel.add(jRadioButton1);
+		typePanel.add(jRadioButton2);
+		gbc.gridx++;// set the x location of the grid
+		gbc.weightx = 0; // to fill whole width
+		registerJPanel.add(typePanel, gbc);
 
+		// Name lable
+		JLabel nameLabel = new JLabel("Name:");
+		nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(nameLabel, gbc);
+		// Name textbox
+		JTextField nameTextField = new JTextField();
+		nameLabel.setLabelFor(nameTextField);
+		gbc.gridx++;// set the x location of the grid
+		gbc.weightx = 1.0; // to fill whole width
+		registerJPanel.add(nameTextField, gbc);
 
-        String[] type = {User.PROVIDER, User.CLIENT};
-        JComboBox comboBox_userType = new JComboBox(type);
+		// Username lable
+		JLabel usenameLabel = new JLabel("Email:");
+		usenameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(usenameLabel, gbc);
+		// Username textbox
+		JTextField userNameTextField = new JTextField();
+		usenameLabel.setLabelFor(userNameTextField);
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.weightx = 1.0; // to fill whole width
+		registerJPanel.add(userNameTextField, gbc);
 
-        String[] keywordss = {"Java", "PHP", "Python", "Go", "C"};
-        JComboBox comboBox_keywordss = new JComboBox(keywordss);
+		// Password label
+		JLabel passwordLabel = new JLabel("Password:");
+		passwordLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(passwordLabel, gbc);
+		// Password textbox
+		JTextField passwordTextField = new JTextField();
+		passwordLabel.setLabelFor(passwordTextField);
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.weightx = 1; // to fill whole width
+		registerJPanel.add(passwordTextField, gbc);
 
-        JButton button_register = new JButton("Register");
+		// Keywords label
+		JLabel keywordsLabel = new JLabel("Keywords:");
+		keywordsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(keywordsLabel, gbc);
+		// Keywords textbox
+		JTextField keywordsTextField = new JTextField();
+		keywordsLabel.setLabelFor(keywordsTextField);
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.weightx = 1; // to fill whole width
+		registerJPanel.add(keywordsTextField, gbc);
 
+		// resume label
+		JLabel resumeLabel = new JLabel("Resume/CV:");
+		resumeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(resumeLabel, gbc);
+		// resume textArea
+		JTextArea resumeTextArea = new JTextArea("Type your resume here ... ");
+		resumeTextArea.setRows(25);
+		resumeLabel.setLabelFor(resumeTextArea);
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.weightx = 1; // to fill whole width
+		registerJPanel.add(resumeTextArea, gbc);
 
-        comboBox_userType.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (comboBox_userType.getSelectedIndex() == 1) {
-                    comboBox_keywordss.setVisible(false);
-                } else {
-                    comboBox_keywordss.setVisible(true);
-                }
-            }
-        });
+		// Submit button
+		JButton submitButton = new JButton("Submit");
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 1; // to not fill whole width
+		registerJPanel.add(submitButton, gbc);
 
-        textField_userName.setSize(new Dimension(200, 40));
-        textField_password.setSize(new Dimension(200, 40));
+		submitButton.addActionListener(new ActionListener() {
+			/**
+			 * Action performed.
+			 *
+			 * @param e the e
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String name = nameTextField.getText().trim();
+				String userName = userNameTextField.getText().trim();
+				String password = passwordTextField.getText().trim();
+				String keywords = keywordsTextField.getText().trim();
+				String resume = resumeTextArea.getText().trim();
+				if (User.CLIENT.equals(type)) {
+					if (name != null && userName != null && password != null && name.length() > 0
+							&& userName.length() > 0 && password.length() > 0) {
+						RegistrationGUI.this.register(type, name, userName, password, null, null);
+					} else {
+						showMissingData();
+					}
+				} else {
+					if (name != null && userName != null && password != null && keywords != null && name.length() > 0
+							&& userName.length() > 0 && password.length() > 0 && keywords.length() > 0) {
+						RegistrationGUI.this.register(type, name, userName, password, keywords, resume);
+					} else {
+						showMissingData();
+					}
+				}
 
-        JTextArea jTextArea = new JTextArea("Agreement: This is the demo for the ABSE course");
-        jTextArea.setRows(30);
-        JCheckBox jCheckBox_agree = new JCheckBox("I agree");
+			}
+		});
 
+		// Adding Listener to JButtons.
+		jRadioButton1.addActionListener(new ActionListener() {
+			// Anonymous class.
+			public void actionPerformed(ActionEvent e) {
+				if (jRadioButton1.isSelected()) {
+					type = User.PROVIDER;
+					keywordsTextField.setEnabled(true);
+					resumeTextArea.setEnabled(true);
+				}
+				System.out.println("Type: " + type);
+			}
+		});
+		jRadioButton2.addActionListener(new ActionListener() {
+			// Anonymous class.
+			public void actionPerformed(ActionEvent e) {
+				if (jRadioButton2.isSelected()) {
+					type = User.CLIENT;
+					keywordsTextField.setEnabled(false);
+					resumeTextArea.setEnabled(false);
+				}
+				System.out.println("Type: " + type);
+			}
+		});
 
-        button_register.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!jCheckBox_agree.isSelected()) {
-                    JOptionPane.showMessageDialog(jFrame, "Please read the agreement and select I agree", "ERROR",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                systemAgent.register(textField_userName.getText(), textField_password.getText(), comboBox_userType.getSelectedItem().toString(), comboBox_keywordss.getSelectedItem().toString());
-                System.out.println("User: " + textField_userName.getText() + " is registered successfully");
-                dispose();
-            }
-        });
-//        textField_userName.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        textField_password.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        comboBox_userType.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        comboBox_keywordss.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        jTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        jCheckBox_agree.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        button_register.setAlignmentX(Component.CENTER_ALIGNMENT);
+		return registerJPanel;
+	}
 
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(textField_userName)
-                        .addComponent(textField_password)
-                        .addComponent(button_register)
-                        .addComponent(jTextArea))
-                        .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(comboBox_userType)
-                                        .addComponent(comboBox_keywordss)
-                                        .addComponent(jCheckBox_agree))
+	/**
+	 * Register.
+	 *
+	 * @param type     the type
+	 * @param name     the name
+	 * @param userName the user name
+	 * @param password the password
+	 * @param keywords the keywords
+	 * @param resume   the resume
+	 */
+	public void register(String type, String name, String userName, String password, String keywords, String resume) {
+		if ("P".equals(type)) {
+			// add a provider
+			DBUtils.addProvider(name, userName, password, false, 0);
+			int id = DBUtils.getUserId(userName);
+			DBUtils.addResume(id, keywords, resume);
+		} else {
+			// add a client
+			DBUtils.addClient(name, userName, password, 0);
+		}
+		this.hideGUI();
+	}
 
-        ));
-        layout.setVerticalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(textField_userName)
-                        .addComponent(comboBox_userType))
-                .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(textField_password)
-                                .addComponent(comboBox_keywordss))
-                                        .addComponent(jTextArea)
-                                        .addComponent(jCheckBox_agree)
-                                        .addComponent(button_register)
-        ));
+	public void showMissingData() {
+		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
 
+	/**
+	 * Show GUI.
+	 */
+	public void showGUI() {
+		this.jFrame.setVisible(true);
+	}
 
+	public void hideGUI() {
+		this.jFrame.setVisible(false);
+	}
 
+	/**
+	 * Dispose.
+	 */
+	public void dispose() {
+		this.jFrame.dispose();
+	}
 
-
-       this.jFrame.add(jpanel);
-    }
-
-    public void showGUI() {
-        this.jFrame.setVisible(true);
-    }
-
-    public void dispose() {
-        this.jFrame.dispose();
-    }
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
+	public static void main(String[] args) {
+		RegistrationGUI registrationGUI = new RegistrationGUI();
+		registrationGUI.showGUI();
+	}
 }
