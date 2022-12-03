@@ -164,7 +164,7 @@ public class MainGUI {
         guestBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GuestGUI guestGUI = new GuestGUI(SystemAgent.getProviders());
+                GuestGUI guestGUI = new GuestGUI();
                 guestGUI.showGUI();
             }
         });        

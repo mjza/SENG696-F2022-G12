@@ -35,8 +35,6 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.List;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class GuestGUI.
  */
@@ -45,27 +43,21 @@ public class GuestGUI {
 	/** The j frame. */
 	private JFrame jFrame;
 
-	/** The providers. */
-	private List<Provider> providers;
-
 	/** The providers list. */
 	private JTable providersJTable;
 
 	/**
 	 * Instantiates a new guest GUI.
-	 *
-	 * @param providers the providers
 	 */
-	public GuestGUI(List<Provider> providers) {
-		// Set the class providers
-		this.providers = providers;
+	public GuestGUI() {
 		// The main frame
 		this.jFrame = new JFrame("B2B Match Making System: Guest user");
 		// Set size of the frame to full screen
+		this.jFrame.setSize(1024, 768);
 		this.jFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// Set the panel inside the frame
-		jFrame.getContentPane().add(this.getGuestJPanel(), BorderLayout.CENTER);
+		this.jFrame.getContentPane().add(this.getGuestJPanel(), BorderLayout.CENTER);
 	}
 
 	/**
@@ -74,26 +66,41 @@ public class GuestGUI {
 	 * @return the guest J panel
 	 */
 	private JPanel getGuestJPanel() {
-		
+
 		JPanel guestJPanel = new JPanel();
 		guestJPanel.setLayout(new BorderLayout());
-		
+
 		JPanel providerPanel = new JPanel();
-        providerPanel.add(new JLabel("List of Providers:"), BorderLayout.NORTH);
+		providerPanel.setLayout(new BorderLayout());
+		providerPanel.add(new JLabel("List of Providers:"), BorderLayout.NORTH);
 		String[] columnNames = Provider.getColumns();
 		TableModel tableModel = new DefaultTableModel(columnNames, 0);
 		JTable providersJTable = new JTable(tableModel);
-        providersJTable.setFillsViewportHeight(true); 
-        this.providersJTable = providersJTable;
-        this.updateTableData(null);
-        //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(providersJTable);
-        //Add the scroll pane to center of guest panel.
-      	providerPanel.add(scrollPane, BorderLayout.CENTER); 
+		providersJTable.setFillsViewportHeight(true);
+		this.providersJTable = providersJTable;
+		this.updateTableData(null);
+		// Create the scroll pane and add the table to it.
+		JScrollPane scrollPane = new JScrollPane(providersJTable);
+		// Add the scroll pane to center of guest panel.
+		providerPanel.add(scrollPane, BorderLayout.CENTER);
 		guestJPanel.add(providerPanel, BorderLayout.CENTER);
-		
-		HintTextField searchTextField = new HintTextField("Search Provider");
-		guestJPanel.add(searchTextField, BorderLayout.NORTH);
+		// A new panel for
+		JPanel searchPanel = new JPanel();
+		searchPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		JLabel label = new JLabel("Filter providers:");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		searchPanel.add(label, gbc);
+		JTextField searchTextField = new JTextField();
+		label.setLabelFor(searchTextField);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		searchPanel.add(searchTextField, gbc);
+		guestJPanel.add(searchPanel, BorderLayout.SOUTH);
 		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
 			/**
 			 * Filter providers.
@@ -108,34 +115,49 @@ public class GuestGUI {
 					updateTableData(searchedText);
 				}
 			}
-			
+
+			/**
+			 * Update on Changed.
+			 *
+			 * @param e the e
+			 */
 			public void changedUpdate(DocumentEvent e) {
 				this.filterProviders(e);
 			}
 
+			/**
+			 * Update on Removes.
+			 *
+			 * @param e the e
+			 */
 			public void removeUpdate(DocumentEvent e) {
 				this.filterProviders(e);
 			}
 
+			/**
+			 * Update on Insert
+			 *
+			 * @param e the e
+			 */
 			public void insertUpdate(DocumentEvent e) {
 				this.filterProviders(e);
 			}
-			
+
 		});
-			return guestJPanel;
+		return guestJPanel;
 	}
-	
-/**
+
+	/**
 	 * Update table data.
 	 *
 	 * @param filter the filter
 	 */
-		private void updateTableData(String filter) {
-		if(this.providersJTable != null) {
+	private void updateTableData(String filter) {
+		if (this.providersJTable != null) {
 			List<Provider> providers = SystemAgent.searchProvider(filter);
 			String[] columnNames = Provider.getColumns();
 			String[][] stringArray = providers.stream().map(p -> p.toArray()).toArray(String[][]::new);
-			DefaultTableModel tableModel = (DefaultTableModel) this.providersJTable.getModel();			
+			DefaultTableModel tableModel = (DefaultTableModel) this.providersJTable.getModel();
 			tableModel.setDataVector(stringArray, columnNames);
 			tableModel.fireTableDataChanged();
 		}
@@ -145,7 +167,7 @@ public class GuestGUI {
 	 * Show GUI.
 	 */
 	public void showGUI() {
-		jFrame.setVisible(true);
+		this.jFrame.setVisible(true);
 	}
 
 	/**
