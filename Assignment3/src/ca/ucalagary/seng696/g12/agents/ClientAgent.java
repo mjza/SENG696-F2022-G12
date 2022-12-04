@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import ca.ucalagary.seng696.g12.dictionary.Antalogy;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.gui.ClientGUI;
-import ca.ucalagary.seng696.g12.settings.Constants;
 
 /**
  * The Class ClientAgent.
@@ -82,23 +82,23 @@ public class ClientAgent extends EnhancedAgent {
                     Project project = null;
                     String projectName, progressText, chatMessage;
                    switch (msg.getPerformative()){
-                        case Constants.ACCEPT:
+                        case Antalogy.ACLMESSAGE_ACCEPT:
                             content = null;
                             c = msg.getContent().split(":");
                             project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),null);
 
-                            reply = new ACLMessage(Constants.CHAT);
+                            reply = new ACLMessage(Antalogy.ACLMESSAGE_CHAT);
                             reply.addReceiver(msg.getSender());
                             content = project.getContract();
                             GUI.addProject(project);
-                        case Constants.REFUSE:
+                        case Antalogy.ACLMESSAGE_REFUSE:
                             content = null;
                             c = msg.getContent().split(":");
                             project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),null);
 
                             content = project.getRejectionMessage(msg.getSender());
                         System.out.println("" + msg.getSender().getLocalName() + " responded to the proposal for " + msg.getContent());
-                    case (Constants.CHAT):
+                    case (Antalogy.ACLMESSAGE_CHAT):
                         projectName = msg.getContent().split(":")[0];
                         chatMessage = msg.getContent().split(":")[1];
                         for (Project project_iter : projects){
@@ -106,7 +106,7 @@ public class ClientAgent extends EnhancedAgent {
                                 project_iter.chatUpdate(chatMessage);
                             }
                         }
-                    case (Constants.PROGRESS):
+                    case (Antalogy.ACLMESSAGE_PROGRESS):
                         projectName = msg.getContent().split(":")[0];
                         progressText = msg.getContent().split(":")[1];
                         int progress = Integer.parseInt(progressText);
@@ -129,8 +129,8 @@ public class ClientAgent extends EnhancedAgent {
      * @param provider the provider
      */
     public void sendProposal(Project p, AID provider) {
-        ACLMessage message = new ACLMessage(Constants.OFFER);
-        message.setConversationId(Constants.PROJECT_STARTER);
+        ACLMessage message = new ACLMessage(Antalogy.ACLMESSAGE_OFFER);
+        message.setConversationId(Antalogy.PROPOSAL);
 
         message.setContent(p.toString());
         System.out.println("Proposing " + p.toString() + " to " + provider.getLocalName());
@@ -148,7 +148,7 @@ public class ClientAgent extends EnhancedAgent {
      */
     public void sendMessage(AID provider, String p, String projectName, int performative) {
         ACLMessage message = new ACLMessage(performative);
-        message.setConversationId(Constants.CLIENT_SEND_MESSAGE);
+        message.setConversationId(Antalogy.CLIENT_TO_PROVIDER);
         message.setContent(projectName + ":" + p);
         message.addReceiver(provider);
         send(message);
@@ -161,8 +161,8 @@ public class ClientAgent extends EnhancedAgent {
      * @param rate the rate
      */
     public void sendRating(AID provider, String rate) {
-        ACLMessage message = new ACLMessage(Constants.RATE);
-        message.setConversationId(Constants.CONVERSATION);
+        ACLMessage message = new ACLMessage(Antalogy.ACLMESSAGE_RATE);
+        message.setConversationId(Antalogy.NEGOTIATION);
         message.setContent(rate);
         message.addReceiver(provider);
         send(message);
@@ -176,8 +176,8 @@ public class ClientAgent extends EnhancedAgent {
     public void markProjectDone(Project project) {
         System.out.println("MARKING DONE " + project.getProvider().getLocalName());
         
-    	ACLMessage message = new ACLMessage(Constants.PAYMENT);
-        message.setConversationId(Constants.CONVERSATION);
+    	ACLMessage message = new ACLMessage(Antalogy.ACLMESSAGE_PAYMENT);
+        message.setConversationId(Antalogy.NEGOTIATION);
         message.setContent(project.getName()+":"+70*project.getBid()/100);
         message.addReceiver(project.getProvider());
         send(message);
