@@ -32,7 +32,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
-import ca.ucalagary.seng696.g12.dictionary.Anthology;
+import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Serializer;
 import jade.core.Agent;
@@ -100,7 +100,7 @@ public class MessageGUI {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					reply.setContent(content);
-					reply.setPerformative(Anthology.ACLMESSAGE_ACCEPT);
+					reply.setPerformative(Ontology.ACLMESSAGE_ACCEPT);
 					myAgent.send(reply);
 					String c[] = content.split(":");
 					Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),
@@ -113,7 +113,7 @@ public class MessageGUI {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					reply.setContent(content);
-					reply.setPerformative(Anthology.ACLMESSAGE_REFUSE);
+					reply.setPerformative(Ontology.ACLMESSAGE_REFUSE);
 					myAgent.send(reply);
 					dispose();
 				}

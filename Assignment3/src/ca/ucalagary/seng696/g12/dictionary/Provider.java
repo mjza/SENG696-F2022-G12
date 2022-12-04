@@ -80,7 +80,16 @@ public class Provider extends User {
 	 * @return the checks if is premium
 	 */
 	public Boolean isPremium() {
-		return isPremium;
+		return this.isPremium;
+	}
+	
+	/**
+	 * Gets the premium. Used for sorting.
+	 *
+	 * @return the premium
+	 */
+	public int getPremium() {
+		return isPremium ? 1 : 0;
 	}
 
 	/**
@@ -117,13 +126,6 @@ public class Provider extends User {
 	 */
 	public void addProject(Project project) {
 		this.projects.add(project);
-	}
-
-	/**
-	 * Sets the premium.
-	 */
-	public void setPremium() {
-		this.isPremium = true;
 	}
 
 	/**
@@ -166,9 +168,10 @@ public class Provider extends User {
 	 *
 	 * @return the columns
 	 */
-	public static String[] getColumns() {
-		String[] columnNames = { "ID", "Name", "Email", "Website", "Keywords", "Is Premium?", "Rating" };
-		return columnNames;
+	public static String[] getColumns(boolean isGuest) {
+		String[] guestColumnNames = { "ID", "Name", "Email", "Website", "Keywords", "Is Premium?", "Rating" };
+		String[] clientColumnNames = { "ID", "Name", "Email", "Website", "Keywords", "Is Premium?", "Rating", "Compensation" };
+		return isGuest ? guestColumnNames : clientColumnNames;
 	}
 
 	/**
@@ -176,10 +179,12 @@ public class Provider extends User {
 	 *
 	 * @return the data
 	 */
-	public String[] toArray() {
-		String[] data = { String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getWebsite(),
+	public String[] toArray(boolean isGuest) {
+		String[] guestData = { String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getWebsite(),
 				this.getKeywords(), (this.isPremium() ? "Yes" : "No"), String.valueOf(this.getRating()) };
-		return data;
+		String[] clientData = { String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getWebsite(),
+				this.getKeywords(), (this.isPremium() ? "Yes" : "No"), String.valueOf(this.getRating()),  String.valueOf(this.getCompensation())};
+		return isGuest ? guestData : clientData;
 	}
 
 	/**

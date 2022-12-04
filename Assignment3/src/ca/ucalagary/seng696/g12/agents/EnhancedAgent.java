@@ -32,7 +32,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
-import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 
 import java.util.HashSet;
@@ -46,7 +45,7 @@ public class EnhancedAgent extends Agent {
 	 * The serial version must be increased by each update.
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * Agent exist.
 	 *
@@ -88,40 +87,40 @@ public class EnhancedAgent extends Agent {
 	 * @param serviceName the service name
 	 * @return the sets the
 	 */
-	protected Set<AID> searchForService(String serviceName) {
-		Set<AID> foundAgents = new HashSet<>();
+	protected Set<AID> searchForService(String serviceName) {		
+		Set<AID> agents = new HashSet<>();		
 		DFAgentDescription dfd = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
+		SearchConstraints sc = new SearchConstraints();		
 		sd.setType(serviceName.toLowerCase());
 		dfd.addServices(sd);
-		SearchConstraints sc = new SearchConstraints();
-		sc.setMaxResults(Long.valueOf(-1));
-		try {
+		sc.setMaxDepth(1L);
+		sc.setMaxResults(-1L);	
+		try {			
 			DFAgentDescription[] results = DFService.search(this, dfd, sc);
 			for (DFAgentDescription result : results) {
-				foundAgents.add(result.getName());
-			}
-			return foundAgents;
-		} catch (FIPAException ex) {
+				agents.add(result.getName());
+			}			
+			return agents;
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;
 		}
-	}	
+	}
 
 	/**
 	 * Creates the agent.
 	 *
-	 * @param name      the name
-	 * @param className the class name
-	 * @throws ControllerException
+	 * @param agentName  the agent name
+	 * @param agentClass the agent class
 	 */
-	protected void createAgent(String name, Class<?> agentClass) {
+	protected void createAgent(String agentName, Class<?> agentClass) {
 		String className = agentClass.getCanonicalName();
-		System.out.println("Creating the agent " + name + " as " + className);
-		AID agentID = new AID(name, AID.ISLOCALNAME);
+		System.out.println("Creating the agent " + agentName + " as " + className);
+		AID agentID = new AID(agentName, AID.ISLOCALNAME);
 		AgentContainer controller = getContainerController();
 		try {
-			AgentController agent = controller.createNewAgent(name, className, null);
+			AgentController agent = controller.createNewAgent(agentName, className, null);
 			agent.start();
 			System.out.println("Agent created: " + agentID);
 		} catch (StaleProxyException e) {
@@ -144,7 +143,7 @@ public class EnhancedAgent extends Agent {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Take down the agent.
 	 */
@@ -155,6 +154,18 @@ public class EnhancedAgent extends Agent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Gets the user name.
+	 *
+	 * @return the user name
+	 */
+	public String getUserName() {
+		if (null != this.getLocalName() && this.getLocalName().split(":").length > 1) {
+			return this.getLocalName().split(":")[1];
+		}
+		return null;
 	}
 
 }

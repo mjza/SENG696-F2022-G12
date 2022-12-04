@@ -32,8 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import ca.ucalagary.seng696.g12.dictionary.Anthology;
+import ca.ucalagary.seng696.g12.dictionary.Ontology;
+import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Project;
+import ca.ucalagary.seng696.g12.dictionary.Provider;
 import ca.ucalagary.seng696.g12.dictionary.Serializer;
 import ca.ucalagary.seng696.g12.gui.ClientGUI;
 
@@ -49,6 +51,8 @@ public class ClientAgent extends EnhancedAgent {
 	/** The projects. */
 	protected List<Project> projects = new ArrayList<>();
 
+	private Set<AID> providersAID = null;
+
 	/** The client GUI. */
 	ClientGUI clientGUI;
 
@@ -58,6 +62,10 @@ public class ClientAgent extends EnhancedAgent {
 	@Override
 	protected void setup() {
 		System.out.println("Client Agent: " + getAID().getName() + " is ready.");
+		// register the agent service in yellow page
+		this.registerService("service-consumer");
+		// update list of providers 
+		this.updateProviders();
 		// bind a GUI and show it
 		clientGUI = new ClientGUI(this);
 		clientGUI.showGUI();
@@ -76,36 +84,35 @@ public class ClientAgent extends EnhancedAgent {
 				ACLMessage msg, reply = null;
 				msg = myAgent.receive();
 				if (msg != null) {
-					System.out.println(
-							"A new message received for client:" + getAID().getName() + " " + msg.getPerformative());
+					System.out.println("A new message received for client:" + getAID().getName() + ", performative: "
+							+ msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
 					String projectName, progressText, chatMessage;
-					switch (msg.getPerformative()) 
-					{
-					case Anthology.ACLMESSAGE_REFUSE:
+					switch (msg.getPerformative()) {
+					case Ontology.ACLMESSAGE_REFUSE:
 						break;
-					case Anthology.ACLMESSAGE_ACCEPT:
-						Project project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]), msg.getSender(),
-								myAgent.getAID(), null);
-						reply = new ACLMessage(Anthology.ACLMESSAGE_CHAT);
+					case Ontology.ACLMESSAGE_ACCEPT:
+						Project project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]),
+								msg.getSender(), myAgent.getAID(), null);
+						reply = new ACLMessage(Ontology.ACLMESSAGE_CHAT);
 						reply.addReceiver(msg.getSender());
 						clientGUI.addProject(project);
 						break;
-					case (Anthology.ACLMESSAGE_CHAT):
+					case (Ontology.ACLMESSAGE_CHAT):
 						projectName = contents[0];
 						chatMessage = contents[1];
-						for (int i = 0; i< projects.size(); i++) {
+						for (int i = 0; i < projects.size(); i++) {
 							project = projects.get(i);
 							if (project.getName().equals(projectName)) {
 								project.chatUpdate(chatMessage);
 							}
 						}
 						break;
-					case (Anthology.ACLMESSAGE_PROGRESS):
+					case (Ontology.ACLMESSAGE_PROGRESS):
 						projectName = contents[0];
 						progressText = contents[1];
 						int progress = Integer.parseInt(progressText);
-						for (int i = 0; i< projects.size(); i++) {
+						for (int i = 0; i < projects.size(); i++) {
 							project = projects.get(i);
 							if (project.getName().equals(projectName)) {
 								project.setProgress(progress);
@@ -123,20 +130,37 @@ public class ClientAgent extends EnhancedAgent {
 	 *
 	 * @param p        the p
 	 * @param provider the provider
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void sendProposal(Project project, AID provider) {
-		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_OFFER);
-		message.setConversationId(Anthology.PROPOSAL);
+		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_OFFER);
+		message.setConversationId(Ontology.PROPOSAL);
 		try {
 			String serializedProject = Serializer.toString(project);
-			message.setContent(serializedProject);	
+			message.setContent(serializedProject);
 			message.addReceiver(provider);
 			send(message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
+	}
+
+	/**
+	 * Gets the client.
+	 *
+	 * @return the client
+	 */
+	public Client getClient() {
+		String userName = this.getUserName();
+		return SystemAgent.getClient(userName);
+	}
+
+	/**
+	 * updates the providers list.
+	 */
+	public void updateProviders() {
+		this.providersAID = searchForService("service-provider");
 	}
 
 	/**
@@ -144,8 +168,18 @@ public class ClientAgent extends EnhancedAgent {
 	 *
 	 * @return the providers
 	 */
-	public Set<AID> getProviders() {
-		Set<AID> providers = searchForService("ProvidingService");
+
+	public List<Provider> getProviders(String filter) {
+		List<Provider> providers = new ArrayList<>();
+		if (null != providersAID)
+			for (AID providerAID : providersAID) {
+				if (null != providerAID.getLocalName() && providerAID.getLocalName().split(":").length > 1) {
+					String providerUserName = providerAID.getLocalName().split(":")[1];
+					Provider provider = SystemAgent.getProvider(providerUserName);
+					if (filter == null || filter.trim().length() == 0 || provider.getKeywords().contains(filter))
+						providers.add(provider);
+				}
+			}
 		return providers;
 	}
 
@@ -168,7 +202,7 @@ public class ClientAgent extends EnhancedAgent {
 	 */
 	public void sendMessage(AID provider, String p, String projectName, int performative) {
 		ACLMessage message = new ACLMessage(performative);
-		message.setConversationId(Anthology.CLIENT_TO_PROVIDER);
+		message.setConversationId(Ontology.CLIENT_TO_PROVIDER);
 		message.setContent(projectName + ":" + p);
 		message.addReceiver(provider);
 		send(message);
@@ -181,8 +215,8 @@ public class ClientAgent extends EnhancedAgent {
 	 * @param rate     the rate
 	 */
 	public void sendRating(AID provider, String rate) {
-		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_RATE);
-		message.setConversationId(Anthology.NEGOTIATION);
+		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_RATE);
+		message.setConversationId(Ontology.NEGOTIATION);
 		message.setContent(rate);
 		message.addReceiver(provider);
 		send(message);
@@ -196,8 +230,8 @@ public class ClientAgent extends EnhancedAgent {
 	public void markProjectAsDone(Project project) {
 		System.out.println("MARKING DONE " + project.getProvider().getLocalName());
 
-		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_PAYMENT);
-		message.setConversationId(Anthology.NEGOTIATION);
+		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_PAYMENT);
+		message.setConversationId(Ontology.NEGOTIATION);
 		message.setContent(project.getName() + ":" + 70 * project.getBid() / 100);
 		message.addReceiver(project.getProvider());
 		send(message);

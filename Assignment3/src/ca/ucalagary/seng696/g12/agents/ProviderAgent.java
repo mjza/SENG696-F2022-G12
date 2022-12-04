@@ -31,7 +31,7 @@ import jade.wrapper.ControllerException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ucalagary.seng696.g12.dictionary.Anthology;
+import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 import ca.ucalagary.seng696.g12.dictionary.User;
@@ -67,7 +67,7 @@ public class ProviderAgent extends EnhancedAgent {
 	protected void setup() {
 		System.out.println("Provider Agent: " + getAID().getName() + " is ready.");
 		// register the agent service in yellow page
-		this.registerService("ProvidingService");
+		this.registerService("service-provider");
 		// addBehaviour(new MessageHandlingBehaviour(this));
 		// in a cycle listen for messages
 		this.addBehaviour(new CyclicBehaviour() {
@@ -88,8 +88,8 @@ public class ProviderAgent extends EnhancedAgent {
 							"A new message received for provider:" + getAID().getName() + " " + msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
 					String projectName, chatMessage;
-					if (msg.getPerformative() == Anthology.ACLMESSAGE_PAYMENT
-							|| msg.getPerformative() == Anthology.ACLMESSAGE_DONE) {
+					if (msg.getPerformative() == Ontology.ACLMESSAGE_PAYMENT
+							|| msg.getPerformative() == Ontology.ACLMESSAGE_DONE) {
 						projectName = contents[0];
 						chatMessage = contents[1];
 					} else {
@@ -97,19 +97,19 @@ public class ProviderAgent extends EnhancedAgent {
 						chatMessage = "NA";
 					}
 					switch (msg.getPerformative()) {
-					case Anthology.ACLMESSAGE_OFFER:
+					case Ontology.ACLMESSAGE_OFFER:
 						reply = msg.createReply();
 						MessageGUI msgGUI = new MessageGUI(myAgent, reply, msg, true);
 						msgGUI.showGUI();
 						break;
-					case Anthology.ACLMESSAGE_CHAT:
+					case Ontology.ACLMESSAGE_CHAT:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.chatUpdate(chatMessage);
 							}
 						}
 						break;
-					case Anthology.ACLMESSAGE_PAYMENT:
+					case Ontology.ACLMESSAGE_PAYMENT:
 						for (Project project : projects) {
 							if (project.getName().equals(contents[0])) {
 								project.setDone();
@@ -117,7 +117,7 @@ public class ProviderAgent extends EnhancedAgent {
 						}
 						providerGUI.updateProjects(projects);
 						break;
-					case Anthology.ACLMESSAGE_DONE:
+					case Ontology.ACLMESSAGE_DONE:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.disposeGUI();
@@ -144,7 +144,7 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @param conversationID the conversation ID
 	 */
 	public void sendMessage(AID client, String messageText, String projectName, String conversationID) {
-		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_CHAT);
+		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_CHAT);
 		message.setConversationId(conversationID);
 		message.setContent(projectName + ":" + messageText);
 		message.addReceiver(client);
@@ -173,7 +173,7 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @return the provider
 	 */
 	public Provider getProvider() {
-		String userName = this.getLocalName().split(":")[1];
+		String userName = this.getUserName();
 		return SystemAgent.getProvider(userName);
 	}
 
@@ -185,7 +185,7 @@ public class ProviderAgent extends EnhancedAgent {
 	public Boolean goPremium() {
 
 		Provider p = getProvider();
-		p.setPremium();
+		p.setPremium(true);
 		providerGUI.updatePremium();
 		return true;
 	}
@@ -196,10 +196,10 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @throws ControllerException
 	 */
 	public void withdraw() {
-		Provider p = getProvider();
-		p.setType(User.PROVIDER);
+		Provider provider = getProvider();
+		provider.setType(User.PROVIDER);
 		providerGUI.dispose();
-		createAgent("Client:" + p.getUsername(), ClientAgent.class);
+		createAgent("Client:" + provider.getUsername(), ClientAgent.class);
 		takeDown();
 	}
 }

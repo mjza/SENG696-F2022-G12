@@ -24,9 +24,9 @@
 package ca.ucalagary.seng696.g12.dictionary;
 
 /**
- * The Class Anthology.
+ * The Class Ontology.
  */
-public class Anthology {
+public class Ontology {
     
     /** The Constant NEGOTIATION. */
     public final static String NEGOTIATION = "BIDING";
@@ -62,7 +62,7 @@ public class Anthology {
     public final static int ACLMESSAGE_PAYMENT = 5;
     
     /** The Constant ACLMESSAGE_PROGRESS. */
-    public final static int ACLMESSAGE_PROGRESS = 7;
+    public final static int ACLMESSAGE_PROGRESS = 9;
     
     /** The Constant ACLMESSAGE_DONE. */
     public final static int ACLMESSAGE_DONE = 8;

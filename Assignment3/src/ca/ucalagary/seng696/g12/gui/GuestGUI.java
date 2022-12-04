@@ -75,12 +75,12 @@ public class GuestGUI {
 		JPanel providerPanel = new JPanel();
 		providerPanel.setLayout(new BorderLayout());
 		providerPanel.add(new JLabel("List of Providers:"), BorderLayout.NORTH);
-		String[] columnNames = Provider.getColumns();
+		String[] columnNames = Provider.getColumns(true);
 		TableModel tableModel = new DefaultTableModel(columnNames, 0);
 		JTable providersJTable = new JTable(tableModel);
 		providersJTable.setFillsViewportHeight(true);
 		this.providersJTable = providersJTable;
-		this.updateTableData(null);
+		this.updateProvidersJTableData(null);
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(providersJTable);
 		// Add the scroll pane to center of guest panel.
@@ -112,9 +112,9 @@ public class GuestGUI {
 			private void filterProviders(DocumentEvent e) {
 				String searchedText = searchTextField.getText();
 				if (searchedText.isEmpty()) {
-					updateTableData(null);
+					updateProvidersJTableData(null);
 				} else {
-					updateTableData(searchedText);
+					updateProvidersJTableData(searchedText);
 				}
 			}
 
@@ -154,11 +154,11 @@ public class GuestGUI {
 	 *
 	 * @param filter the filter
 	 */
-	private void updateTableData(String filter) {
+	private void updateProvidersJTableData(String filter) {
 		if (this.providersJTable != null) {
 			List<Provider> providers = SystemAgent.searchProvider(filter);
-			String[] columnNames = Provider.getColumns();
-			String[][] stringArray = providers.stream().map(p -> p.toArray()).toArray(String[][]::new);
+			String[] columnNames = Provider.getColumns(true);
+			String[][] stringArray = providers.stream().map(provider -> provider.toArray(true)).toArray(String[][]::new);
 			DefaultTableModel tableModel = (DefaultTableModel) this.providersJTable.getModel();
 			tableModel.setDataVector(stringArray, columnNames);
 			tableModel.fireTableDataChanged();
