@@ -26,6 +26,7 @@ package ca.ucalagary.seng696.g12.agents;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.ControllerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class ProviderAgent extends EnhancedAgent {
 	private static final long serialVersionUID = 1L;
 
 	/** The projects. */
-	private List<Project> projects;
+	private List<Project> projects = new ArrayList<>();
 
 	/** The ratings. */
 	ArrayList<Integer> ratings = new ArrayList<>();
@@ -67,10 +68,9 @@ public class ProviderAgent extends EnhancedAgent {
 	 */
 	@Override
 	protected void setup() {
-		System.out.println("SETTING UP A PROVIDER AGENT");
-		projects = new ArrayList<>();
-		register("project-provide");
-		addBehaviour(new CyclicBehaviour() {
+		System.out.println("A provider is setting up.");
+		this.registerService("project-provide");
+		this.addBehaviour(new CyclicBehaviour() {
 			/**
 			 * The serial version must be increased by each update.
 			 */
@@ -211,12 +211,13 @@ public class ProviderAgent extends EnhancedAgent {
 
 	/**
 	 * Withdraw.
+	 * @throws ControllerException 
 	 */
 	public void withdraw() {
 		Provider p = getProvider();
 		p.setType(User.PROVIDER);
 		providerGUI.dispose();
-		createAgent("Client:" + p.getUsername(), "ca.ucalagary.seng696.g12.agents.ClientAgent");
+		createAgent("client:" + p.getUsername(), ClientAgent.class);
 		takeDown();
 	}
 }

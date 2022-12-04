@@ -203,4 +203,12 @@ public class MainGUI {
         MainGUI userGUI = new MainGUI(null);
         userGUI.showGUI();
     }
+
+	/**
+	 * Show agent already exist.
+	 */
+	public void showAgentAlreadyExist() {
+		JOptionPane.showMessageDialog(jFrame, "An agent with this username already exist.", "ERROR",
+                JOptionPane.ERROR_MESSAGE);
+	}
 }

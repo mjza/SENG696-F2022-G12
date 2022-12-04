@@ -32,6 +32,8 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
+import jade.wrapper.ControllerException;
+import jade.wrapper.StaleProxyException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,51 +48,27 @@ public class EnhancedAgent extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Search for service.
+	 * Agent exist.
 	 *
-	 * @param serviceName the service name
-	 * @return the sets the
+	 * @param agentName the agent name
+	 * @return true, if successful
 	 */
-	protected Set<AID> searchForService(String serviceName) {
-		System.out.println("Enhanced agent launched");
-		Set<AID> foundAgents = new HashSet<>();
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType(serviceName.toLowerCase());
-		dfd.addServices(sd);
-
-		SearchConstraints sc = new SearchConstraints();
-		sc.setMaxResults(Long.valueOf(-1));
-
+	public boolean agentExist(String agentName) {
+		AgentContainer controller = getContainerController();
 		try {
-			DFAgentDescription[] results = DFService.search(this, dfd, sc);
-			for (DFAgentDescription result : results) {
-				foundAgents.add(result.getName());
-			}
-			return foundAgents;
-		} catch (FIPAException ex) {
-			ex.printStackTrace();
-			return null;
+			controller.getAgent(agentName);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 
 	/**
-	 * Take down.
-	 */
-	protected void takeDown() {
-		System.out.println("Taking down" + getLocalName());
-		try {
-			DFService.deregister(this);
-		} catch (Exception ex) {
-		}
-	}
-
-	/**
-	 * Register.
+	 * Register a service.
 	 *
 	 * @param serviceName the service name
 	 */
-	protected void register(String serviceName) {
+	protected void registerService(String serviceName) {
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -105,38 +83,79 @@ public class EnhancedAgent extends Agent {
 	}
 
 	/**
+	 * Search for service.
+	 *
+	 * @param serviceName the service name
+	 * @return the sets the
+	 */
+	protected Set<AID> searchForService(String serviceName) {
+		Set<AID> foundAgents = new HashSet<>();
+		DFAgentDescription dfd = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType(serviceName.toLowerCase());
+		dfd.addServices(sd);
+		SearchConstraints sc = new SearchConstraints();
+		sc.setMaxResults(Long.valueOf(-1));
+		try {
+			DFAgentDescription[] results = DFService.search(this, dfd, sc);
+			for (DFAgentDescription result : results) {
+				foundAgents.add(result.getName());
+			}
+			return foundAgents;
+		} catch (FIPAException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}	
+
+	/**
 	 * Creates the agent.
 	 *
 	 * @param name      the name
 	 * @param className the class name
+	 * @throws ControllerException
 	 */
-	protected void createAgent(String name, String className) {
-		System.out.println("creating agent " + name + " " + className);
+	protected void createAgent(String name, Class<?> agentClass) {
+		String className = agentClass.getCanonicalName();
+		System.out.println("Creating the agent " + name + " as " + className);
 		AID agentID = new AID(name, AID.ISLOCALNAME);
 		AgentContainer controller = getContainerController();
 		try {
 			AgentController agent = controller.createNewAgent(name, className, null);
 			agent.start();
 			System.out.println("Agent created: " + agentID);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (StaleProxyException e) {
+			System.err.println("The agent is already exist!");
 		}
 	}
 
 	/**
 	 * Kill agent.
 	 *
-	 * @param name the name
+	 * @param agentName the name
 	 */
-	public void killAgent(String name) {
-		AID agentID = new AID(name, AID.ISLOCALNAME);
+	public void killAgent(String agentName) {
+		AID agentID = new AID(agentName, AID.ISLOCALNAME);
 		AgentContainer controller = getContainerController();
 		try {
-			AgentController agent = controller.getAgent(name);
+			AgentController agent = controller.getAgent(agentName);
 			agent.kill();
 			System.out.println("Agent killed: " + agentID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Take down the agent.
+	 */
+	protected void takeDown() {
+		System.out.println("Taking down the agent " + getLocalName());
+		try {
+			DFService.deregister(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

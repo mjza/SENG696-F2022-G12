@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
+import jade.wrapper.ControllerException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -105,8 +106,8 @@ public class ProviderGUI {
 		JButton withdrawButton = new JButton("Witdraw service agreement");
 		withdrawButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				myAgent.withdraw();
+			public void actionPerformed(ActionEvent e) {					
+						myAgent.withdraw();
 			}
 		});
 		jPanelNewMessage.add(withdrawButton, BorderLayout.SOUTH);

@@ -24,6 +24,7 @@
 package ca.ucalagary.seng696.g12.agents;
 
 import jade.core.behaviours.OneShotBehaviour;
+import jade.wrapper.ControllerException;
 
 import java.awt.Image;
 import java.net.URL;
@@ -114,16 +115,25 @@ public class SystemAgent extends EnhancedAgent {
 	 *
 	 * @param userName the user name
 	 * @param password the password
+	 * @throws ControllerException 
 	 */
 	public void login(String userName, String password) {
 		String type = DBUtils.getUserType(userName, password);
+		String agentName; 
 		if (User.CLIENT.equalsIgnoreCase(type)) {
-			this.createAgent("Client:" + userName, "ca.ucalagary.seng696.g12.agents.ClientAgent");
+			agentName = "client:" + userName;
 		} else if (User.PROVIDER.equalsIgnoreCase(type)) {
-			this.createAgent("Provider:" + userName, "ca.ucalagary.seng696.g12.agents.ProviderAgent");
+			agentName ="provider:" + userName;			
 		} else {
 			this.mainGUI.showWrongCredential();
+			return;
 		}
+		// After setting name
+		if(this.agentExist(agentName)) {
+			this.mainGUI.showAgentAlreadyExist();
+			return;
+		}
+		this.createAgent(agentName, ProviderAgent.class);
 	}
 
 	/**
@@ -156,6 +166,6 @@ public class SystemAgent extends EnhancedAgent {
 	@Override
 	protected void takeDown() {
 		this.mainGUI.dispose();
-		System.out.println("System Agent: " + getAID().getName() + " is terminating.");
+		super.takeDown();
 	}
 }
