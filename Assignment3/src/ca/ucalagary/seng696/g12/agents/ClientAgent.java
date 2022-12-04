@@ -39,157 +39,157 @@ import ca.ucalagary.seng696.g12.gui.ClientGUI;
  * The Class ClientAgent.
  */
 public class ClientAgent extends EnhancedAgent {
-    /**
+	/**
 	 * The serial version must be increased by each update.
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The projects. */
 	List<Project> projects;
-    
-    /** The current number. */
-    int currentNumber = 0;
-    
-    /** The gui. */
-    ClientGUI GUI;
-    
-    
-    /**
-     * Setup.
-     */
-    @Override
-    protected void setup() {
-        System.out.println("Hello! ClientAgent " + getAID().getName() + " is here!");
-        Set<AID> providers = searchForService("project-provide");
-        projects = new ArrayList<>();
-        GUI = new ClientGUI(this, providers, projects);
-        GUI.showGUI();
-//        addBehaviour(new MessageHandlingBehaviour(this));
-        addBehaviour(new CyclicBehaviour() {
-            /**
+
+	/** The current number. */
+	int currentNumber = 0;
+
+	/** The client GUI. */
+	ClientGUI clientGUI;
+
+	/**
+	 * Setup.
+	 */
+	@Override
+	protected void setup() {
+		System.out.println("Client Agent: " + getAID().getName() + " is ready.");
+		Set<AID> providers = searchForService("ProvidingService");
+		projects = new ArrayList<>();
+		clientGUI = new ClientGUI(this, providers, projects);
+		clientGUI.showGUI();
+		// addBehaviour(new MessageHandlingBehaviour(this));
+		// in a cycle listen for messages
+		addBehaviour(new CyclicBehaviour() {
+			/**
 			 * The serial version must be increased by each update.
 			 */
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * Action.
+			 */
 			public void action() {
-                ACLMessage msg, reply = null;
+				ACLMessage msg, reply = null;
+				msg = myAgent.receive();
+				if (msg != null) {
+					System.out.println(
+							"A new message received for client:" + getAID().getName() + " " + msg.getPerformative());
+					String contents[] = null;
+					Project project = null;
+					String projectName, progressText, chatMessage;
+					switch (msg.getPerformative()) {
+					case Anthology.ACLMESSAGE_ACCEPT:
+						// content = null;
+						contents = msg.getContent().split(":");
+						project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]), msg.getSender(),
+								myAgent.getAID(), null);
+						reply = new ACLMessage(Anthology.ACLMESSAGE_CHAT);
+						reply.addReceiver(msg.getSender());
+						// content = project.getContract();
+						clientGUI.addProject(project);
+					case Anthology.ACLMESSAGE_REFUSE:
+						// content = null;
+						contents = msg.getContent().split(":");
+						project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]), msg.getSender(),
+								myAgent.getAID(), null);
+						// content = project.getRejectionMessage(msg.getSender());
+						System.out.println("" + msg.getSender().getLocalName() + " responded to the proposal for "
+								+ msg.getContent());
+					case (Anthology.ACLMESSAGE_CHAT):
+						projectName = msg.getContent().split(":")[0];
+						chatMessage = msg.getContent().split(":")[1];
+						for (Project project_iter : projects) {
+							if (project_iter.getName().equals(projectName)) {
+								project_iter.chatUpdate(chatMessage);
+							}
+						}
+					case (Anthology.ACLMESSAGE_PROGRESS):
+						projectName = msg.getContent().split(":")[0];
+						progressText = msg.getContent().split(":")[1];
+						int progress = Integer.parseInt(progressText);
+						for (Project project_iter : projects) {
+							if (project_iter.getName().equals(projectName)) {
+								project_iter.setProgress(progress);
+							}
+						}
+					}
+				}
+			}
+		});
+	}
 
-                msg = myAgent.receive();
+	/**
+	 * Send proposal.
+	 *
+	 * @param p        the p
+	 * @param provider the provider
+	 */
+	public void sendProposal(Project p, AID provider) {
+		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_OFFER);
+		message.setConversationId(Anthology.PROPOSAL);
+		message.setContent(p.toString());
+		System.out.println("Proposing " + p.toString() + " to " + provider.getLocalName());
+		message.addReceiver(provider);
+		send(message);
+	}
 
-                if (msg != null) {
-					String content = null;
-                    String c[] = null;
-                    Project project = null;
-                    String projectName, progressText, chatMessage;
-                   switch (msg.getPerformative()){
-                        case Anthology.ACLMESSAGE_ACCEPT:
-                            content = null;
-                            c = msg.getContent().split(":");
-                            project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),null);
+	/**
+	 * Send message.
+	 *
+	 * @param provider     the provider
+	 * @param p            the p
+	 * @param projectName  the project name
+	 * @param performative the performative
+	 */
+	public void sendMessage(AID provider, String p, String projectName, int performative) {
+		ACLMessage message = new ACLMessage(performative);
+		message.setConversationId(Anthology.CLIENT_TO_PROVIDER);
+		message.setContent(projectName + ":" + p);
+		message.addReceiver(provider);
+		send(message);
+	}
 
-                            reply = new ACLMessage(Anthology.ACLMESSAGE_CHAT);
-                            reply.addReceiver(msg.getSender());
-                            content = project.getContract();
-                            GUI.addProject(project);
-                        case Anthology.ACLMESSAGE_REFUSE:
-                            content = null;
-                            c = msg.getContent().split(":");
-                            project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),null);
+	/**
+	 * Send rating.
+	 *
+	 * @param provider the provider
+	 * @param rate     the rate
+	 */
+	public void sendRating(AID provider, String rate) {
+		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_RATE);
+		message.setConversationId(Anthology.NEGOTIATION);
+		message.setContent(rate);
+		message.addReceiver(provider);
+		send(message);
+	}
 
-                            content = project.getRejectionMessage(msg.getSender());
-                        System.out.println("" + msg.getSender().getLocalName() + " responded to the proposal for " + msg.getContent());
-                    case (Anthology.ACLMESSAGE_CHAT):
-                        projectName = msg.getContent().split(":")[0];
-                        chatMessage = msg.getContent().split(":")[1];
-                        for (Project project_iter : projects){
-                            if (project_iter.getName().equals(projectName)){
-                                project_iter.chatUpdate(chatMessage);
-                            }
-                        }
-                    case (Anthology.ACLMESSAGE_PROGRESS):
-                        projectName = msg.getContent().split(":")[0];
-                        progressText = msg.getContent().split(":")[1];
-                        int progress = Integer.parseInt(progressText);
-                        for (Project project_iter : projects){
-                            if (project_iter.getName().equals(projectName)){
-                                project_iter.setProgress(progress);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
+	/**
+	 * Mark project done.
+	 *
+	 * @param project the project
+	 */
+	public void markProjectAsDone(Project project) {
+		System.out.println("MARKING DONE " + project.getProvider().getLocalName());
 
+		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_PAYMENT);
+		message.setConversationId(Anthology.NEGOTIATION);
+		message.setContent(project.getName() + ":" + 70 * project.getBid() / 100);
+		message.addReceiver(project.getProvider());
+		send(message);
+		project.setDone();
+		for (Project p : projects) {
+			if (p.getName().equals(project.getName())) {
+				System.out.println("FOUND DONE PROJECT");
+				p.setDone();
+			}
+		}
+		clientGUI.updateProjects(projects);
+	}
 
-    /**
-     * Send proposal.
-     *
-     * @param p the p
-     * @param provider the provider
-     */
-    public void sendProposal(Project p, AID provider) {
-        ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_OFFER);
-        message.setConversationId(Anthology.PROPOSAL);
-
-        message.setContent(p.toString());
-        System.out.println("Proposing " + p.toString() + " to " + provider.getLocalName());
-        message.addReceiver(provider);
-        send(message);
-    }
-
-    /**
-     * Send message.
-     *
-     * @param provider the provider
-     * @param p the p
-     * @param projectName the project name
-     * @param performative the performative
-     */
-    public void sendMessage(AID provider, String p, String projectName, int performative) {
-        ACLMessage message = new ACLMessage(performative);
-        message.setConversationId(Anthology.CLIENT_TO_PROVIDER);
-        message.setContent(projectName + ":" + p);
-        message.addReceiver(provider);
-        send(message);
-    }
-
-    /**
-     * Send rating.
-     *
-     * @param provider the provider
-     * @param rate the rate
-     */
-    public void sendRating(AID provider, String rate) {
-        ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_RATE);
-        message.setConversationId(Anthology.NEGOTIATION);
-        message.setContent(rate);
-        message.addReceiver(provider);
-        send(message);
-    }
-    
-    /**
-     * Mark project done.
-     *
-     * @param project the project
-     */
-    public void markProjectDone(Project project) {
-        System.out.println("MARKING DONE " + project.getProvider().getLocalName());
-        
-    	ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_PAYMENT);
-        message.setConversationId(Anthology.NEGOTIATION);
-        message.setContent(project.getName()+":"+70*project.getBid()/100);
-        message.addReceiver(project.getProvider());
-        send(message);
-        project.setDone();
-        for(Project p: projects){
-            if(p.getName().equals(project.getName())){
-                System.out.println("FOUND DONE PROJECT");
-                p.setDone();
-            }
-        }
-        GUI.updateProjects(projects);
-    }
-    
-    
 }

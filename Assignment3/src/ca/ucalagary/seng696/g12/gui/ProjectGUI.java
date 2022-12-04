@@ -101,6 +101,7 @@ public class ProjectGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String rating = showDialog(project, agent);
+				System.out.print(rating);
 				jFrame.dispose();
 				String messageText = "Done";
 				agent.sendMessage(project.getProvider(), messageText, project.getName(), Anthology.ACLMESSAGE_DONE);
@@ -166,7 +167,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				System.out.println("Done" + ratingTextField.getText() + commentTextField.getText());
-				agent.markProjectDone(project);
+				agent.markProjectAsDone(project);
 				agent.sendRating(project.getProvider(), ratingTextField.getText());
 
 			}

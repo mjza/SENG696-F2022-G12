@@ -26,7 +26,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HintTextField extends JTextField {
-    public HintTextField(String hint) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public HintTextField(String hint) {
         _hint = hint;
     }
     @Override

@@ -26,7 +26,6 @@ package ca.ucalagary.seng696.g12.dictionary;
 import jade.core.AID;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 

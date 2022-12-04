@@ -116,7 +116,7 @@ public class MessageGUI {
     }
 
 
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         jTextAreaMessages.setText(message);
     }
 

@@ -60,15 +60,16 @@ public class ProviderAgent extends EnhancedAgent {
 	/** The rate. */
 	private double rate = 0.0;
 
-
-
 	/**
 	 * Setup.
 	 */
 	@Override
 	protected void setup() {
-		System.out.println("A provider is setting up.");
-		this.registerService("project-provide");
+		System.out.println("Provider Agent: " + getAID().getName() + " is ready.");
+		// register the agent service in yellow page
+		this.registerService("ProvidingService");
+		// addBehaviour(new MessageHandlingBehaviour(this));
+		// in a cycle listen for messages
 		this.addBehaviour(new CyclicBehaviour() {
 			/**
 			 * The serial version must be increased by each update.
@@ -80,13 +81,14 @@ public class ProviderAgent extends EnhancedAgent {
 			 */
 			@Override
 			public void action() {
-				ACLMessage msg, reply;
-				msg = ProviderAgent.this.receive();
+				ACLMessage msg, reply = null;
+				msg = myAgent.receive();
 				if (msg != null) {
 					System.out.println(
-							"new message received for provider:" + getAID().getName() + " " + msg.getPerformative());
+							"A new message received for provider:" + getAID().getName() + " " + msg.getPerformative());
 					String projectName, chatMessage;
-					if (msg.getPerformative() == Anthology.ACLMESSAGE_PAYMENT || msg.getPerformative() == Anthology.ACLMESSAGE_DONE) {
+					if (msg.getPerformative() == Anthology.ACLMESSAGE_PAYMENT
+							|| msg.getPerformative() == Anthology.ACLMESSAGE_DONE) {
 						projectName = msg.getContent().split(":")[0];
 						chatMessage = msg.getContent().split(":")[1];
 					} else {
@@ -113,8 +115,7 @@ public class ProviderAgent extends EnhancedAgent {
 							}
 						}
 						providerGUI.updateProjects(projects);
-						int bid = Integer.parseInt(contents[1]);
-						
+						// int bid = Integer.parseInt(contents[1]);
 					case Anthology.ACLMESSAGE_DONE:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
@@ -126,7 +127,7 @@ public class ProviderAgent extends EnhancedAgent {
 
 			}
 		});
-//        addBehaviour(new MessageHandlingBehaviour(this));
+
 		providerGUI = new ProviderGUI(this, projects);
 		providerGUI.showGUI();
 
@@ -151,7 +152,7 @@ public class ProviderAgent extends EnhancedAgent {
 	/**
 	 * Update rate.
 	 */
-	private void updateRate() {
+	public void updateRate() {
 		Integer sum = 0;
 		if (!ratings.isEmpty()) {
 			for (Integer mark : ratings) {
@@ -179,7 +180,7 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @return the boolean
 	 */
 	public Boolean goPremium() {
-		
+
 		Provider p = getProvider();
 		p.setPremium();
 		providerGUI.updatePremium();
@@ -188,7 +189,8 @@ public class ProviderAgent extends EnhancedAgent {
 
 	/**
 	 * Withdraw.
-	 * @throws ControllerException 
+	 * 
+	 * @throws ControllerException
 	 */
 	public void withdraw() {
 		Provider p = getProvider();

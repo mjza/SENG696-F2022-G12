@@ -27,7 +27,6 @@ import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
-import jade.wrapper.ControllerException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -125,7 +124,7 @@ public class ProviderGUI {
 
 		projectList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				JList list = (JList) evt.getSource();
+				JList<?> list = (JList<?>) evt.getSource();
 				if (evt.getClickCount() == 2) {
 					int index = list.locationToIndex(evt.getPoint());
 					ProjectGUI projectDetailGUI = new ProjectGUI(myAgent, projects.get(index));

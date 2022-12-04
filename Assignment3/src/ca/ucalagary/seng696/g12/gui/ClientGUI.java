@@ -56,14 +56,14 @@ public class ClientGUI {
     DefaultListModel<String> projectsListModel;
     
     List<Provider> currentProviders = new ArrayList<>();
-    ClientAgent myAgent;
+    ClientAgent clientAgent;
 
-    public ClientGUI(ClientAgent myAgent, Set<AID> providers, List<Project> projects) {
-        this.myAgent = myAgent;
+    public ClientGUI(ClientAgent clientAgent, Set<AID> providers, List<Project> projects) {
+        this.clientAgent = clientAgent;
         System.out.println("number of providers: ");
         System.out.println(providers.size());
 
-        jFrame = new JFrame("Welcome " + myAgent.getLocalName());
+        jFrame = new JFrame("Welcome " + clientAgent.getLocalName());
         jFrame.setSize(1000, 600);
         this.projects = projects;
 
@@ -71,12 +71,12 @@ public class ClientGUI {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 super.windowClosing(windowEvent);
-                myAgent.killAgent(myAgent.getLocalName());
+                clientAgent.killAgent(clientAgent.getLocalName());
             }
         });
 
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+        JPanel clientJPanel = new JPanel();
+        clientJPanel.setLayout(new BorderLayout());
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
@@ -164,7 +164,7 @@ public class ClientGUI {
                 JList<?> list = (JList<?>) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
-                    ProjectGUI projectDetailGUI = new ProjectGUI(myAgent, ClientGUI.this.projects.get(index));
+                    ProjectGUI projectDetailGUI = new ProjectGUI(clientAgent, ClientGUI.this.projects.get(index));
                     projectDetailGUI.showGUI();
                     System.out.println("Clicked: " + index);
                 }
@@ -175,7 +175,7 @@ public class ClientGUI {
         projectPanel.add(new JLabel("Projects"),BorderLayout.NORTH);
         projectPanel.add(projectList, BorderLayout.CENTER);
         leftPanel.add(projectPanel, BorderLayout.CENTER);
-        jPanel.add(leftPanel, BorderLayout.WEST);
+        clientJPanel.add(leftPanel, BorderLayout.WEST);
 
         JTextArea jTextAreaDescription = new JTextArea("Project Description");
         jTextAreaDescription.setRows(20);
@@ -188,7 +188,7 @@ public class ClientGUI {
         jPanel1.add(jTextFieldName, BorderLayout.NORTH);
         jPanel1.add(jTextAreaDescription, BorderLayout.CENTER);
 
-        jPanel.add(jPanel1, BorderLayout.CENTER);
+        clientJPanel.add(jPanel1, BorderLayout.CENTER);
 
         HintTextField bid = new HintTextField("BID:");
         bid.setPreferredSize(new Dimension(200, 24));
@@ -208,7 +208,7 @@ public class ClientGUI {
         datePanel.setPreferredSize(new Dimension(200, 200));
         jPanelNewMessage.add(datePanel, BorderLayout.SOUTH);
 
-        jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
+        clientJPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
 
 
         jButtonSend.addActionListener(new ActionListener() {
@@ -218,9 +218,9 @@ public class ClientGUI {
                     return;
                 }
                 Project project = new Project(jTextFieldName.getText(), jTextAreaDescription.getText(),
-                        Integer.parseInt(bid.getText()), selectedProvider, myAgent.getAID(), model.getValue());
+                        Integer.parseInt(bid.getText()), selectedProvider, clientAgent.getAID(), model.getValue());
                 System.out.println(jTextFieldName.getText() + "  " + project.toString());
-                myAgent.sendProposal(project, selectedProvider);
+                clientAgent.sendProposal(project, selectedProvider);
             }
         });
         
@@ -230,9 +230,9 @@ public class ClientGUI {
 
         
 
-        jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
+        clientJPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
 
-        jFrame.add(jPanel);
+        jFrame.add(clientJPanel);
     }
 
     public void showGUI() {

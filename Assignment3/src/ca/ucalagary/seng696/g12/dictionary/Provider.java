@@ -31,11 +31,6 @@ import java.util.List;
  */
 public class Provider extends User {
 
-	/**
-	 * The serial version must be increased by each update.
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/** The keywords. */
 	private String keywords;
 
