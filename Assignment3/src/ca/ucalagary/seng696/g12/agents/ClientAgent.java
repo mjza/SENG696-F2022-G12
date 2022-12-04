@@ -35,11 +35,30 @@ import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.gui.ClientGUI;
 import ca.ucalagary.seng696.g12.settings.Constants;
 
+/**
+ * The Class ClientAgent.
+ */
 public class ClientAgent extends EnhancedAgent {
-    List<Project> projects;
+    /**
+	 * The serial version must be increased by each update.
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The projects. */
+	List<Project> projects;
+    
+    /** The current number. */
     int currentNumber = 0;
+    
+    /** The gui. */
     ClientGUI GUI;
+    
+    /** The credit. */
     private int credit = 1000;
+    
+    /**
+     * Setup.
+     */
     @Override
     protected void setup() {
         System.out.println("Hello! ClientAgent " + getAID().getName() + " is here!");
@@ -49,13 +68,18 @@ public class ClientAgent extends EnhancedAgent {
         GUI.showGUI();
 //        addBehaviour(new MessageHandlingBehaviour(this));
         addBehaviour(new CyclicBehaviour() {
-            public void action() {
+            /**
+			 * The serial version must be increased by each update.
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void action() {
                 ACLMessage msg, reply = null;
 
                 msg = myAgent.receive();
 
                 if (msg != null) {
-                    String content = null;
+					String content = null;
                     String c[] = null;
                     Project project = null;
                     String projectName, progressText, chatMessage;
@@ -100,6 +124,12 @@ public class ClientAgent extends EnhancedAgent {
     }
 
 
+    /**
+     * Send proposal.
+     *
+     * @param p the p
+     * @param provider the provider
+     */
     public void sendProposal(Project p, AID provider) {
         ACLMessage message = new ACLMessage(Constants.OFFER);
         message.setConversationId(Constants.PROJECT_STARTER);
@@ -110,6 +140,14 @@ public class ClientAgent extends EnhancedAgent {
         send(message);
     }
 
+    /**
+     * Send message.
+     *
+     * @param provider the provider
+     * @param p the p
+     * @param projectName the project name
+     * @param performative the performative
+     */
     public void sendMessage(AID provider, String p, String projectName, int performative) {
         ACLMessage message = new ACLMessage(performative);
         message.setConversationId(Constants.CLIENT_SEND_MESSAGE);
@@ -118,6 +156,12 @@ public class ClientAgent extends EnhancedAgent {
         send(message);
     }
 
+    /**
+     * Send rating.
+     *
+     * @param provider the provider
+     * @param rate the rate
+     */
     public void sendRating(AID provider, String rate) {
         ACLMessage message = new ACLMessage(Constants.RATE);
         message.setConversationId(Constants.CONVERSATION);
@@ -126,6 +170,11 @@ public class ClientAgent extends EnhancedAgent {
         send(message);
     }
     
+    /**
+     * Mark project done.
+     *
+     * @param project the project
+     */
     public void markProjectDone(Project project) {
         System.out.println("MARKING DONE " + project.getProvider().getLocalName());
         
@@ -144,9 +193,21 @@ public class ClientAgent extends EnhancedAgent {
         GUI.updateProjects(projects);
     	addCredit(-1 * project.getBid());
     }
+    
+    /**
+     * Gets the credit.
+     *
+     * @return the credit
+     */
     public int getCredit() {
     	return credit;
     }
+    
+    /**
+     * Adds the credit.
+     *
+     * @param x the x
+     */
     public void addCredit(int x) {
         credit += x;
         GUI.updateCredit();

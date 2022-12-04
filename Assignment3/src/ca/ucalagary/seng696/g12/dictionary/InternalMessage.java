@@ -23,14 +23,59 @@
  */
 package ca.ucalagary.seng696.g12.dictionary;
 import jade.core.AID;
+
+/**
+ * The Class InternalMessage.
+ */
 public class InternalMessage {
-	public static AID sender;
-	public static AID receiver;
-	public  String content;
 	
-	public InternalMessage(AID s, AID r, String c) {
-		sender = s;
-		receiver = r;
-		content = c;
+	/** The sender. */
+	private AID sender;
+	
+	/** The receiver. */
+	private AID receiver;
+	
+	/**
+	 * Gets the sender.
+	 *
+	 * @return the sender
+	 */
+	public AID getSender() {
+		return sender;
+	}
+
+	/**
+	 * Gets the receiver.
+	 *
+	 * @return the receiver
+	 */
+	public AID getReceiver() {
+		return receiver;
+	}
+
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 */
+	public String getContent() {
+		return content;
+	}
+
+
+	/** The content. */
+	private  String content;
+	
+	/**
+	 * Instantiates a new internal message.
+	 *
+	 * @param sender the sender
+	 * @param receiver the receiver
+	 * @param content the content
+	 */
+	public InternalMessage(AID sender, AID receiver, String content) {
+		this.sender = sender;
+		this.receiver = receiver;
+		this.content = content;
 	}
 }

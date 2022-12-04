@@ -143,7 +143,7 @@ public class ClientGUI {
                     providersList.removeAllElements();
                     List<Provider> searchedProviders = SystemAgent.searchProvider(searchedText);
                     for (Provider provider : searchedProviders) {
-                        if(provider.isPremium){
+                        if(provider.isPremium()){
                         }
                         providersList.addElement(provider.getInfo());
                     }

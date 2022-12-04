@@ -24,119 +24,229 @@
 package ca.ucalagary.seng696.g12.dictionary;
 
 import jade.core.AID;
-import jade.lang.acl.ACLMessage;
-
 import java.util.ArrayList;
-
 import ca.ucalagary.seng696.g12.gui.ProjectDetailGUI;
 
+/**
+ * The Class Project.
+ */
 public class Project {
-    private String name;
-    private String description;
-    private int progress = 0;
-    private int bid;
-    private ArrayList<String> messagesHistory = new ArrayList<>();
-    private AID provider;
-    private AID client;
-    private String deadline;
-    private ProjectDetailGUI projectDetailGUI;
-    private boolean done = false;
+	
+	/** The name. */
+	private String name;
+	
+	/** The description. */
+	private String description;
+	
+	/** The progress. */
+	private int progress = 0;
+	
+	/** The bid. */
+	private int bid;
+	
+	/** The messages history. */
+	private ArrayList<String> messagesHistory = new ArrayList<>();
+	
+	/** The provider. */
+	private AID provider;
+	
+	/** The client. */
+	private AID client;
+	
+	/** The deadline. */
+	private String deadline;
+	
+	/** The project detail GUI. */
+	private ProjectDetailGUI projectDetailGUI;
+	
+	/** The done. */
+	private boolean done = false;
 
-    public Project(String name, String description, int bid, AID provider, AID client, String deadline) {
-        this.name = name;
-        this.bid = bid;
-        this.description = description;
-        this.provider = provider;
-        this.client = client;
-        this.deadline = deadline;
-    }
+	/**
+	 * Instantiates a new project.
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @param bid the bid
+	 * @param provider the provider
+	 * @param client the client
+	 * @param deadline the deadline
+	 */
+	public Project(String name, String description, int bid, AID provider, AID client, String deadline) {
+		this.name = name;
+		this.bid = bid;
+		this.description = description;
+		this.provider = provider;
+		this.client = client;
+		this.deadline = deadline;
+	}
 
-    public void setDone() {
-        done = true;
-    }
+	/**
+	 * Sets the done.
+	 */
+	public void setDone() {
+		this.done = true;
+	}
 
-    public void setName(String newName) {
-        this.name = newName;
-    }
+	/**
+	 * Sets the name.
+	 *
+	 * @param newName the new name
+	 */
+	public void setName(String newName) {
+		this.name = newName;
+	}
 
+	/**
+	 * Gets the messages history.
+	 *
+	 * @return the messages history
+	 */
+	public ArrayList<String> getMessagesHistory() {
+		return this.messagesHistory;
+	}
 
-    public ArrayList<String> getMessagesHistory() {
-        return messagesHistory;
-    }
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		if (this.done) {
+			return "" + this.name + " (done)";
+		}
+		return this.name;
+	}
 
-    public String getName() {
-        if (done) {
-            return "" + name + " (done)";
-        }
-        return this.name;
-    }
+	/**
+	 * Gets the description.
+	 *
+	 * @return the description
+	 */
+	public String getDescription() {
+		return this.description;
+	}
 
-    public String getDescription() {
-        return this.description;
-    }
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	public String toString() {
+		if (this.done) {
+			return "" + this.name + " (done)";
+		}
+		return this.name + ":" + this.description + ":" + this.bid + ":" + this.deadline;
+	}
 
+	/**
+	 * Gets the contract.
+	 *
+	 * @return the contract
+	 */
+	public String getContract() {
+		return "Contract for project: " + toString();
+	}
 
-    public String toString() {
-        if (done) {
-            return "" + name + " (done)";
-        }
-        return "" + name + ":" + description + ":" + bid + ":" + deadline;
-    }
+	/**
+	 * Gets the rejection message.
+	 *
+	 * @param sender the sender
+	 * @return the rejection message
+	 */
+	public String getRejectionMessage(AID sender) {
+		return sender.getLocalName() + " has rejected " + toString();
+	}
 
-    public String getContract() {
-        return "Contract for project: " + toString();
-    }
+	/**
+	 * Checks if is final.
+	 *
+	 * @return true, if is final
+	 */
+	public boolean isFinal() {
+		return this.progress == 100;
+	}
 
-    public String getRejectionMessage(AID sender) {
-        return sender.getLocalName() + " has rejected " + toString();
-    }
+	/**
+	 * Gets the progress.
+	 *
+	 * @return the progress
+	 */
+	public int getProgress() {
+		return this.progress;
+	}
 
+	/**
+	 * Progress.
+	 *
+	 * @param progressPercentage the progress percentage
+	 */
+	public void progress(int progressPercentage) {
+		int permittedProgress = 100 - this.progress;
+		if (progressPercentage < permittedProgress) {
+			this.progress += progressPercentage;
+		}
+		if (this.projectDetailGUI != null) {
+			this.projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
+					this.getMessagesHistory());
+		}
+	}
 
-    public boolean isFinal() {
-        return progress == 100;
-    }
+	/**
+	 * Chat update.
+	 *
+	 * @param chatMessage the chat message
+	 */
+	public void chatUpdate(String chatMessage) {
+		this.messagesHistory.add(chatMessage);
+		if (this.projectDetailGUI != null) {
+			this.projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
+					this.getMessagesHistory());
+		}
+	}
 
-    public int getProgress() {
-        return progress;
-    }
+	/**
+	 * Gets the bid.
+	 *
+	 * @return the bid
+	 */
+	public int getBid() {
+		return this.bid;
+	}
 
-    public void progress(int progressPercentage) {
-        int permittedProgress = 100 - this.progress;
-        if (progressPercentage < permittedProgress) {
-            progress += progressPercentage;
-        }
-        if (projectDetailGUI != null) {
-            projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(), this.getMessagesHistory());
-        }
-    }
+	/**
+	 * Gets the provider.
+	 *
+	 * @return the provider
+	 */
+	public AID getProvider() {
+		return this.provider;
+	}
 
-    public void chatUpdate(String chatMessage) {
-        messagesHistory.add(chatMessage);
-        if (projectDetailGUI != null) {
-            projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(), this.getMessagesHistory());
-        }
-    }
+	/**
+	 * Gets the client.
+	 *
+	 * @return the client
+	 */
+	public AID getClient() {
+		return this.client;
+	}
 
-    public int getBid() {
-        return bid;
-    }
+	/**
+	 * Connect GUI.
+	 *
+	 * @param projectDetailGUI the project detail GUI
+	 */
+	public void connectGUI(ProjectDetailGUI projectDetailGUI) {
+		this.projectDetailGUI = projectDetailGUI;
+	}
 
-    public AID getProvider() {
-        return provider;
-    }
-
-    public AID getClient() {
-        return client;
-    }
-
-    public void connectGUI(ProjectDetailGUI projectDetailGUI) {
-        this.projectDetailGUI = projectDetailGUI;
-    }
-
-    public void disposeGUI() {
-        if(this.projectDetailGUI!=null){
-            this.projectDetailGUI.disposeGUI();
-        }
-    }
+	/**
+	 * Dispose GUI.
+	 */
+	public void disposeGUI() {
+		if (this.projectDetailGUI != null) {
+			this.projectDetailGUI.disposeGUI();
+		}
+	}
 }
-

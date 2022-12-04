@@ -72,7 +72,7 @@ public class ProviderGUI {
 
         jPanel.add(jPanelNewMessage, BorderLayout.CENTER);
 
-        if(!myAgent.getProvider().isPremium){
+        if(!myAgent.getProvider().isPremium()){
             JButton premiumButton = new JButton("Go premium!");
             premiumButton.addActionListener(new ActionListener() {
                 @Override
@@ -142,7 +142,7 @@ public class ProviderGUI {
     }
 
     public void updatePremium(){
-        premiumLabel.setText("You are" + (myAgent.getProvider().isPremium?" ":" not ")+ "a premium user");
+        premiumLabel.setText("You are" + (myAgent.getProvider().isPremium() ?" ":" not ")+ "a premium user");
     }
 
     public void updateProjects(List<Project> projects){

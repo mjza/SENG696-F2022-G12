@@ -108,25 +108,25 @@ public class MainGUI {
         JLabel usenameLabel = new JLabel("Username:");
         usenameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         usenameLabel.setPreferredSize(new Dimension(200, 24));
-        gbc.gridy = 1;//change the y location      
+        gbc.gridy++;//change the y location      
         loginJPanel.add(usenameLabel, gbc);        
         // Username textbox
         JTextField userNameTextField = new JTextField();
         userNameTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         userNameTextField.setPreferredSize(new Dimension(200, 24));
-        gbc.gridy = 2;//change the y location
+        gbc.gridy++;//change the y location
         loginJPanel.add(userNameTextField, gbc);
         // Password label
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         passwordLabel.setPreferredSize(new Dimension(200, 24));
-        gbc.gridy = 3;//change the y location      
+        gbc.gridy++;//change the y location      
         loginJPanel.add(passwordLabel, gbc);
         // Password textbox        
         JPasswordField passwordTextField = new JPasswordField();        
         passwordTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         passwordTextField.setPreferredSize(new Dimension(200, 24));
-        gbc.gridy = 4;//change the y location
+        gbc.gridy++;//change the y location
         loginJPanel.add(passwordTextField, gbc);
         // Login button 
         JButton loginBtn = new JButton("Login");
@@ -146,7 +146,7 @@ public class MainGUI {
         });
         loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginBtn.setPreferredSize(new Dimension(200, 24));
-        gbc.gridy = 5;//change the y location
+        gbc.gridy++;//change the y location
         loginJPanel.add(loginBtn, gbc);
         // Register button
         JButton registerBtn = new JButton("Register");        
@@ -160,7 +160,7 @@ public class MainGUI {
         registerBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         registerBtn.setPreferredSize(new Dimension(200, 24));
         //jPanel.add(Box.createRigidArea(new Dimension(10,10)));
-        gbc.gridy = 6;//change the y location
+        gbc.gridy++;//change the y location
         loginJPanel.add(registerBtn, gbc);
         // Guest login 
         JButton guestBtn = new JButton("Visit as a guest");
@@ -173,7 +173,7 @@ public class MainGUI {
         });        
         guestBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         guestBtn.setPreferredSize(new Dimension(200, 24));
-        gbc.gridy = 7;//change the y location
+        gbc.gridy++;//change the y location
         loginJPanel.add(guestBtn, gbc);        
         return loginJPanel;
     } 

@@ -53,7 +53,7 @@ public class ListCellRenderer extends DefaultListCellRenderer {
                                                   boolean cellHasFocus)
     {
         JLabel lbl = (JLabel) super.getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);
-		if (providers.get(index).isPremium) {
+		if (providers.get(index).isPremium()) {
 			lbl.setForeground(Color.BLUE);
 		}
         else {

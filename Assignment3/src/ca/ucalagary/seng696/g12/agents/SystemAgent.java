@@ -42,28 +42,27 @@ import ca.ucalagary.seng696.g12.gui.MainGUI;
  */
 public class SystemAgent extends EnhancedAgent {
 
-    /**
-	 * The serial version must be increased by each update.  
+	/**
+	 * The serial version must be increased by each update.
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Section for class attributes. */
 	private MainGUI mainGUI;
 
-    
-    /**
-     * The constructor initializes the system.
-     * Reads list of providers and clients from DB. 
-     * Loads their data to the system. 
-     */
-    public SystemAgent() {
-    	DBUtils.initDB();
-    }
-    
-    /**
-     * Gets a list of providers. 
-     * @return providers
-     */
+	/**
+	 * The constructor initializes the system. Reads list of providers and clients
+	 * from DB. Loads their data to the system.
+	 */
+	public SystemAgent() {
+		DBUtils.initDB();
+	}
+
+	/**
+	 * Gets a list of providers.
+	 * 
+	 * @return providers
+	 */
 	public static List<Provider> getProviders() {
 		return DBUtils.getProviders(null);
 	}
@@ -75,85 +74,88 @@ public class SystemAgent extends EnhancedAgent {
 	 * @return the provider
 	 */
 	public static Provider getProvider(String userName) {
-        return DBUtils.getProvider(userName);
-    }
+		return DBUtils.getProvider(userName);
+	}
 
-    /**
-     * Gets the client.
-     *
-     * @param userName the userName
-     * @return the client
-     */
-    public static Client getClient(String userName) {
-        return DBUtils.getClient(userName);
-    }
+	/**
+	 * Gets the client.
+	 *
+	 * @param userName the userName
+	 * @return the client
+	 */
+	public static Client getClient(String userName) {
+		return DBUtils.getClient(userName);
+	}
 
-    /**
-     * Search provider.
-     *
-     * @param keyword the keyword
-     * @return the list
-     */
-    public static List<Provider> searchProvider(String keyword) {
-        List<Provider> providers = DBUtils.getProviders(keyword);
-        return providers;
-    } 
-    
-    public static Image getIcon() {
-    	URL resource = SystemAgent.class.getResource("/ca/ucalagary/seng696/g12/images/icon.png");
-        ImageIcon img = new ImageIcon(resource);
-        return img.getImage();
-    }
-    
-    /**
-     * Login.
-     *
-     * @param userName the user name
-     * @param password the password
-     * @param type the type
-     */
-    public void login(String userName, String password) {
-    	String type = DBUtils.getUserType(userName, password);
-        if (User.CLIENT.equalsIgnoreCase(type)) {            
-           this.createAgent("Client:" + userName, "ca.ucalagary.seng696.g12.agents.ClientAgent");            
-        } else if (User.PROVIDER.equalsIgnoreCase(type)){            
-           this.createAgent("Provider:" + userName, "ca.ucalagary.seng696.g12.agents.ProviderAgent");            
-        } else {
-        	this.mainGUI.showWrongCredential();
-        }
-    }
+	/**
+	 * Search provider.
+	 *
+	 * @param keyword the keyword
+	 * @return the list
+	 */
+	public static List<Provider> searchProvider(String keyword) {
+		List<Provider> providers = DBUtils.getProviders(keyword);
+		return providers;
+	}
 
-    
-    
-    
+	/**
+	 * Gets the icon.
+	 *
+	 * @return the icon
+	 */
+	public static Image getIcon() {
+		URL resource = SystemAgent.class.getResource("/ca/ucalagary/seng696/g12/images/icon.png");
+		ImageIcon img = new ImageIcon(resource);
+		return img.getImage();
+	}
 
-    /**
-     * Setup.
-     */
-    @Override
-    protected void setup() {
-    	addBehaviour(new OneShotBehaviour() {
-            /**
+	/**
+	 * Login.
+	 *
+	 * @param userName the user name
+	 * @param password the password
+	 */
+	public void login(String userName, String password) {
+		String type = DBUtils.getUserType(userName, password);
+		if (User.CLIENT.equalsIgnoreCase(type)) {
+			this.createAgent("Client:" + userName, "ca.ucalagary.seng696.g12.agents.ClientAgent");
+		} else if (User.PROVIDER.equalsIgnoreCase(type)) {
+			this.createAgent("Provider:" + userName, "ca.ucalagary.seng696.g12.agents.ProviderAgent");
+		} else {
+			this.mainGUI.showWrongCredential();
+		}
+	}
+
+	/**
+	 * Setup.
+	 */
+	@Override
+	protected void setup() {
+		addBehaviour(new OneShotBehaviour() {
+			/**
 			 * The serial version must be increased by each update
 			 */
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * Action.
+			 */
 			@Override
-            public void action() {
-                System.out.println("System Agent: " + getAID().getName() + " is ready.");
-                // Show the main frame
-                mainGUI = new MainGUI(SystemAgent.this);
-                mainGUI.showGUI();
-            }
-        });
-    }
+			public void action() {
+				System.out.println("System Agent: " + getAID().getName() + " is ready.");
+				// Show the main frame
+				mainGUI = new MainGUI(SystemAgent.this);
+				mainGUI.showGUI();
+			}
+		});
+	}
 
-    /**
-     * Take down.
-     */
-    @Override
-    protected void takeDown() {
-        this.mainGUI.dispose();
-        System.out.println("System Agent: " + getAID().getName() + " is terminating.");
-    }    
+	/**
+	 * Take down.
+	 */
+	@Override
+	protected void takeDown() {
+		this.mainGUI.dispose();
+		System.out.println("System Agent: " + getAID().getName() + " is terminating.");
+	}
 }

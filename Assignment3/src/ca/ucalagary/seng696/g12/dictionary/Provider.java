@@ -26,54 +26,60 @@ package ca.ucalagary.seng696.g12.dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Provider.
  */
 public class Provider extends User {
 
-    /** The keywords. */
-    private String keywords;
-    
-    /** The resume. */
-    private String resume;
-    
-    /** The current projects. */
-    private List<Project> currentProjects = new ArrayList<>();
-    
-    /** The done projects. */
-    private List<Project> doneProjects = new ArrayList<>();
-    
-    /** The is premium. */
-    public Boolean isPremium = false;    
-    
+	/** The keywords. */
+	private String keywords;
+
+	/** The resume. */
+	private String resume;
+
+	/** The is premium. */
+	private Boolean isPremium = false;
+
+	/** The website. */
+	private String website;
+
+	/** The compensation. */
+	private double compensation;
+
+	/** The projects. */
+	private List<Project> projects = new ArrayList<>();
 
 	/**
 	 * Instantiates a new provider.
 	 *
-	 * @param id the id
-	 * @param name the name
-	 * @param username the username
-	 * @param password the password
-	 * @param type the type
-	 * @param rating the rating
-	 * @param keywords the keywords
-	 * @param resume the resume
-	 * @param isPremium the is premium
+	 * @param id           the id
+	 * @param name         the name
+	 * @param username     the username
+	 * @param password     the password
+	 * @param type         the type
+	 * @param rating       the rating
+	 * @param keywords     the keywords
+	 * @param resume       the resume
+	 * @param isPremium    the is premium
+	 * @param website      the website
+	 * @param compensation the compensation
 	 */
-    public Provider(int id, String name, String username, String password, String type, int rating, String keywords, String resume, Boolean isPremium) {
-        super(id, name, username, password, type, rating);
-        this.setKeywords(keywords);
-        this.setResume(resume);
-        this.setIsPremium(isPremium);
-    }
-    
-    /**
-     * Gets the checks if is premium.
-     *
-     * @return the checks if is premium
-     */
-    public Boolean getIsPremium() {
+	public Provider(int id, String name, String username, String password, String type, int rating, String keywords,
+			String resume, Boolean isPremium, String website, double compensation) {
+		super(id, name, username, password, type, rating);
+		this.setKeywords(keywords);
+		this.setResume(resume);
+		this.setPremium(isPremium);
+		this.setWebsite(website);
+		this.setCompensation(compensation);
+	}
+
+	/**
+	 * Gets the checks if is premium.
+	 *
+	 * @return the checks if is premium
+	 */
+	public Boolean isPremium() {
 		return isPremium;
 	}
 
@@ -82,52 +88,43 @@ public class Provider extends User {
 	 *
 	 * @param isPremium the new checks if is premium
 	 */
-	public void setIsPremium(Boolean isPremium) {
+	public void setPremium(Boolean isPremium) {
 		this.isPremium = isPremium;
 	}
 
-    /**
-     * Sets the keywords.
-     *
-     * @param keywords the new keywords
-     */
-    private void setKeywords(String keywords) {
-		this.keywords = keywords;		
+	/**
+	 * Sets the keywords.
+	 *
+	 * @param keywords the new keywords
+	 */
+	private void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 	/**
-     * Gets the keywords.
-     *
-     * @return the keywords
-     */
-    public String getKeywords() {
-        return this.keywords;
-    }
+	 * Gets the keywords.
+	 *
+	 * @return the keywords
+	 */
+	public String getKeywords() {
+		return this.keywords;
+	}
 
-    /**
-     * Adds the project.
-     *
-     * @param project the project
-     */
-    public void addProject(Project project) {
-        this.currentProjects.add(project);
-    }
+	/**
+	 * Adds the project.
+	 *
+	 * @param project the project
+	 */
+	public void addProject(Project project) {
+		this.projects.add(project);
+	}
 
-    /**
-     * Gets the done project number.
-     *
-     * @return the done project number
-     */
-    public int getDoneProjectNumber() {
-        return doneProjects.size();
-    }
-
-    /**
-     * Sets the premium.
-     */
-    public void setPremium(){
-        isPremium=true;
-    }    
+	/**
+	 * Sets the premium.
+	 */
+	public void setPremium() {
+		this.isPremium = true;
+	}
 
 	/**
 	 * Gets the resume.
@@ -146,41 +143,78 @@ public class Provider extends User {
 	public void setResume(String resume) {
 		this.resume = resume;
 	}
-	
+
 	/**
 	 * Gets the info.
 	 *
 	 * @return the info
 	 */
-	public String getInfo(){
-        String text =  "";
-        text += "Name: " + this.getName() + "; \n";
-        text += "Keywords: " + this.getKeywords() + "; \n";
-        text += "Premium: " + (this.getIsPremium() ? "Yes" : "No") + "; \n";
-        text += "Rating:";
-        for(int i = 0; i< this.getRating(); i++)
-        	text += "*";
-        text += " \n";
-        return text;
-    }
-	
+	public String getInfo() {
+		String text = "";
+		text += "Name: " + this.getName() + "; \n";
+		text += "Keywords: " + this.getKeywords() + "; \n";
+		text += "Premium: " + (this.isPremium() ? "Yes" : "No") + "; \n";
+		text += "Rating:";
+		for (int i = 0; i < this.getRating(); i++)
+			text += "*";
+		text += " \n";
+		return text;
+	}
+
 	/**
 	 * Gets the columns.
 	 *
 	 * @return the columns
 	 */
 	public static String[] getColumns() {
-		String[] columnNames = {"ID", "Name", "Email", "Keywords", "Is Premium", "Rating"};
+		String[] columnNames = { "ID", "Name", "Email", "Website", "Keywords", "Is Premium?", "Rating" };
 		return columnNames;
 	}
-	
+
 	/**
 	 * Gets the data.
 	 *
 	 * @return the data
 	 */
 	public String[] toArray() {
-		String[] data = {String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getKeywords(), (this.getIsPremium() ? "Yes" : "No"), String.valueOf(this.getRating())};
+		String[] data = { String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getWebsite(),
+				this.getKeywords(), (this.isPremium() ? "Yes" : "No"), String.valueOf(this.getRating()) };
 		return data;
+	}
+
+	/**
+	 * Gets the website.
+	 *
+	 * @return the website
+	 */
+	public String getWebsite() {
+		return website;
+	}
+
+	/**
+	 * Sets the website.
+	 *
+	 * @param website the new website
+	 */
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	/**
+	 * Gets the compensation.
+	 *
+	 * @return the compensation
+	 */
+	public double getCompensation() {
+		return compensation;
+	}
+
+	/**
+	 * Sets the compensation.
+	 *
+	 * @param compensation the new compensation
+	 */
+	public void setCompensation(double compensation) {
+		this.compensation = compensation;
 	}
 }

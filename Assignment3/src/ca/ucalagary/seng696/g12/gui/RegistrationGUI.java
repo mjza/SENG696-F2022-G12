@@ -159,6 +159,34 @@ public class RegistrationGUI {
 		gbc.weightx = 1; // to fill whole width
 		registerJPanel.add(keywordsTextField, gbc);
 
+		// Website label
+		JLabel websiteJLable = new JLabel("Website:");
+		websiteJLable.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(websiteJLable, gbc);
+		// Website textbox
+		JTextField websiteTextField = new JTextField();
+		websiteJLable.setLabelFor(websiteTextField);
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.weightx = 1; // to fill whole width
+		registerJPanel.add(websiteTextField, gbc);
+
+		// Compensation label
+		JLabel compensationJLable = new JLabel("Compensation:");
+		compensationJLable.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(compensationJLable, gbc);
+		// Compensation textbox
+		JTextField compensationTextField = new JTextField("0.0");
+		compensationJLable.setLabelFor(compensationTextField);
+		gbc.gridx = 1;// set the x location of the grid
+		gbc.weightx = 1; // to fill whole width
+		registerJPanel.add(compensationTextField, gbc);
+
 		// resume label
 		JLabel resumeLabel = new JLabel("Resume/CV:");
 		resumeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -168,11 +196,25 @@ public class RegistrationGUI {
 		registerJPanel.add(resumeLabel, gbc);
 		// resume textArea
 		JTextArea resumeTextArea = new JTextArea("Type your resume here ... ");
-		resumeTextArea.setRows(25);
+		resumeTextArea.setRows(17);
 		resumeLabel.setLabelFor(resumeTextArea);
 		gbc.gridx = 1;// set the x location of the grid
 		gbc.weightx = 1; // to fill whole width
 		registerJPanel.add(resumeTextArea, gbc);
+
+		// Name lable
+		JLabel premiumLabel = new JLabel("I am premium:");
+		premiumLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		gbc.gridx = 0;// set the x location of the grid
+		gbc.gridy++;// change the y location
+		gbc.weightx = 0; // to not fill whole width
+		registerJPanel.add(premiumLabel, gbc);
+		// Name textbox
+		JCheckBox premiumCheckBox = new JCheckBox();
+		premiumLabel.setLabelFor(premiumCheckBox);
+		gbc.gridx++;// set the x location of the grid
+		gbc.weightx = 1.0; // to fill whole width
+		registerJPanel.add(premiumCheckBox, gbc);
 
 		// Submit button
 		JButton submitButton = new JButton("Submit");
@@ -193,18 +235,22 @@ public class RegistrationGUI {
 				String userName = userNameTextField.getText().trim();
 				String password = passwordTextField.getText().trim();
 				String keywords = keywordsTextField.getText().trim();
+				String website = websiteTextField.getText().trim();
+				String compensation = compensationTextField.getText().trim();
 				String resume = resumeTextArea.getText().trim();
+				Boolean isPremium = premiumCheckBox.isSelected();
 				if (User.CLIENT.equals(type)) {
 					if (name != null && userName != null && password != null && name.length() > 0
 							&& userName.length() > 0 && password.length() > 0) {
-						RegistrationGUI.this.register(type, name, userName, password, null, null);
+						RegistrationGUI.this.register(type, name, userName, password, null, null, null, null, null);
 					} else {
 						showMissingData();
 					}
 				} else {
-					if (name != null && userName != null && password != null && keywords != null && name.length() > 0
-							&& userName.length() > 0 && password.length() > 0 && keywords.length() > 0) {
-						RegistrationGUI.this.register(type, name, userName, password, keywords, resume);
+					if (name != null && userName != null && password != null && keywords != null && website != null && compensation != null && name.length() > 0
+							&& userName.length() > 0 && password.length() > 0 && keywords.length() > 0 && compensation.length() > 0 && website.length() > 0) {
+						RegistrationGUI.this.register(type, name, userName, password, keywords, resume, isPremium, website,
+								compensation);
 					} else {
 						showMissingData();
 					}
@@ -220,7 +266,10 @@ public class RegistrationGUI {
 				if (jRadioButton1.isSelected()) {
 					type = User.PROVIDER;
 					keywordsTextField.setEnabled(true);
+					websiteTextField.setEnabled(true);
+					compensationTextField.setEnabled(true);
 					resumeTextArea.setEnabled(true);
+					premiumCheckBox.setEnabled(true);
 				}
 				System.out.println("Type: " + type);
 			}
@@ -231,7 +280,10 @@ public class RegistrationGUI {
 				if (jRadioButton2.isSelected()) {
 					type = User.CLIENT;
 					keywordsTextField.setEnabled(false);
+					websiteTextField.setEnabled(false);
+					compensationTextField.setEnabled(false);
 					resumeTextArea.setEnabled(false);
+					premiumCheckBox.setEnabled(false);
 				}
 				System.out.println("Type: " + type);
 			}
@@ -250,12 +302,14 @@ public class RegistrationGUI {
 	 * @param keywords the keywords
 	 * @param resume   the resume
 	 */
-	public void register(String type, String name, String userName, String password, String keywords, String resume) {
+	public void register(String type, String name, String userName, String password, String keywords, String resume,
+			Boolean isPremium, String website, String compensation) {
 		if ("P".equals(type)) {
 			// add a provider
-			DBUtils.addProvider(name, userName, password, false, 0);
+			DBUtils.addProvider(name, userName, password, 0);
 			int id = DBUtils.getUserId(userName);
-			DBUtils.addResume(id, keywords, resume);
+			Double dCompensation = Double.valueOf(compensation);
+			DBUtils.addResume(id, keywords, resume, isPremium, website, dCompensation);
 		} else {
 			// add a client
 			DBUtils.addClient(name, userName, password, 0);

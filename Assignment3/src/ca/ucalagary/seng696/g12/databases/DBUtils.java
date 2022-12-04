@@ -39,7 +39,6 @@ import org.apache.derby.jdbc.*;
 import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DBUtils.
  */
@@ -49,13 +48,11 @@ public class DBUtils {
 	 * The main method.
 	 *
 	 * @param args the arguments
-	 */
-	// Run this main function just for test
-	public static void main(String[] args) {
+	 */	
+	public static void main(String[] args) { // Run this main function just for test
 		DBUtils.initDB();
 		DBUtils.printUsers();
 		DBUtils.printResumes();
-		DBUtils.getProvider("m.j@ucalgary.ca");
 	}
 
 	/**
@@ -105,10 +102,9 @@ public class DBUtils {
 	 */
 	public static void initUsersTable() {
 		String createUsersSQL = "CREATE TABLE USERS ("
-				+ "ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
-				+ "NAME VARCHAR(30) NOT NULL," + "EMAIL VARCHAR(30)," + "PASSWORD VARCHAR(30),"
-				+ "TYPE VARCHAR(1) NOT NULL DEFAULT 'C' CONSTRAINT TYPE_CONSTRAINT CHECK (TYPE IN ('P', 'C')),"
-				+ "PREMIUM VARCHAR(1) NOT NULL DEFAULT 'N' CONSTRAINT PREMIUM_CONSTRAINT CHECK (PREMIUM IN ('N', 'Y')),"
+				+ "ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\n"
+				+ "NAME VARCHAR(30) NOT NULL,\n" + "EMAIL VARCHAR(30) NOT NULL,\n" + "PASSWORD VARCHAR(30) NOT NULL,\n"
+				+ "TYPE VARCHAR(1) NOT NULL DEFAULT 'C' CONSTRAINT TYPE_CONSTRAINT CHECK (TYPE IN ('P', 'C')),\n"				
 				+ "RATING INTEGER NOT NULL DEFAULT 0 CONSTRAINT RATING_CONSTRAINT CHECK (RATING >=0 AND RATING <= 5),"
 				+ "CONSTRAINT USERS_PK PRIMARY KEY (ID)," + "CONSTRAINT USERS_UQ UNIQUE (EMAIL))";
 		// Creating the table and insert initial data
@@ -129,8 +125,8 @@ public class DBUtils {
 		}
 		DBUtils.closeConnection();
 		// initialize
-		DBUtils.addProvider("Mahdi J.Ansari", "m.j@ucalgary.ca", "p1", true, 3);
-		DBUtils.addProvider("Majid Askari", "m.a@ucalgary.ca", "p2", false, 5);
+		DBUtils.addProvider("Mahdi J.Ansari", "m.j@ucalgary.ca", "p1", 3);
+		DBUtils.addProvider("Majid Askari", "m.a@ucalgary.ca", "p2", 5);
 		DBUtils.addClient("Mahta Ghorbani", "m.g@ucalgary.ca", "c1", 2);
 		DBUtils.addClient("Mitra Mir", "m.m@ucalgary.ca", "c2", 4);
 	}
@@ -144,17 +140,16 @@ public class DBUtils {
 	 * @param isPremium the is premium
 	 * @param rating    the rating
 	 */
-	public static void addProvider(String name, String email, String password, Boolean isPremium, int rating) {
+	public static void addProvider(String name, String email, String password, int rating) {
 		try {
 			Connection conn = DBUtils.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(
-					"INSERT INTO USERS (NAME,EMAIL,PASSWORD,TYPE,PREMIUM,RATING) VALUES(?,?,?,?,?,?)");
+					"INSERT INTO USERS (NAME,EMAIL,PASSWORD,TYPE,RATING) VALUES(?,?,?,?,?)");
 			pstmt.setString(1, name);
 			pstmt.setString(2, email);
 			pstmt.setString(3, password);
-			pstmt.setString(4, "P");
-			pstmt.setString(5, isPremium.booleanValue() == true ? "Y" : "N");
-			pstmt.setInt(6, rating);
+			pstmt.setString(4, "P");			
+			pstmt.setInt(5, rating);
 			pstmt.executeUpdate();
 			conn.commit();
 		} catch (SQLException ex) {
@@ -193,9 +188,12 @@ public class DBUtils {
 	 * Inits the resumes table.
 	 */
 	public static void initResumesTable() {
-		String createResumesSQL = "CREATE TABLE RESUMES (" + "ID INTEGER NOT NULL," + "KEYWORDS VARCHAR(100) NOT NULL,"
-				+ "BODY VARCHAR(1000)," + "UPDATED_AT TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-				+ "CONSTRAINT RESUMES_PK PRIMARY KEY (ID),"
+		String createResumesSQL = "CREATE TABLE RESUMES (" + "ID INTEGER NOT NULL,\n" + "KEYWORDS VARCHAR(200) NOT NULL,\n"
+				+ "BODY VARCHAR(1000)," + "UPDATED_AT TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n"
+				+ "PREMIUM VARCHAR(1) NOT NULL DEFAULT 'N' CONSTRAINT PREMIUM_CONSTRAINT CHECK (PREMIUM IN ('N', 'Y')),\n"
+				+ "WEBSITE VARCHAR(100) NOT NULL,\n"
+				+ "COMPENSATION DOUBLE PRECISION NOT NULL DEFAULT 0,\n"
+				+ "CONSTRAINT RESUMES_PK PRIMARY KEY (ID),\n"
 				+ "CONSTRAINT RESUMES_FK FOREIGN KEY (ID) REFERENCES USERS(ID))";
 		// Creating the table and insert initial data
 		try {
@@ -214,8 +212,8 @@ public class DBUtils {
 		}
 		DBUtils.closeConnection();
 
-		DBUtils.addResume(1, "C++, JAVA, C#, SQLSERVER", "I did 200 projects ...");
-		DBUtils.addResume(2, "PHP, MYSQL, PHYTHON", "I am better than others ...");
+		DBUtils.addResume(1, "C++, JAVA, C#, SQLSERVER", "I did 200 projects ...", true, "www.mjz.com", 50);
+		DBUtils.addResume(2, "PHP, MYSQL, PHYTHON", "I am better than others ...", false, "www.mas.us", 60);
 	}
 
 	/**
@@ -225,13 +223,16 @@ public class DBUtils {
 	 * @param keywords the keywords
 	 * @param body     the body
 	 */
-	public static void addResume(int userId, String keywords, String body) {
+	public static void addResume(int userId, String keywords, String body, Boolean isPremium, String website, double compensation) {
 		try {
 			Connection conn = DBUtils.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO RESUMES (ID,KEYWORDS,BODY) VALUES(?,?,?)");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO RESUMES (ID,KEYWORDS,BODY,PREMIUM,WEBSITE,COMPENSATION) VALUES(?,?,?,?,?,?)");
 			pstmt.setInt(1, userId);
 			pstmt.setString(2, keywords);
 			pstmt.setString(3, body);
+			pstmt.setString(4, isPremium.booleanValue() == true ? "Y" : "N");
+			pstmt.setString(5, website);
+			pstmt.setDouble(6, compensation);
 			pstmt.executeUpdate();
 			conn.commit();
 		} catch (SQLException ex) {
@@ -245,14 +246,14 @@ public class DBUtils {
 	 */
 	public static void printUsers() {
 		ResultSet rs = null;
-		String readUsersSQL = "SELECT ID, NAME, EMAIL, PASSWORD, TYPE, PREMIUM, RATING FROM USERS";
+		String readUsersSQL = "SELECT ID, NAME, EMAIL, PASSWORD, TYPE, RATING FROM USERS";
 		try {
 			Connection conn = DBUtils.getConnection();
 			Statement stmt = conn.createStatement();
 			rs = stmt.executeQuery(readUsersSQL);
 			while (rs.next()) {
-				System.out.printf("%d, %s, %s, %s, %s, %s, %d\n", rs.getInt(1), rs.getString(2), rs.getString(3),
-						rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7));
+				System.out.printf("%d, %s, %s, %s, %s, %d\n", rs.getInt(1), rs.getString(2), rs.getString(3),
+						rs.getString(4), rs.getString(5), rs.getInt(6));
 			}
 		} catch (SQLException ex) {
 			System.out.println("in connection" + ex);
@@ -264,13 +265,13 @@ public class DBUtils {
 	 * Prints the resumes.
 	 */
 	public static void printResumes() {
-		String readResumesSQL = "SELECT ID, KEYWORDS, BODY, UPDATED_AT FROM RESUMES";
+		String readResumesSQL = "SELECT ID, KEYWORDS, BODY, PREMIUM, WEBSITE, COMPENSATION, UPDATED_AT FROM RESUMES";
 		try {
 			Connection conn = DBUtils.getConnection();
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(readResumesSQL);
 			while (rs.next()) {
-				System.out.printf("%d, %s, %s, %s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+				System.out.printf("%d, %s, %s, %s, %s, %s, %s\n", rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
 			}
 		} catch (SQLException ex) {
 			System.out.println("in connection" + ex);
@@ -286,7 +287,7 @@ public class DBUtils {
 	 */
 	public static Provider getProvider(String username) {
 		Provider provider = null;
-		String readUsersSQL = "SELECT U.ID, U.NAME, U.TYPE, U.PREMIUM, U.RATING, R.KEYWORDS, R.BODY FROM USERS U \n"
+		String readUsersSQL = "SELECT U.ID, U.NAME, U.TYPE, U.RATING, R.KEYWORDS, R.BODY, R.PREMIUM, R.WEBSITE, R.COMPENSATION FROM USERS U \n"
 				+ "LEFT JOIN RESUMES R ON \n" + " U.ID = R.ID \n" + "WHERE U.TYPE = 'P' AND U.EMAIL = '" + username
 				+ "'";
 		try {
@@ -296,12 +297,14 @@ public class DBUtils {
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String name = rs.getString(2);
-				String type = rs.getString(3);
-				Boolean isPremium = rs.getBoolean(4);
-				int rating = rs.getInt(5);
+				String type = rs.getString(3);				
+				int rating = rs.getInt(4);
 				String keywords = rs.getString(5);
 				String resume = rs.getString(6);
-				provider = new Provider(id, name, username, null, type, rating, keywords, resume, isPremium);
+				Boolean isPremium = "Y".equals(rs.getString(7));
+				String website = rs.getString(8);
+				double compensation = rs.getDouble(9);
+				provider = new Provider(id, name, username, null, type, rating, keywords, resume, isPremium, website, compensation);
 
 			}
 		} catch (SQLException ex) {
@@ -319,10 +322,10 @@ public class DBUtils {
 	 */
 	public static List<Provider> getProviders(String keyword) {
 		List<Provider> providers = new ArrayList<>();
-		String readUsersSQL = "SELECT U.ID, U.NAME, U.EMAIL, U.TYPE, U.PREMIUM, U.RATING, R.KEYWORDS, R.BODY FROM USERS AS U \n"
+		String readUsersSQL = "SELECT U.ID, U.NAME, U.EMAIL, U.TYPE, U.RATING, R.KEYWORDS, R.BODY, R.PREMIUM, R.WEBSITE, R.COMPENSATION FROM USERS AS U \n"
 				+ "LEFT JOIN RESUMES AS R ON \n" + " U.ID = R.ID \n" + "WHERE U.TYPE = 'P'\n"
 				+ (keyword != null ? " AND R.KEYWORDS LIKE '%" + keyword +"%'\n" : "")
-				+ "ORDER BY U.PREMIUM DESC";
+				+ "ORDER BY R.PREMIUM DESC";
 		try {
 			Connection conn = DBUtils.getConnection();
 			Statement stmt = conn.createStatement();
@@ -331,12 +334,14 @@ public class DBUtils {
 				int id = rs.getInt(1);
 				String name = rs.getString(2);
 				String username = rs.getString(3);
-				String type = rs.getString(4);
-				Boolean isPremium = "Y".equals(rs.getString(5));
-				int rating = rs.getInt(6);
-				String keywords = rs.getString(7);
-				String resume = rs.getString(8);
-				Provider provider = new Provider(id, name, username, null, type, rating, keywords, resume, isPremium);
+				String type = rs.getString(4);				
+				int rating = rs.getInt(5);
+				String keywords = rs.getString(6);
+				String resume = rs.getString(7);
+				Boolean isPremium = "Y".equals(rs.getString(8));
+				String website = rs.getString(9);
+				double compensation = rs.getDouble(10);
+				Provider provider = new Provider(id, name, username, null, type, rating, keywords, resume, isPremium, website, compensation);
 				providers.add(provider);
 			}
 		} catch (SQLException ex) {

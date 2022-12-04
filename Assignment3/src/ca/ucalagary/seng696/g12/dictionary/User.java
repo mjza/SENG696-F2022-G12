@@ -55,7 +55,7 @@ public class User {
     public static final String CLIENT = "C";
     
     /** The Constant TYPES. */
-    public static final String TYPES[] = {PROVIDER, CLIENT};
+    public static final String TYPES[] = {User.PROVIDER, User.CLIENT};
 
     /**
      * Instantiates a new user.
