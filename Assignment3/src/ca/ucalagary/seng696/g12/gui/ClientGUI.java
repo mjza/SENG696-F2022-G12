@@ -42,6 +42,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+//import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -66,7 +67,13 @@ public class ClientGUI {
         System.out.println(providers.size());
 
         jFrame = new JFrame("Welcome " + clientAgent.getLocalName());
-        jFrame.setSize(1000, 600);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(jFrame.getGraphicsConfiguration());
+        int taskBarHeight = scnMax.bottom;
+		jFrame.setSize(screenSize.width/2, screenSize.height - taskBarHeight);
+		jFrame.setLocation(screenSize.width/2, 0);
+		
+		
         this.projects = projects;
 
         this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -79,6 +86,7 @@ public class ClientGUI {
 
         JPanel clientJPanel = new JPanel();
         clientJPanel.setLayout(new BorderLayout());
+        clientJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLUE));
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());

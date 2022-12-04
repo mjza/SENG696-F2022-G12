@@ -74,9 +74,15 @@ public class ProviderGUI {
 			}
 		});
 		this.projects = projects;
-		jFrame.setSize(400, 400);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(jFrame.getGraphicsConfiguration());
+        int taskBarHeight = scnMax.bottom;
+		jFrame.setSize(screenSize.width/2, screenSize.height - taskBarHeight);
+		jFrame.setLocation(0, 0);
 		JPanel jPanel = new JPanel();
 		jPanel.setLayout(new BorderLayout());
+		
+		jPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
 
 		premiumLabel = new JLabel();
 

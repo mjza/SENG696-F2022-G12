@@ -46,7 +46,7 @@ public class SystemAgent extends EnhancedAgent {
 	/**
 	 * The serial version must be increased by each update.
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/** Section for class attributes. */
 	private MainGUI mainGUI;
