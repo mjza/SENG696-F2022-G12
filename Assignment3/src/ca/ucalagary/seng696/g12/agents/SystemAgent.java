@@ -120,7 +120,7 @@ public class SystemAgent extends EnhancedAgent {
 	public void login(String userName, String password) {
 		String type = DBUtils.getUserType(userName, password);
 		String agentName; 
-		Class agentClass;
+		Class<?> agentClass;
 		if (User.CLIENT.equalsIgnoreCase(type)) {
 			agentName = "Client:" + userName;
 			agentClass = ClientAgent.class;
