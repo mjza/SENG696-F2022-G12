@@ -128,7 +128,7 @@ public class SystemAgent extends EnhancedAgent {
 			this.mainGUI.showWrongCredential();
 			return;
 		}
-		// After setting name
+		// After forming the agent name
 		if(this.agentExist(agentName)) {
 			this.mainGUI.showAgentAlreadyExist();
 			return;
