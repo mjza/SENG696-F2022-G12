@@ -67,7 +67,7 @@ public class MainGUI {
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 super.windowClosing(windowEvent);
                 if(systemAgent != null)
-                	systemAgent.killAgent(systemAgent.getLocalName());
+                	systemAgent.killAgent();
             }
         });
         jFrame.getContentPane().add(this.getLoginJPanel(),BorderLayout.CENTER);        

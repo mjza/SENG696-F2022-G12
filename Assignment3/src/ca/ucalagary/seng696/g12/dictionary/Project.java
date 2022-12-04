@@ -26,6 +26,7 @@ package ca.ucalagary.seng696.g12.dictionary;
 import jade.core.AID;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -34,7 +35,12 @@ import ca.ucalagary.seng696.g12.gui.ProjectGUI;
 /**
  * The Class Project.
  */
-public class Project {
+public class Project implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The name. */
 	private String name;
@@ -157,7 +163,7 @@ public class Project {
 	 *
 	 * @return the string
 	 */
-	public String toString() {
+	public String compact() {
 		if (this.done) {
 			return "" + this.name + " (done)";
 		}
@@ -170,7 +176,7 @@ public class Project {
 	 * @return the contract
 	 */
 	public String getContract() {
-		return "Contract for project: " + toString();
+		return "Contract for project: " + compact();
 	}
 
 	/**
@@ -180,7 +186,7 @@ public class Project {
 	 * @return the rejection message
 	 */
 	public String getRejectionMessage(AID sender) {
-		return sender.getLocalName() + " has rejected " + toString();
+		return sender.getLocalName() + " has rejected " + compact();
 	}
 
 	/**

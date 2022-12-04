@@ -86,11 +86,12 @@ public class ProviderAgent extends EnhancedAgent {
 				if (msg != null) {
 					System.out.println(
 							"A new message received for provider:" + getAID().getName() + " " + msg.getPerformative());
+					String contents[] = msg.getContent().split(":");
 					String projectName, chatMessage;
 					if (msg.getPerformative() == Anthology.ACLMESSAGE_PAYMENT
 							|| msg.getPerformative() == Anthology.ACLMESSAGE_DONE) {
-						projectName = msg.getContent().split(":")[0];
-						chatMessage = msg.getContent().split(":")[1];
+						projectName = contents[0];
+						chatMessage = contents[1];
 					} else {
 						projectName = "NA";
 						chatMessage = "NA";
@@ -100,28 +101,29 @@ public class ProviderAgent extends EnhancedAgent {
 						reply = msg.createReply();
 						MessageGUI msgGUI = new MessageGUI(myAgent, reply, msg, true);
 						msgGUI.showGUI();
+						break;
 					case Anthology.ACLMESSAGE_CHAT:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.chatUpdate(chatMessage);
 							}
 						}
+						break;
 					case Anthology.ACLMESSAGE_PAYMENT:
-						String contents[] = msg.getContent().split(":");
-						for (Project p : projects) {
-							if (p.getName().equals(contents[0])) {
-								System.out.println("FOUND DONE PROJECT");
-								p.setDone();
+						for (Project project : projects) {
+							if (project.getName().equals(contents[0])) {
+								project.setDone();
 							}
 						}
 						providerGUI.updateProjects(projects);
-						// int bid = Integer.parseInt(contents[1]);
+						break;
 					case Anthology.ACLMESSAGE_DONE:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.disposeGUI();
 							}
 						}
+						break;
 					}
 				}
 
@@ -171,7 +173,8 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @return the provider
 	 */
 	public Provider getProvider() {
-		return SystemAgent.getProvider(this.getLocalName().split(":")[1]);
+		String userName = this.getLocalName().split(":")[1];
+		return SystemAgent.getProvider(userName);
 	}
 
 	/**

@@ -27,107 +27,146 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Anthology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
+import ca.ucalagary.seng696.g12.dictionary.Serializer;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
+/**
+ * The Class MessageGUI.
+ */
 public class MessageGUI {
 
-    JFrame jFrame;
-    JTextArea jTextAreaMessages;
+	/** The j frame. */
+	JFrame jFrame;
+	
+	/** The j text area messages. */
+	JTextArea jTextAreaMessages;
+	
+	Project project = null;
 
-    public MessageGUI(Agent myAgent, ACLMessage reply, ACLMessage msg, Boolean isProposal) {
-        String content = msg.getContent();
-        jFrame = new JFrame("Proposal (" + myAgent.getLocalName() + ")");
+	/**
+	 * Instantiates a new message GUI.
+	 *
+	 * @param myAgent the my agent
+	 * @param reply the reply
+	 * @param msg the msg
+	 * @param isProposal the is proposal
+	 */
+	public MessageGUI(Agent myAgent, ACLMessage reply, ACLMessage msg, Boolean isProposal) {
+		String content = msg.getContent();		
+		try {
+			project = (Project) Serializer.toObject(content);
+		} catch (ClassNotFoundException | IOException e1) {
+			e1.printStackTrace();
+			this.showDecodingError();
+			return;
+		}
+		jFrame = new JFrame("Proposal (" + myAgent.getLocalName() + ")");
 
-        this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                super.windowClosing(windowEvent);
-//                myAgent.killAgent(myAgent.getLocalName());
-            }
-        });
+		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				super.windowClosing(windowEvent);
+			}
+		});
 
-        jFrame.setSize(600, 400);
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+		jFrame.setSize(600, 400);
+		JPanel jPanel = new JPanel();
+		jPanel.setLayout(new BorderLayout());
 
-        JLabel jLabel = new JLabel();
-        String[] text = content.split(":");
-        String output = "<HTML>";
-        for(String string : text){
-            output+=" "+string+"<br/>";
-        }
-        output+="</HTML>";
-        jLabel.setText(output);
-        jLabel.setSize(new Dimension(20, 20));
-        jPanel.add(jLabel, BorderLayout.CENTER);
-        
-        JPanel jPanelNewMessage = new JPanel();
-        if(isProposal) {
-        	JButton jButtonAccept = new JButton("Accept");
-        	JButton jButtonReject = new JButton("Reject");
-            jButtonAccept.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                	reply.setContent(content);
-                	reply.setPerformative(Anthology.ACLMESSAGE_ACCEPT);
-                    myAgent.send(reply);
-                    String c[] = content.split(":");
-                    Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),null);
-                    ((ProviderAgent)myAgent).providerGUI.addProject(project);
-                    dispose();
-                }
-            });
-            jButtonReject.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                	reply.setContent(content);
-                	reply.setPerformative(Anthology.ACLMESSAGE_REFUSE);
-                    myAgent.send(reply);
-                    dispose();
-                }
-            });
-            jPanelNewMessage.add(jButtonAccept, BorderLayout.WEST);
-            jPanelNewMessage.add(jButtonReject, BorderLayout.EAST);
-        }else if(reply != null){
-	        HintTextField newMessage = new HintTextField("Reply:");
-	        newMessage.setPreferredSize(new Dimension(300, 30));
-	        JButton jButtonSend = new JButton("Send");
-	        jButtonSend.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	            	reply.setContent(content + "\n" + newMessage.getText());
-	                myAgent.send(reply);
-	            }
-	        });
-	        
-	        jPanelNewMessage.add(newMessage, BorderLayout.CENTER);
-	        jPanelNewMessage.add(jButtonSend, BorderLayout.SOUTH);
+		JLabel jLabel = new JLabel();
+		String[] text = content.split(":");
+		String output = "<HTML>";
+		for (String string : text) {
+			output += " " + string + "<br/>";
+		}
+		output += "</HTML>";
+		jLabel.setText(output);
+		jLabel.setSize(new Dimension(20, 20));
+		jPanel.add(jLabel, BorderLayout.CENTER);
+
+		JPanel jPanelNewMessage = new JPanel();
+		if (isProposal) {
+			JButton jButtonAccept = new JButton("Accept");
+			JButton jButtonReject = new JButton("Reject");
+			jButtonAccept.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					reply.setContent(content);
+					reply.setPerformative(Anthology.ACLMESSAGE_ACCEPT);
+					myAgent.send(reply);
+					String c[] = content.split(":");
+					Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),
+							null);
+					((ProviderAgent) myAgent).providerGUI.addProject(project);
+					dispose();
+				}
+			});
+			jButtonReject.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					reply.setContent(content);
+					reply.setPerformative(Anthology.ACLMESSAGE_REFUSE);
+					myAgent.send(reply);
+					dispose();
+				}
+			});
+			jPanelNewMessage.add(jButtonAccept, BorderLayout.WEST);
+			jPanelNewMessage.add(jButtonReject, BorderLayout.EAST);
+		} else if (reply != null) {
+			HintTextField newMessage = new HintTextField("Reply:");
+			newMessage.setPreferredSize(new Dimension(300, 30));
+			JButton jButtonSend = new JButton("Send");
+			jButtonSend.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					reply.setContent(content + "\n" + newMessage.getText());
+					myAgent.send(reply);
+				}
+			});
+
+			jPanelNewMessage.add(newMessage, BorderLayout.CENTER);
+			jPanelNewMessage.add(jButtonSend, BorderLayout.SOUTH);
 //	        myAgent.openProject(selectProject);
-        }
-        jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
-        jFrame.add(jPanel);
+		}
+		jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
+		jFrame.add(jPanel);
+	}
+
+	/**
+	 * Show message.
+	 *
+	 * @param message the message
+	 */
+	public void showMessage(String message) {
+		jTextAreaMessages.setText(message);
+	}
+
+	/**
+	 * Show GUI.
+	 */
+	public void showGUI() {
+		jFrame.setVisible(true);
+	}
+
+	/**
+	 * Dispose.
+	 */
+	public void dispose() {
+		this.jFrame.dispose();
+	}
+	
+	public void showDecodingError() {
+        JOptionPane.showMessageDialog(jFrame, "Problem in decoding data.", "ERROR",
+                JOptionPane.ERROR_MESSAGE);
     }
-
-
-    public void showMessage(String message) {
-        jTextAreaMessages.setText(message);
-    }
-
-    public void showGUI() {
-        jFrame.setVisible(true);
-    }
-
-    public void dispose() {
-        this.jFrame.dispose();
-    }
-
 
 
 }

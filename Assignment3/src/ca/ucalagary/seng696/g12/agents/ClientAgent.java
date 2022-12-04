@@ -27,12 +27,14 @@ import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import ca.ucalagary.seng696.g12.dictionary.Anthology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
+import ca.ucalagary.seng696.g12.dictionary.Serializer;
 import ca.ucalagary.seng696.g12.gui.ClientGUI;
 
 /**
@@ -45,10 +47,7 @@ public class ClientAgent extends EnhancedAgent {
 	private static final long serialVersionUID = 1L;
 
 	/** The projects. */
-	List<Project> projects;
-
-	/** The current number. */
-	int currentNumber = 0;
+	protected List<Project> projects = new ArrayList<>();
 
 	/** The client GUI. */
 	ClientGUI clientGUI;
@@ -59,9 +58,8 @@ public class ClientAgent extends EnhancedAgent {
 	@Override
 	protected void setup() {
 		System.out.println("Client Agent: " + getAID().getName() + " is ready.");
-		Set<AID> providers = searchForService("ProvidingService");
-		projects = new ArrayList<>();
-		clientGUI = new ClientGUI(this, providers, projects);
+		// bind a GUI and show it
+		clientGUI = new ClientGUI(this);
 		clientGUI.showGUI();
 		// addBehaviour(new MessageHandlingBehaviour(this));
 		// in a cycle listen for messages
@@ -80,44 +78,40 @@ public class ClientAgent extends EnhancedAgent {
 				if (msg != null) {
 					System.out.println(
 							"A new message received for client:" + getAID().getName() + " " + msg.getPerformative());
-					String contents[] = null;
-					Project project = null;
+					String contents[] = msg.getContent().split(":");
 					String projectName, progressText, chatMessage;
-					switch (msg.getPerformative()) {
+					switch (msg.getPerformative()) 
+					{
+					case Anthology.ACLMESSAGE_REFUSE:
+						break;
 					case Anthology.ACLMESSAGE_ACCEPT:
-						// content = null;
-						contents = msg.getContent().split(":");
-						project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]), msg.getSender(),
+						Project project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]), msg.getSender(),
 								myAgent.getAID(), null);
 						reply = new ACLMessage(Anthology.ACLMESSAGE_CHAT);
 						reply.addReceiver(msg.getSender());
-						// content = project.getContract();
 						clientGUI.addProject(project);
-					case Anthology.ACLMESSAGE_REFUSE:
-						// content = null;
-						contents = msg.getContent().split(":");
-						project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]), msg.getSender(),
-								myAgent.getAID(), null);
-						// content = project.getRejectionMessage(msg.getSender());
-						System.out.println("" + msg.getSender().getLocalName() + " responded to the proposal for "
-								+ msg.getContent());
+						break;
 					case (Anthology.ACLMESSAGE_CHAT):
-						projectName = msg.getContent().split(":")[0];
-						chatMessage = msg.getContent().split(":")[1];
-						for (Project project_iter : projects) {
-							if (project_iter.getName().equals(projectName)) {
-								project_iter.chatUpdate(chatMessage);
+						projectName = contents[0];
+						chatMessage = contents[1];
+						for (int i = 0; i< projects.size(); i++) {
+							project = projects.get(i);
+							if (project.getName().equals(projectName)) {
+								project.chatUpdate(chatMessage);
 							}
 						}
+						break;
 					case (Anthology.ACLMESSAGE_PROGRESS):
-						projectName = msg.getContent().split(":")[0];
-						progressText = msg.getContent().split(":")[1];
+						projectName = contents[0];
+						progressText = contents[1];
 						int progress = Integer.parseInt(progressText);
-						for (Project project_iter : projects) {
-							if (project_iter.getName().equals(projectName)) {
-								project_iter.setProgress(progress);
+						for (int i = 0; i< projects.size(); i++) {
+							project = projects.get(i);
+							if (project.getName().equals(projectName)) {
+								project.setProgress(progress);
 							}
 						}
+						break;
 					}
 				}
 			}
@@ -129,14 +123,39 @@ public class ClientAgent extends EnhancedAgent {
 	 *
 	 * @param p        the p
 	 * @param provider the provider
+	 * @throws IOException 
 	 */
-	public void sendProposal(Project p, AID provider) {
+	public void sendProposal(Project project, AID provider) {
 		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_OFFER);
 		message.setConversationId(Anthology.PROPOSAL);
-		message.setContent(p.toString());
-		System.out.println("Proposing " + p.toString() + " to " + provider.getLocalName());
-		message.addReceiver(provider);
-		send(message);
+		try {
+			String serializedProject = Serializer.toString(project);
+			message.setContent(serializedProject);	
+			message.addReceiver(provider);
+			send(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	/**
+	 * Gets the providers.
+	 *
+	 * @return the providers
+	 */
+	public Set<AID> getProviders() {
+		Set<AID> providers = searchForService("ProvidingService");
+		return providers;
+	}
+
+	/**
+	 * Gets the projects.
+	 *
+	 * @return the projects
+	 */
+	public List<Project> getProjects() {
+		return projects;
 	}
 
 	/**

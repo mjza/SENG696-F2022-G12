@@ -58,8 +58,10 @@ public class ClientGUI {
     List<Provider> currentProviders = new ArrayList<>();
     ClientAgent clientAgent;
 
-    public ClientGUI(ClientAgent clientAgent, Set<AID> providers, List<Project> projects) {
+    public ClientGUI(ClientAgent clientAgent) {
         this.clientAgent = clientAgent;
+        Set<AID> providers = clientAgent.getProviders();
+        List<Project> projects = clientAgent.getProjects();
         System.out.println("number of providers: ");
         System.out.println(providers.size());
 
@@ -71,7 +73,7 @@ public class ClientGUI {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 super.windowClosing(windowEvent);
-                clientAgent.killAgent(clientAgent.getLocalName());
+                clientAgent.killAgent();
             }
         });
 
@@ -219,7 +221,7 @@ public class ClientGUI {
                 }
                 Project project = new Project(jTextFieldName.getText(), jTextAreaDescription.getText(),
                         Integer.parseInt(bid.getText()), selectedProvider, clientAgent.getAID(), model.getValue());
-                System.out.println(jTextFieldName.getText() + "  " + project.toString());
+                System.out.println(jTextFieldName.getText() + "  " + project.compact());
                 clientAgent.sendProposal(project, selectedProvider);
             }
         });

@@ -70,7 +70,7 @@ public class ProviderGUI {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				super.windowClosing(windowEvent);
-				myAgent.killAgent(myAgent.getLocalName());
+				myAgent.killAgent();
 			}
 		});
 		this.projects = projects;

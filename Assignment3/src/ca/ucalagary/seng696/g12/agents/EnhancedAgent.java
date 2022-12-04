@@ -130,17 +130,16 @@ public class EnhancedAgent extends Agent {
 	}
 
 	/**
-	 * Kill agent.
+	 * Kill agent the current agent.
 	 *
-	 * @param agentName the name
 	 */
-	public void killAgent(String agentName) {
-		AID agentID = new AID(agentName, AID.ISLOCALNAME);
+	public void killAgent() {
+		System.out.println("Killing the agent " + getLocalName());
 		AgentContainer controller = getContainerController();
 		try {
-			AgentController agent = controller.getAgent(agentName);
+			AgentController agent = controller.getAgent(getLocalName());
 			agent.kill();
-			System.out.println("Agent killed: " + agentID);
+			System.out.println("Agent killed: " + getLocalName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
