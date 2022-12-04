@@ -120,10 +120,13 @@ public class SystemAgent extends EnhancedAgent {
 	public void login(String userName, String password) {
 		String type = DBUtils.getUserType(userName, password);
 		String agentName; 
+		Class agentClass;
 		if (User.CLIENT.equalsIgnoreCase(type)) {
 			agentName = "client:" + userName;
+			agentClass = ClientAgent.class;
 		} else if (User.PROVIDER.equalsIgnoreCase(type)) {
-			agentName ="provider:" + userName;			
+			agentName ="provider:" + userName;
+			agentClass = ProviderAgent.class;
 		} else {
 			this.mainGUI.showWrongCredential();
 			return;
@@ -133,7 +136,7 @@ public class SystemAgent extends EnhancedAgent {
 			this.mainGUI.showAgentAlreadyExist();
 			return;
 		}
-		this.createAgent(agentName, ProviderAgent.class);
+		this.createAgent(agentName, agentClass);
 	}
 
 	/**
