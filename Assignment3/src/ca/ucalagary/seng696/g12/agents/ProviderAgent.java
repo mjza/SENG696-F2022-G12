@@ -60,8 +60,7 @@ public class ProviderAgent extends EnhancedAgent {
 	/** The rate. */
 	private double rate = 0.0;
 
-	/** The credit. */
-	private int credit = 1000;
+
 
 	/**
 	 * Setup.
@@ -115,7 +114,7 @@ public class ProviderAgent extends EnhancedAgent {
 						}
 						providerGUI.updateProjects(projects);
 						int bid = Integer.parseInt(contents[1]);
-						ProviderAgent.this.addCredit(bid);
+						
 					case Constants.DONE:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
@@ -166,25 +165,6 @@ public class ProviderAgent extends EnhancedAgent {
 	}
 
 	/**
-	 * Gets the credit.
-	 *
-	 * @return the credit
-	 */
-	public int getCredit() {
-		return credit;
-	}
-
-	/**
-	 * Adds the credit.
-	 *
-	 * @param x the x
-	 */
-	public void addCredit(int x) {
-		credit += x;
-		providerGUI.updateCredit();
-	}
-
-	/**
 	 * Gets the provider.
 	 *
 	 * @return the provider
@@ -199,10 +179,7 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @return the boolean
 	 */
 	public Boolean goPremium() {
-		if (getCredit() < Constants.PREMIUM_PRICE) {
-			return false;
-		}
-		addCredit(-Constants.PREMIUM_PRICE);
+		
 		Provider p = getProvider();
 		p.setPremium();
 		providerGUI.updatePremium();
@@ -217,7 +194,7 @@ public class ProviderAgent extends EnhancedAgent {
 		Provider p = getProvider();
 		p.setType(User.PROVIDER);
 		providerGUI.dispose();
-		createAgent("client:" + p.getUsername(), ClientAgent.class);
+		createAgent("Client:" + p.getUsername(), ClientAgent.class);
 		takeDown();
 	}
 }

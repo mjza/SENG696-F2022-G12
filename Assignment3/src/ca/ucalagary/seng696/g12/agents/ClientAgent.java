@@ -53,8 +53,6 @@ public class ClientAgent extends EnhancedAgent {
     /** The gui. */
     ClientGUI GUI;
     
-    /** The credit. */
-    private int credit = 1000;
     
     /**
      * Setup.
@@ -191,26 +189,7 @@ public class ClientAgent extends EnhancedAgent {
             }
         }
         GUI.updateProjects(projects);
-    	addCredit(-1 * project.getBid());
     }
     
-    /**
-     * Gets the credit.
-     *
-     * @return the credit
-     */
-    public int getCredit() {
-    	return credit;
-    }
     
-    /**
-     * Adds the credit.
-     *
-     * @param x the x
-     */
-    public void addCredit(int x) {
-        credit += x;
-        GUI.updateCredit();
-    	
-    }
 }

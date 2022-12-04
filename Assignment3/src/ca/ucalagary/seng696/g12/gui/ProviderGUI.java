@@ -50,8 +50,6 @@ public class ProviderGUI {
 	/** The projects. */
 	List<Project> projects;
 	
-	/** The credit label. */
-	JLabel creditLabel;
 	
 	/** The premium label. */
 	JLabel premiumLabel;
@@ -80,13 +78,13 @@ public class ProviderGUI {
 		jFrame.setSize(400, 400);
 		JPanel jPanel = new JPanel();
 		jPanel.setLayout(new BorderLayout());
-		creditLabel = new JLabel();
+
 		premiumLabel = new JLabel();
-		updateCredit();
+
 		updatePremium();
 
 		JPanel jPanelNewMessage = new JPanel();
-		jPanelNewMessage.add(creditLabel, BorderLayout.CENTER);
+
 		jPanelNewMessage.add(premiumLabel, BorderLayout.SOUTH);
 
 		jPanel.add(jPanelNewMessage, BorderLayout.CENTER);
@@ -167,12 +165,6 @@ public class ProviderGUI {
 		this.projects.add(project);
 	}
 
-	/**
-	 * Update credit.
-	 */
-	public void updateCredit() {
-		creditLabel.setText("Your credit: " + myAgent.getCredit());
-	}
 
 	/**
 	 * Update premium.

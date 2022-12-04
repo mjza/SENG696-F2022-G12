@@ -54,7 +54,7 @@ public class ClientGUI {
     DefaultListModel<String> providersList;
     List<Project> projects;
     DefaultListModel<String> projectsListModel;
-    JLabel creditLabel;
+    
     List<Provider> currentProviders = new ArrayList<>();
     ClientAgent myAgent;
 
@@ -228,8 +228,7 @@ public class ClientGUI {
         jPanelNewMessage.add(bid, BorderLayout.CENTER);
         jPanelNewMessage.add(jButtonSend, BorderLayout.SOUTH);
 
-        creditLabel = new JLabel("Your credit: "+ myAgent.getCredit());
-        jPanelNewMessage.add(creditLabel, BorderLayout.WEST);
+        
 
         jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
 
@@ -249,9 +248,7 @@ public class ClientGUI {
         projectsListModel.addElement(project.getName());
     }
 
-    public void updateCredit() {
-        creditLabel.setText("Your credit: " + myAgent.getCredit());
-    }
+
     public void updateProjects(List<Project> projects){
         System.out.println("UPDATING PROJECTS");
         this.projects = projects;

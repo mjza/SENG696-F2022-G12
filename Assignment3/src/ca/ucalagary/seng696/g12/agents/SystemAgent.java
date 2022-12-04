@@ -122,10 +122,10 @@ public class SystemAgent extends EnhancedAgent {
 		String agentName; 
 		Class agentClass;
 		if (User.CLIENT.equalsIgnoreCase(type)) {
-			agentName = "client:" + userName;
+			agentName = "Client:" + userName;
 			agentClass = ClientAgent.class;
 		} else if (User.PROVIDER.equalsIgnoreCase(type)) {
-			agentName ="provider:" + userName;
+			agentName ="Provider:" + userName;
 			agentClass = ProviderAgent.class;
 		} else {
 			this.mainGUI.showWrongCredential();
