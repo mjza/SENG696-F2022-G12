@@ -37,7 +37,6 @@ import ca.ucalagary.seng696.g12.gui.MessageGUI;
 import ca.ucalagary.seng696.g12.gui.ProviderGUI;
 import ca.ucalagary.seng696.g12.settings.Constants;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ProviderAgent.
  */
@@ -124,8 +123,6 @@ public class ProviderAgent extends EnhancedAgent {
 							}
 						}
 					}
-				} else {
-					System.out.println("provider receives no message");
 				}
 
 			}

@@ -164,7 +164,7 @@ public class ClientGUI {
                 JList<?> list = (JList<?>) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     int index = list.locationToIndex(evt.getPoint());
-                    ProjectDetailGUI projectDetailGUI = new ProjectDetailGUI(myAgent, ClientGUI.this.projects.get(index));
+                    ProjectGUI projectDetailGUI = new ProjectGUI(myAgent, ClientGUI.this.projects.get(index));
                     projectDetailGUI.showGUI();
                     System.out.println("Clicked: " + index);
                 }
@@ -218,7 +218,7 @@ public class ClientGUI {
                     return;
                 }
                 Project project = new Project(jTextFieldName.getText(), jTextAreaDescription.getText(),
-                        Integer.parseInt(bid.getText()), selectedProvider, myAgent.getAID(), model.getYear() + "/" + model.getMonth() + "/" + model.getDay());
+                        Integer.parseInt(bid.getText()), selectedProvider, myAgent.getAID(), model.getValue());
                 System.out.println(jTextFieldName.getText() + "  " + project.toString());
                 myAgent.sendProposal(project, selectedProvider);
             }

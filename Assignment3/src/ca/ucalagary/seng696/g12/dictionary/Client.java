@@ -28,7 +28,7 @@ package ca.ucalagary.seng696.g12.dictionary;
  */
 public class Client extends User {
 
-    /**
+	/**
      * Instantiates a new client.
      *
      * @param id the id

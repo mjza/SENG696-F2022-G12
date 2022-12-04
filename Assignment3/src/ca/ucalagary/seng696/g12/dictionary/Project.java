@@ -24,14 +24,19 @@
 package ca.ucalagary.seng696.g12.dictionary;
 
 import jade.core.AID;
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import ca.ucalagary.seng696.g12.gui.ProjectDetailGUI;
+import java.util.Date;
+
+import ca.ucalagary.seng696.g12.gui.ProjectGUI;
 
 /**
  * The Class Project.
  */
 public class Project {
-	
+
 	/** The name. */
 	private String name;
 	
@@ -44,8 +49,8 @@ public class Project {
 	/** The bid. */
 	private int bid;
 	
-	/** The messages history. */
-	private ArrayList<String> messagesHistory = new ArrayList<>();
+	/** The deadline. */
+	private Date deadline;
 	
 	/** The provider. */
 	private AID provider;
@@ -53,14 +58,14 @@ public class Project {
 	/** The client. */
 	private AID client;
 	
-	/** The deadline. */
-	private String deadline;
-	
-	/** The project detail GUI. */
-	private ProjectDetailGUI projectDetailGUI;
-	
 	/** The done. */
 	private boolean done = false;
+	
+	/** The messages history. */
+	private ArrayList<String> chats = new ArrayList<>();
+	
+	/** The project detail GUI. */
+	private ProjectGUI projectGUI;
 
 	/**
 	 * Instantiates a new project.
@@ -72,12 +77,33 @@ public class Project {
 	 * @param client the client
 	 * @param deadline the deadline
 	 */
-	public Project(String name, String description, int bid, AID provider, AID client, String deadline) {
+	public Project(String name, String description, int bid, AID provider, AID client, Date deadline) {
 		this.name = name;
 		this.bid = bid;
 		this.description = description;
 		this.provider = provider;
 		this.client = client;
+		this.deadline = deadline;
+	}
+	
+	/**
+	 * Instantiates a new project.
+	 *
+	 * @param name the name
+	 * @param description the description
+	 * @param bid the bid
+	 * @param provider the provider
+	 * @param client the client
+	 * @param deadline the deadline
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public Project(String name, String description, int bid, String provider, String client, Date deadline) throws ClassNotFoundException, IOException {
+		this.name = name;
+		this.bid = bid;
+		this.description = description;
+		this.provider = (AID) Serializer.toObject(provider);
+		this.client = (AID) Serializer.toObject(client);
 		this.deadline = deadline;
 	}
 
@@ -91,19 +117,19 @@ public class Project {
 	/**
 	 * Sets the name.
 	 *
-	 * @param newName the new name
+	 * @param name the name
 	 */
-	public void setName(String newName) {
-		this.name = newName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * Gets the messages history.
+	 * Gets the chats.
 	 *
-	 * @return the messages history
+	 * @return the chats
 	 */
-	public ArrayList<String> getMessagesHistory() {
-		return this.messagesHistory;
+	public ArrayList<String> getChats() {
+		return this.chats;
 	}
 
 	/**
@@ -159,11 +185,11 @@ public class Project {
 	}
 
 	/**
-	 * Checks if is final.
+	 * Checks if is done.
 	 *
-	 * @return true, if is final
+	 * @return true, if is done
 	 */
-	public boolean isFinal() {
+	public boolean isDone() {
 		return this.progress == 100;
 	}
 
@@ -181,27 +207,27 @@ public class Project {
 	 *
 	 * @param progressPercentage the progress percentage
 	 */
-	public void progress(int progressPercentage) {
+	public void setProgress(int progressPercentage) {
 		int permittedProgress = 100 - this.progress;
-		if (progressPercentage < permittedProgress) {
+		if (progressPercentage <= permittedProgress) {
 			this.progress += progressPercentage;
 		}
-		if (this.projectDetailGUI != null) {
-			this.projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
-					this.getMessagesHistory());
+		if (this.projectGUI != null) {
+			this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
+					this.getChats());
 		}
 	}
 
 	/**
 	 * Chat update.
 	 *
-	 * @param chatMessage the chat message
+	 * @param chat the chat message
 	 */
-	public void chatUpdate(String chatMessage) {
-		this.messagesHistory.add(chatMessage);
-		if (this.projectDetailGUI != null) {
-			this.projectDetailGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
-					this.getMessagesHistory());
+	public void chatUpdate(String chat) {
+		this.chats.add(chat);
+		if (this.projectGUI != null) {
+			this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
+					this.getChats());
 		}
 	}
 
@@ -235,18 +261,18 @@ public class Project {
 	/**
 	 * Connect GUI.
 	 *
-	 * @param projectDetailGUI the project detail GUI
+	 * @param projectGUI the project detail GUI
 	 */
-	public void connectGUI(ProjectDetailGUI projectDetailGUI) {
-		this.projectDetailGUI = projectDetailGUI;
+	public void connectGUI(ProjectGUI projectGUI) {
+		this.projectGUI = projectGUI;
 	}
 
 	/**
 	 * Dispose GUI.
 	 */
 	public void disposeGUI() {
-		if (this.projectDetailGUI != null) {
-			this.projectDetailGUI.disposeGUI();
+		if (this.projectGUI != null) {
+			this.projectGUI.disposeGUI();
 		}
 	}
 }

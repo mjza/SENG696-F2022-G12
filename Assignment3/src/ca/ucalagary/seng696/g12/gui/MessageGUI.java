@@ -79,7 +79,7 @@ public class MessageGUI {
                 	reply.setPerformative(Constants.ACCEPT);
                     myAgent.send(reply);
                     String c[] = content.split(":");
-                    Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),"");
+                    Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),null);
                     ((ProviderAgent)myAgent).providerGUI.addProject(project);
                     dispose();
                 }

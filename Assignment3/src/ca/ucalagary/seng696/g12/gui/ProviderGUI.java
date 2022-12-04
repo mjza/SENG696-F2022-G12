@@ -35,122 +35,162 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-
-
+/**
+ * The Class ProviderGUI.
+ */
 public class ProviderGUI {
 
-    JFrame jFrame;
-    DefaultListModel<String> projectsListModel;
-    List<Project> projects;
-    JLabel creditLabel;
-    JLabel premiumLabel;
-    ProviderAgent myAgent;
+	/** The j frame. */
+	JFrame jFrame;
+	
+	/** The projects list model. */
+	DefaultListModel<String> projectsListModel;
+	
+	/** The projects. */
+	List<Project> projects;
+	
+	/** The credit label. */
+	JLabel creditLabel;
+	
+	/** The premium label. */
+	JLabel premiumLabel;
+	
+	/** The my agent. */
+	ProviderAgent myAgent;
 
-    public ProviderGUI(ProviderAgent myAgent, List<Project> projects) {
-    	this.myAgent = myAgent;
-        jFrame = new JFrame("Welcome " + myAgent.getLocalName());
+	/**
+	 * Instantiates a new provider GUI.
+	 *
+	 * @param myAgent the my agent
+	 * @param projects the projects
+	 */
+	public ProviderGUI(ProviderAgent myAgent, List<Project> projects) {
+		this.myAgent = myAgent;
+		jFrame = new JFrame("Welcome " + myAgent.getLocalName());
 
-        this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                super.windowClosing(windowEvent);
-                myAgent.killAgent(myAgent.getLocalName());
-            }
-        });
-        this.projects = projects;
-        jFrame.setSize(400, 400);
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
-        creditLabel = new JLabel();
-        premiumLabel = new JLabel();
-        updateCredit();
-        updatePremium();
-        
-        JPanel jPanelNewMessage = new JPanel();
-        jPanelNewMessage.add(creditLabel, BorderLayout.CENTER);
-        jPanelNewMessage.add(premiumLabel, BorderLayout.SOUTH);
+		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				super.windowClosing(windowEvent);
+				myAgent.killAgent(myAgent.getLocalName());
+			}
+		});
+		this.projects = projects;
+		jFrame.setSize(400, 400);
+		JPanel jPanel = new JPanel();
+		jPanel.setLayout(new BorderLayout());
+		creditLabel = new JLabel();
+		premiumLabel = new JLabel();
+		updateCredit();
+		updatePremium();
 
-        jPanel.add(jPanelNewMessage, BorderLayout.CENTER);
+		JPanel jPanelNewMessage = new JPanel();
+		jPanelNewMessage.add(creditLabel, BorderLayout.CENTER);
+		jPanelNewMessage.add(premiumLabel, BorderLayout.SOUTH);
 
-        if(!myAgent.getProvider().isPremium()){
-            JButton premiumButton = new JButton("Go premium!");
-            premiumButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if(myAgent.goPremium()){
-                        premiumButton.setVisible(false);
-                    }
-                }
-            });
-            jPanelNewMessage.add(premiumButton, BorderLayout.SOUTH);
-        }
-        JButton withdrawButton = new JButton("Witdraw service agreement");
-        withdrawButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                myAgent.withdraw();     
-            }
-        });
-        jPanelNewMessage.add(withdrawButton, BorderLayout.SOUTH);
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.setSize(100, 400);
+		jPanel.add(jPanelNewMessage, BorderLayout.CENTER);
 
-        projectsListModel = new DefaultListModel<>();
+		if (!myAgent.getProvider().isPremium()) {
+			JButton premiumButton = new JButton("Go premium!");
+			premiumButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (myAgent.goPremium()) {
+						premiumButton.setVisible(false);
+					}
+				}
+			});
+			jPanelNewMessage.add(premiumButton, BorderLayout.SOUTH);
+		}
+		JButton withdrawButton = new JButton("Witdraw service agreement");
+		withdrawButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myAgent.withdraw();
+			}
+		});
+		jPanelNewMessage.add(withdrawButton, BorderLayout.SOUTH);
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BorderLayout());
+		leftPanel.setSize(100, 400);
 
-        for (Project project : this.projects) {
-            projectsListModel.addElement(project.getName());
-        }
+		projectsListModel = new DefaultListModel<>();
 
-        JList<String> projectList = new JList<>(projectsListModel);
-        projectList.setFixedCellHeight(50);
-        projectList.setFixedCellWidth(100);
+		for (Project project : this.projects) {
+			projectsListModel.addElement(project.getName());
+		}
 
-        projectList.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                JList list = (JList) evt.getSource();
-                if (evt.getClickCount() == 2) {
-                    int index = list.locationToIndex(evt.getPoint());
-                    ProjectDetailGUI projectDetailGUI = new ProjectDetailGUI(myAgent, projects.get(index));
-                    projectDetailGUI.showGUI();
-                    System.out.println("Clicked: " + index);
-                }
-            }
-        });
+		JList<String> projectList = new JList<>(projectsListModel);
+		projectList.setFixedCellHeight(50);
+		projectList.setFixedCellWidth(100);
 
-        leftPanel.add(projectList, BorderLayout.CENTER);
-        jPanel.add(leftPanel, BorderLayout.WEST);
+		projectList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				JList list = (JList) evt.getSource();
+				if (evt.getClickCount() == 2) {
+					int index = list.locationToIndex(evt.getPoint());
+					ProjectGUI projectDetailGUI = new ProjectGUI(myAgent, projects.get(index));
+					projectDetailGUI.showGUI();
+					System.out.println("Clicked: " + index);
+				}
+			}
+		});
 
-        jFrame.add(jPanel);
-    }
+		leftPanel.add(projectList, BorderLayout.CENTER);
+		jPanel.add(leftPanel, BorderLayout.WEST);
 
-    public void showGUI() {
-        jFrame.setVisible(true);
-    }
+		jFrame.add(jPanel);
+	}
 
-    public void dispose() {
-        this.jFrame.dispose();
-    }
+	/**
+	 * Show GUI.
+	 */
+	public void showGUI() {
+		jFrame.setVisible(true);
+	}
 
-    public void addProject(Project project) {
-        projectsListModel.addElement(project.getName());
-        this.projects.add(project);
-    }
-    
-    public void updateCredit() {
-    	creditLabel.setText("Your credit: " + myAgent.getCredit());
-    }
+	/**
+	 * Dispose.
+	 */
+	public void dispose() {
+		this.jFrame.dispose();
+	}
 
-    public void updatePremium(){
-        premiumLabel.setText("You are" + (myAgent.getProvider().isPremium() ?" ":" not ")+ "a premium user");
-    }
+	/**
+	 * Adds the project.
+	 *
+	 * @param project the project
+	 */
+	public void addProject(Project project) {
+		projectsListModel.addElement(project.getName());
+		this.projects.add(project);
+	}
 
-    public void updateProjects(List<Project> projects){
-        System.out.println("UPDATING PROJECTS");
-        this.projects = projects;
-        projectsListModel.clear();
-        for (Project project : this.projects) {
-            projectsListModel.addElement(project.getName());
-        }
-    }
+	/**
+	 * Update credit.
+	 */
+	public void updateCredit() {
+		creditLabel.setText("Your credit: " + myAgent.getCredit());
+	}
+
+	/**
+	 * Update premium.
+	 */
+	public void updatePremium() {
+		premiumLabel.setText("You are" + (myAgent.getProvider().isPremium() ? " " : " not ") + "a premium user");
+	}
+
+	/**
+	 * Update projects.
+	 *
+	 * @param projects the projects
+	 */
+	public void updateProjects(List<Project> projects) {
+		System.out.println("UPDATING PROJECTS");
+		this.projects = projects;
+		projectsListModel.clear();
+		for (Project project : this.projects) {
+			projectsListModel.addElement(project.getName());
+		}
+	}
 }

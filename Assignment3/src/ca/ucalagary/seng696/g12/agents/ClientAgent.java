@@ -87,7 +87,7 @@ public class ClientAgent extends EnhancedAgent {
                         case Constants.ACCEPT:
                             content = null;
                             c = msg.getContent().split(":");
-                            project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),"");
+                            project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),null);
 
                             reply = new ACLMessage(Constants.CHAT);
                             reply.addReceiver(msg.getSender());
@@ -96,7 +96,7 @@ public class ClientAgent extends EnhancedAgent {
                         case Constants.REFUSE:
                             content = null;
                             c = msg.getContent().split(":");
-                            project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),"");
+                            project = new Project(c[0], c[1], Integer.parseInt(c[2]), msg.getSender(), myAgent.getAID(),null);
 
                             content = project.getRejectionMessage(msg.getSender());
                         System.out.println("" + msg.getSender().getLocalName() + " responded to the proposal for " + msg.getContent());
@@ -114,7 +114,7 @@ public class ClientAgent extends EnhancedAgent {
                         int progress = Integer.parseInt(progressText);
                         for (Project project_iter : projects){
                             if (project_iter.getName().equals(projectName)){
-                                project_iter.progress(progress);
+                                project_iter.setProgress(progress);
                             }
                         }
                     }
