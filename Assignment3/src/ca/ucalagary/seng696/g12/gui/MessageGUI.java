@@ -31,7 +31,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
-import ca.ucalagary.seng696.g12.dictionary.Antalogy;
+import ca.ucalagary.seng696.g12.dictionary.Anthology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
@@ -76,7 +76,7 @@ public class MessageGUI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 	reply.setContent(content);
-                	reply.setPerformative(Antalogy.ACLMESSAGE_ACCEPT);
+                	reply.setPerformative(Anthology.ACLMESSAGE_ACCEPT);
                     myAgent.send(reply);
                     String c[] = content.split(":");
                     Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),null);
@@ -88,7 +88,7 @@ public class MessageGUI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 	reply.setContent(content);
-                	reply.setPerformative(Antalogy.ACLMESSAGE_REFUSE);
+                	reply.setPerformative(Anthology.ACLMESSAGE_REFUSE);
                     myAgent.send(reply);
                     dispose();
                 }

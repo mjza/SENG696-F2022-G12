@@ -31,7 +31,7 @@ import jade.wrapper.ControllerException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ucalagary.seng696.g12.dictionary.Antalogy;
+import ca.ucalagary.seng696.g12.dictionary.Anthology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
 import ca.ucalagary.seng696.g12.dictionary.User;
@@ -86,7 +86,7 @@ public class ProviderAgent extends EnhancedAgent {
 					System.out.println(
 							"new message received for provider:" + getAID().getName() + " " + msg.getPerformative());
 					String projectName, chatMessage;
-					if (msg.getPerformative() == Antalogy.ACLMESSAGE_PAYMENT || msg.getPerformative() == Antalogy.ACLMESSAGE_DONE) {
+					if (msg.getPerformative() == Anthology.ACLMESSAGE_PAYMENT || msg.getPerformative() == Anthology.ACLMESSAGE_DONE) {
 						projectName = msg.getContent().split(":")[0];
 						chatMessage = msg.getContent().split(":")[1];
 					} else {
@@ -94,17 +94,17 @@ public class ProviderAgent extends EnhancedAgent {
 						chatMessage = "NA";
 					}
 					switch (msg.getPerformative()) {
-					case Antalogy.ACLMESSAGE_OFFER:
+					case Anthology.ACLMESSAGE_OFFER:
 						reply = msg.createReply();
 						MessageGUI msgGUI = new MessageGUI(myAgent, reply, msg, true);
 						msgGUI.showGUI();
-					case Antalogy.ACLMESSAGE_CHAT:
+					case Anthology.ACLMESSAGE_CHAT:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.chatUpdate(chatMessage);
 							}
 						}
-					case Antalogy.ACLMESSAGE_PAYMENT:
+					case Anthology.ACLMESSAGE_PAYMENT:
 						String contents[] = msg.getContent().split(":");
 						for (Project p : projects) {
 							if (p.getName().equals(contents[0])) {
@@ -115,7 +115,7 @@ public class ProviderAgent extends EnhancedAgent {
 						providerGUI.updateProjects(projects);
 						int bid = Integer.parseInt(contents[1]);
 						
-					case Antalogy.ACLMESSAGE_DONE:
+					case Anthology.ACLMESSAGE_DONE:
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.disposeGUI();
@@ -141,7 +141,7 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @param conversationID the conversation ID
 	 */
 	public void sendMessage(AID client, String messageText, String projectName, String conversationID) {
-		ACLMessage message = new ACLMessage(Antalogy.ACLMESSAGE_CHAT);
+		ACLMessage message = new ACLMessage(Anthology.ACLMESSAGE_CHAT);
 		message.setConversationId(conversationID);
 		message.setContent(projectName + ":" + messageText);
 		message.addReceiver(client);

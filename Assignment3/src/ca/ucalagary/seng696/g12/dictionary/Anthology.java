@@ -24,9 +24,9 @@
 package ca.ucalagary.seng696.g12.dictionary;
 
 /**
- * The Class Antalogy.
+ * The Class Anthology.
  */
-public class Antalogy {
+public class Anthology {
     
     /** The Constant NEGOTIATION. */
     public final static String NEGOTIATION = "BIDING";

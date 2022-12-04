@@ -27,7 +27,7 @@ import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ClientAgent;
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
-import ca.ucalagary.seng696.g12.dictionary.Antalogy;
+import ca.ucalagary.seng696.g12.dictionary.Anthology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 
 import java.awt.*;
@@ -85,7 +85,7 @@ public class ProjectGUI {
 
 				String messageText = jTextFieldMessage.getText();
 				project.chatUpdate(messageText);
-				agent.sendMessage(project.getProvider(), messageText, project.getName(), Antalogy.ACLMESSAGE_CHAT);
+				agent.sendMessage(project.getProvider(), messageText, project.getName(), Anthology.ACLMESSAGE_CHAT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 
@@ -103,7 +103,7 @@ public class ProjectGUI {
 				String rating = showDialog(project, agent);
 				jFrame.dispose();
 				String messageText = "Done";
-				agent.sendMessage(project.getProvider(), messageText, project.getName(), Antalogy.ACLMESSAGE_DONE);
+				agent.sendMessage(project.getProvider(), messageText, project.getName(), Anthology.ACLMESSAGE_DONE);
 			}
 		});
 		this.jFrame.add(jPanel);
@@ -218,7 +218,7 @@ public class ProjectGUI {
 
 				String messageText = jTextFieldMessage.getText();
 				project.chatUpdate(messageText);
-				agent.sendMessage(project.getClient(), messageText, project.getName(), Antalogy.PROVIDER_TO_CLIENT);
+				agent.sendMessage(project.getClient(), messageText, project.getName(), Anthology.PROVIDER_TO_CLIENT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 
@@ -235,7 +235,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				String messageText = "10";
 				project.setProgress(10);
-				agent.sendMessage(project.getClient(), messageText, project.getName(), Antalogy.REPORTING);
+				agent.sendMessage(project.getClient(), messageText, project.getName(), Anthology.REPORTING);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 			}
