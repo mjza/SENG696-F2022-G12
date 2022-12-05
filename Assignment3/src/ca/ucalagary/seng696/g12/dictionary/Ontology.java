@@ -62,7 +62,7 @@ public class Ontology {
     public final static int ACLMESSAGE_PAYMENT = 5;
     
     /** The Constant ACLMESSAGE_PROGRESS. */
-    public final static int ACLMESSAGE_PROGRESS = 9;
+    public final static int ACLMESSAGE_PROGRESS = 7;
     
     /** The Constant ACLMESSAGE_DONE. */
     public final static int ACLMESSAGE_DONE = 8;

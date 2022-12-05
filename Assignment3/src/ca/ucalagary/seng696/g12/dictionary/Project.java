@@ -30,86 +30,113 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.gui.ProjectGUI;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Project.
  */
 public class Project implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The name. */
 	private String name;
-	
+
 	/** The description. */
 	private String description;
-	
+
 	/** The progress. */
 	private int progress = 0;
-	
+
 	/** The bid. */
 	private int bid;
-	
+
 	/** The deadline. */
 	private Date deadline;
-	
-	/** The provider. */
-	private AID provider;
-	
-	/** The client. */
-	private AID client;
-	
+
+	/** The provider AID. */
+	private AID providerAID;
+
+	/** The client AID. */
+	private AID clientAID;
+
 	/** The done. */
 	private boolean done = false;
-	
+
 	/** The messages history. */
 	private ArrayList<String> chats = new ArrayList<>();
-	
+
 	/** The project detail GUI. */
 	private ProjectGUI projectGUI;
 
 	/**
 	 * Instantiates a new project.
 	 *
-	 * @param name the name
+	 * @param name        the name
 	 * @param description the description
-	 * @param bid the bid
-	 * @param provider the provider
-	 * @param client the client
-	 * @param deadline the deadline
+	 * @param bid         the bid
+	 * @param providerAID the provider AID
+	 * @param clientAID the client AID
+	 * @param deadline    the deadline
 	 */
-	public Project(String name, String description, int bid, AID provider, AID client, Date deadline) {
+	public Project(String name, String description, int bid, AID providerAID, AID clientAID, Date deadline) {
 		this.name = name;
 		this.bid = bid;
 		this.description = description;
-		this.provider = provider;
-		this.client = client;
+		this.providerAID = providerAID;
+		this.clientAID = clientAID;
 		this.deadline = deadline;
 	}
-	
+
 	/**
 	 * Instantiates a new project.
 	 *
-	 * @param name the name
+	 * @param name        the name
 	 * @param description the description
-	 * @param bid the bid
-	 * @param provider the provider
-	 * @param client the client
-	 * @param deadline the deadline
+	 * @param bid         the bid
+	 * @param provider    the provider
+	 * @param client      the client
+	 * @param deadline    the deadline
 	 * @throws ClassNotFoundException the class not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException            Signals that an I/O exception has occurred.
 	 */
-	public Project(String name, String description, int bid, String provider, String client, Date deadline) throws ClassNotFoundException, IOException {
+	public Project(String name, String description, int bid, String provider, String client, Date deadline)
+			throws ClassNotFoundException, IOException {
 		this.name = name;
 		this.bid = bid;
 		this.description = description;
-		this.provider = (AID) Serializer.toObject(provider);
-		this.client = (AID) Serializer.toObject(client);
+		this.providerAID = (AID) Serializer.toObject(provider);
+		this.clientAID = (AID) Serializer.toObject(client);
 		this.deadline = deadline;
+	}
+
+	/**
+	 * Gets the provider user name.
+	 *
+	 * @return the provider user name
+	 */
+	public String getProviderUserName() {
+		if (null != this.providerAID && null != this.providerAID.getLocalName()
+				&& this.providerAID.getLocalName().split(":").length > 1) {
+			return this.providerAID.getLocalName().split(":")[1];
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the client user name.
+	 *
+	 * @return the client user name
+	 */
+	public String getClientUserName() {
+		if (null != this.clientAID && null != this.clientAID.getLocalName()
+				&& this.clientAID.getLocalName().split(":").length > 1) {
+			return this.clientAID.getLocalName().split(":")[1];
+		}
+		return null;
 	}
 
 	/**
@@ -156,6 +183,19 @@ public class Project implements Serializable {
 	 */
 	public String getDescription() {
 		return this.description;
+	}
+
+	/**
+	 * Gets the deadline.
+	 *
+	 * @return the deadline
+	 */
+	public Date getDeadline() {
+		return deadline;
+	}
+	
+	public long getTimestamp() {
+		return deadline.getTime();
 	}
 
 	/**
@@ -246,12 +286,31 @@ public class Project implements Serializable {
 	}
 
 	/**
+	 * Gets the provider AID.
+	 *
+	 * @return the provider AID
+	 */
+	public AID getProviderAID() {
+		return this.providerAID;
+	}
+
+	/**
+	 * Gets the client AID.
+	 *
+	 * @return the client AID
+	 */
+	public AID getClientAID() {
+		return this.clientAID;
+	}
+
+	/**
 	 * Gets the provider.
 	 *
 	 * @return the provider
 	 */
-	public AID getProvider() {
-		return this.provider;
+	public Provider getProvider() {
+		String userName = this.getProviderUserName();
+		return SystemAgent.getProvider(userName);
 	}
 
 	/**
@@ -259,8 +318,9 @@ public class Project implements Serializable {
 	 *
 	 * @return the client
 	 */
-	public AID getClient() {
-		return this.client;
+	public Client getClient() {
+		String userName = this.getClientUserName();
+		return SystemAgent.getClient(userName);
 	}
 
 	/**
@@ -279,5 +339,32 @@ public class Project implements Serializable {
 		if (this.projectGUI != null) {
 			this.projectGUI.disposeGUI();
 		}
+	}
+
+	/**
+	 * Gets the columns.
+	 *
+	 * @param isProvider the is provider
+	 * @return the columns
+	 */
+	public static String[] getColumns(boolean isProvider) {
+		String[] providerColumnNames = { "Name", "Description", "Bid", "Client", "Deadline", "Done" };
+		String[] clientColumnNames = { "Name", "Description", "Bid", "Provider", "Deadline", "Done" };
+		return isProvider ? providerColumnNames : clientColumnNames;
+	}
+
+
+	/**
+	 * To array.
+	 *
+	 * @param isProvider the is provider
+	 * @return the string[]
+	 */
+	public String[] toArray(boolean isProvider) {
+		String[] providerData = { this.getName(), this.getDescription(), String.valueOf(this.getBid()),
+				this.getClientUserName(), this.getDeadline().toString(), (this.isDone() ? "Yes" : "No") };
+		String[] clientData = { this.getName(), this.getDescription(), String.valueOf(this.getBid()),
+				this.getProviderUserName(), this.getDeadline().toString(), (this.isDone() ? "Yes" : "No") };
+		return isProvider ? providerData : clientData;
 	}
 }

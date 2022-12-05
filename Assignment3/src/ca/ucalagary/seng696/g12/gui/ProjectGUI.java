@@ -85,7 +85,7 @@ public class ProjectGUI {
 
 				String messageText = jTextFieldMessage.getText();
 				project.chatUpdate(messageText);
-				agent.sendMessage(project.getProvider(), messageText, project.getName(), Ontology.ACLMESSAGE_CHAT);
+				agent.sendMessage(project.getProviderAID(), messageText, project.getName(), Ontology.ACLMESSAGE_CHAT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 
@@ -104,7 +104,7 @@ public class ProjectGUI {
 				System.out.print(rating);
 				jFrame.dispose();
 				String messageText = "Done";
-				agent.sendMessage(project.getProvider(), messageText, project.getName(), Ontology.ACLMESSAGE_DONE);
+				agent.sendMessage(project.getProviderAID(), messageText, project.getName(), Ontology.ACLMESSAGE_DONE);
 			}
 		});
 		this.jFrame.add(jPanel);
@@ -168,7 +168,7 @@ public class ProjectGUI {
 				frame.dispose();
 				System.out.println("Done" + ratingTextField.getText() + commentTextField.getText());
 				agent.markProjectAsDone(project);
-				agent.sendRating(project.getProvider(), ratingTextField.getText());
+				agent.sendRating(project.getProviderAID(), ratingTextField.getText());
 
 			}
 		});
@@ -219,7 +219,7 @@ public class ProjectGUI {
 
 				String messageText = jTextFieldMessage.getText();
 				project.chatUpdate(messageText);
-				agent.sendMessage(project.getClient(), messageText, project.getName(), Ontology.PROVIDER_TO_CLIENT);
+				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.PROVIDER_TO_CLIENT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 
@@ -236,7 +236,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				String messageText = "10";
 				project.setProgress(10);
-				agent.sendMessage(project.getClient(), messageText, project.getName(), Ontology.REPORTING);
+				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.REPORTING);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 			}

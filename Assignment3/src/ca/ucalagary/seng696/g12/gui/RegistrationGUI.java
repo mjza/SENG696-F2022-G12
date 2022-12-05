@@ -317,6 +317,9 @@ public class RegistrationGUI {
 		this.hideGUI();
 	}
 
+	/**
+	 * Show missing data.
+	 */
 	public void showMissingData() {
 		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "ERROR", JOptionPane.ERROR_MESSAGE);
 	}

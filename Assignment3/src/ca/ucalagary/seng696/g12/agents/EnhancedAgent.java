@@ -117,7 +117,7 @@ public class EnhancedAgent extends Agent {
 	protected void createAgent(String agentName, Class<?> agentClass) {
 		String className = agentClass.getCanonicalName();
 		System.out.println("Creating the agent " + agentName + " as " + className);
-		AID agentID = new AID(agentName, AID.ISLOCALNAME);
+		AID agentID = this.generateAgentAID(agentName);
 		AgentContainer controller = getContainerController();
 		try {
 			AgentController agent = controller.createNewAgent(agentName, className, null);
@@ -167,5 +167,27 @@ public class EnhancedAgent extends Agent {
 		}
 		return null;
 	}
+	
+	/**
+	 * Generate agent name.
+	 *
+	 * @param agentUserName the agent user name
+	 * @param agentClass the agent class
+	 * @return the string
+	 */
+	public String generateAgentName(String agentUserName, Class<?> agentClass) {
+		String prefix = agentClass.getSimpleName();
+		return prefix+":"+agentUserName;
+	}	
 
+	/**
+	 * Generate agent AID.
+	 *
+	 * @param agentName the agent name
+	 * @return the aid
+	 */
+	private AID generateAgentAID(String agentName) {
+		AID agentID = new AID(agentName, AID.ISLOCALNAME);
+		return agentID;
+	}
 }

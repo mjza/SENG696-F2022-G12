@@ -26,6 +26,7 @@ package ca.ucalagary.seng696.g12.dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Provider.
  */
@@ -163,9 +164,11 @@ public class Provider extends User {
 		return text;
 	}
 
+	
 	/**
 	 * Gets the columns.
 	 *
+	 * @param isGuest the is guest
 	 * @return the columns
 	 */
 	public static String[] getColumns(boolean isGuest) {
@@ -174,10 +177,12 @@ public class Provider extends User {
 		return isGuest ? guestColumnNames : clientColumnNames;
 	}
 
+	
 	/**
-	 * Gets the data.
+	 * To array.
 	 *
-	 * @return the data
+	 * @param isGuest the is guest
+	 * @return the string[]
 	 */
 	public String[] toArray(boolean isGuest) {
 		String[] guestData = { String.valueOf(this.getId()), this.getName(), this.getUsername(), this.getWebsite(),

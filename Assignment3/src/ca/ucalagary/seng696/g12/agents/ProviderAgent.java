@@ -34,7 +34,6 @@ import java.util.List;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
-import ca.ucalagary.seng696.g12.dictionary.User;
 import ca.ucalagary.seng696.g12.gui.MessageGUI;
 import ca.ucalagary.seng696.g12.gui.ProviderGUI;
 
@@ -197,9 +196,10 @@ public class ProviderAgent extends EnhancedAgent {
 	 */
 	public void withdraw() {
 		Provider provider = getProvider();
-		provider.setType(User.PROVIDER);
 		providerGUI.dispose();
-		createAgent("Client:" + provider.getUsername(), ClientAgent.class);
+		Class<?> agentClass = ClientAgent.class;
+		String agentName = this.generateAgentName(provider.getUsername(), agentClass);
+		this.createAgent(agentName, agentClass);
 		takeDown();
 	}
 }

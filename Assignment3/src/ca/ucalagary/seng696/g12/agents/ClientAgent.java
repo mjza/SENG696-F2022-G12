@@ -84,7 +84,7 @@ public class ClientAgent extends EnhancedAgent {
 				ACLMessage msg, reply = null;
 				msg = myAgent.receive();
 				if (msg != null) {
-					System.out.println("A new message received for client:" + getAID().getName() + ", performative: "
+					System.out.println("A new message received for: " + getAID().getName() + ", performative: "
 							+ msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
 					String projectName, progressText, chatMessage;
@@ -159,7 +159,7 @@ public class ClientAgent extends EnhancedAgent {
 	/**
 	 * updates the providers list.
 	 */
-	public void updateProviders() {
+	private void updateProviders() {
 		this.providersAID = searchForService("service-provider");
 	}
 
@@ -181,6 +181,23 @@ public class ClientAgent extends EnhancedAgent {
 				}
 			}
 		return providers;
+	}
+	
+	/**
+	 * Gets the provider AID.
+	 *
+	 * @param providerUserName the provider user name
+	 * @return the provider AID
+	 */
+	public AID getProviderAID(String providerUserName) {
+		if (null != providersAID)
+			for (AID providerAID : providersAID) {
+				if (null != providerAID.getLocalName() && providerAID.getLocalName().split(":").length > 1) {
+					if (providerUserName.equalsIgnoreCase(providerAID.getLocalName().split(":")[1]))
+						return providerAID;
+				}
+			}
+		return null;
 	}
 
 	/**
@@ -228,12 +245,12 @@ public class ClientAgent extends EnhancedAgent {
 	 * @param project the project
 	 */
 	public void markProjectAsDone(Project project) {
-		System.out.println("MARKING DONE " + project.getProvider().getLocalName());
+		System.out.println("MARKING DONE " + project.getProviderAID().getLocalName());
 
 		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_PAYMENT);
 		message.setConversationId(Ontology.NEGOTIATION);
 		message.setContent(project.getName() + ":" + 70 * project.getBid() / 100);
-		message.addReceiver(project.getProvider());
+		message.addReceiver(project.getProviderAID());
 		send(message);
 		project.setDone();
 		for (Project p : projects) {
