@@ -26,6 +26,7 @@ package ca.ucalagary.seng696.g12.gui;
 import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ClientAgent;
+import ca.ucalagary.seng696.g12.agents.EnhancedAgent;
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.dictionary.Chat;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
@@ -49,33 +50,61 @@ public class ProjectGUI {
 
 	/** The j label. */
 	JLabel projectJLabel = new JLabel();
+	
+	Project project = null;
+	
+	EnhancedAgent myAgent = null;
 
 	/**
-	 * Instantiates a new project GUI.
-	 * It is shown when the user is a Provider
+	 * Instantiates a new project GUI. It is shown when the user is a Provider
+	 * 
 	 * @param agent   the agent
 	 * @param project the project
 	 */
 	public ProjectGUI(ProviderAgent agent, Project project) {
+		project.bindGUI(this);
 
-		project.connectGUI(this);
+		this.jFrame = new JFrame("Welcome " + agent.getLocalName());
+		this.jFrame.setSize(400, 400);
 
-		jFrame = new JFrame("Welcome " + agent.getLocalName());
-		jFrame.setSize(400, 400);
+		
+		this.jFrame.add(this.getProviderJPanel());
+	}
 
-		JPanel jPanel = new JPanel();
-		jPanel.setLayout(new BorderLayout());
+	/**
+	 * Instantiates a new project GUI.
+	 *
+	 * @param agent   the agent
+	 * @param project the project
+	 */
+	public ProjectGUI(ClientAgent agent, Project project) {
+		project.bindGUI(this);
+		this.myAgent = agent;
+		this.project = project;
+		this.jFrame = new JFrame("Welcome " + agent.getLocalName());
+		this.jFrame.setSize(400, 400);
+
+		
+		this.jFrame.add(this.getClientJPanel());
+	}
+
+	private JPanel getProviderJPanel() {
+		ProviderAgent agent = (ProviderAgent) this.myAgent;
+		Project project = this.project;
+		
+		JPanel providerJPanel = new JPanel();
+		providerJPanel.setLayout(new BorderLayout());
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(chatJLabel, BorderLayout.EAST);
 		centerPanel.add(projectJLabel, BorderLayout.WEST);
-		jPanel.add(centerPanel, BorderLayout.CENTER);
+		providerJPanel.add(centerPanel, BorderLayout.CENTER);
 
 		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getChats());
 
 		JTextField jTextFieldMessage = new JHintTextField("Message");
-		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
+		providerJPanel.add(jTextFieldMessage, BorderLayout.NORTH);
 
 		JButton sendMsgJButton = new JButton("Send");
 		sendMsgJButton.addActionListener(new ActionListener() {
@@ -94,7 +123,7 @@ public class ProjectGUI {
 		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
 		JButton progressJButton = new JButton("10% progress");
 		southPanel.add(progressJButton, BorderLayout.SOUTH);
-		jPanel.add(southPanel, BorderLayout.SOUTH);
+		providerJPanel.add(southPanel, BorderLayout.SOUTH);
 		progressJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -105,35 +134,27 @@ public class ProjectGUI {
 						project.getChats());
 			}
 		});
-		this.jFrame.add(jPanel);
+		return providerJPanel;
 	}
 
-	/**
-	 * Instantiates a new project GUI.
-	 *
-	 * @param agent   the agent
-	 * @param project the project
-	 */
-	public ProjectGUI(ClientAgent agent, Project project) {
-
-		project.connectGUI(this);
-
-		jFrame = new JFrame("Welcome " + agent.getLocalName());
-		jFrame.setSize(400, 400);
-
-		JPanel jPanel = new JPanel();
-		jPanel.setLayout(new BorderLayout());
+	private JPanel getClientJPanel() {
+		
+		ClientAgent agent = (ClientAgent) this.myAgent;
+		Project project = this.project;
+		
+		JPanel clientJPanel = new JPanel();
+		clientJPanel.setLayout(new BorderLayout());
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(chatJLabel, BorderLayout.EAST);
 		centerPanel.add(projectJLabel, BorderLayout.WEST);
-		jPanel.add(centerPanel, BorderLayout.CENTER);
+		clientJPanel.add(centerPanel, BorderLayout.CENTER);
 
 		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getChats());
 
 		JTextField jTextFieldMessage = new JHintTextField("Message");
-		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
+		clientJPanel.add(jTextFieldMessage, BorderLayout.NORTH);
 
 		JButton sendMsgJButton = new JButton("Send");
 		sendMsgJButton.addActionListener(new ActionListener() {
@@ -152,7 +173,7 @@ public class ProjectGUI {
 		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
 		JButton doneJButton = new JButton("Pay after 100%!");
 		southPanel.add(doneJButton, BorderLayout.SOUTH);
-		jPanel.add(southPanel, BorderLayout.SOUTH);
+		clientJPanel.add(southPanel, BorderLayout.SOUTH);
 		doneJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -163,16 +184,16 @@ public class ProjectGUI {
 				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_DONE);
 			}
 		});
-		this.jFrame.add(jPanel);
+		return clientJPanel;
 	}
 
 	/**
 	 * Update right label.
 	 *
-	 * @param name           the name
-	 * @param description    the description
-	 * @param progress       the progress
-	 * @param chats the message history
+	 * @param name        the name
+	 * @param description the description
+	 * @param progress    the progress
+	 * @param chats       the message history
 	 */
 	public void updateRightLabel(String name, String description, int progress, ArrayList<Chat> chats) {
 		updateLeftLabel(name, description, progress);

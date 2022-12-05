@@ -309,11 +309,11 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * Connect GUI.
+	 * Bind a GUI.
 	 *
 	 * @param projectGUI the project detail GUI
 	 */
-	public void connectGUI(ProjectGUI projectGUI) {
+	public void bindGUI(ProjectGUI projectGUI) {
 		this.projectGUI = projectGUI;
 	}
 
