@@ -192,7 +192,7 @@ public class OfferGUI {
 	 * Show decoding error.
 	 */
 	public void showDecodingError() {
-		JOptionPane.showMessageDialog(jFrame, "Problem in decoding data.", "ERROR", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(jFrame, "Problem in decoding data.", "Ops: Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 }

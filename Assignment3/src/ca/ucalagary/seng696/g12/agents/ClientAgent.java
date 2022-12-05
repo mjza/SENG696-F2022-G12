@@ -143,7 +143,7 @@ public class ClientAgent extends EnhancedAgent {
 	 * Show decoding error.
 	 */
 	public void showDecodingError() {
-		JOptionPane.showMessageDialog(clientGUI.getjFrame(), "Problem in decoding data.", "ERROR",
+		JOptionPane.showMessageDialog(clientGUI.getjFrame(), "Problem in decoding data.", "Ops: Error",
 				JOptionPane.ERROR_MESSAGE);
 	}
 

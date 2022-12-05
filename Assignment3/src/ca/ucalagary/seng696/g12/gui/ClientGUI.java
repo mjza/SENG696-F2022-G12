@@ -349,14 +349,14 @@ public class ClientGUI {
 	 * Show missing data.
 	 */
 	public void showMissingData() {
-		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "ERROR", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "Ops: Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
 	 * Show select A provider.
 	 */
 	public void showSelectAProvider() {
-		JOptionPane.showMessageDialog(jFrame, "Please select a provider in the provider table first.", "ERROR",
+		JOptionPane.showMessageDialog(jFrame, "Please select a provider in the provider table first.", "Ops: Error",
 				JOptionPane.ERROR_MESSAGE);
 	}
 

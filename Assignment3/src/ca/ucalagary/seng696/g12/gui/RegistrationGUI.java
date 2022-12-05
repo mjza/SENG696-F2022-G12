@@ -321,7 +321,7 @@ public class RegistrationGUI {
 	 * Show missing data.
 	 */
 	public void showMissingData() {
-		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "ERROR", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "Ops: Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**

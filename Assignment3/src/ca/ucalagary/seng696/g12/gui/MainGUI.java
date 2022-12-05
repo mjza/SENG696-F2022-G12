@@ -182,7 +182,7 @@ public class MainGUI {
      * Show wrong credential.
      */
     public void showWrongCredential() {
-        JOptionPane.showMessageDialog(jFrame, "Please check your username and password.", "ERROR",
+        JOptionPane.showMessageDialog(jFrame, "Please check your username and password.", "Ops: Error",
                 JOptionPane.ERROR_MESSAGE);
     }
     
@@ -190,7 +190,7 @@ public class MainGUI {
      * Show empty credential.
      */
     public void showEmptyCredential() {
-        JOptionPane.showMessageDialog(jFrame, "Please fill the username and passowrd.", "ERROR",
+        JOptionPane.showMessageDialog(jFrame, "Please fill the username and passowrd.", "Ops: Error",
                 JOptionPane.ERROR_MESSAGE);
     }
 
@@ -208,7 +208,7 @@ public class MainGUI {
 	 * Show agent already exist.
 	 */
 	public void showAgentAlreadyExist() {
-		JOptionPane.showMessageDialog(jFrame, "An agent with this username already exist.", "ERROR",
+		JOptionPane.showMessageDialog(jFrame, "An agent with this username already exist.", "Ops: Error",
                 JOptionPane.ERROR_MESSAGE);
 	}
 }

@@ -90,15 +90,7 @@ public class ProviderAgent extends EnhancedAgent {
 					System.out.println("A new message received for: " + getAID().getName() + ", Performative: "
 							+ msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
-					String projectName, chatMessage;
-					if (msg.getPerformative() == Ontology.ACLMESSAGE_PAYMENT
-							|| msg.getPerformative() == Ontology.ACLMESSAGE_DONE) {
-						projectName = contents[0];
-						chatMessage = contents[1];
-					} else {
-						projectName = "NA";
-						chatMessage = "NA";
-					}
+					String projectName, chatMessage;					
 					switch (msg.getPerformative()) {
 					case Ontology.ACLMESSAGE_OFFER:
 						reply = msg.createReply();
@@ -106,6 +98,8 @@ public class ProviderAgent extends EnhancedAgent {
 						msgGUI.showGUI();
 						break;
 					case Ontology.ACLMESSAGE_CHAT:
+						projectName = contents[0];
+						chatMessage = contents[1];
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.chatUpdate(chatMessage);
@@ -113,14 +107,18 @@ public class ProviderAgent extends EnhancedAgent {
 						}
 						break;
 					case Ontology.ACLMESSAGE_PAYMENT:
+						projectName = contents[0];
+						chatMessage = contents[1];
 						for (Project project : projects) {
-							if (project.getName().equals(contents[0])) {
+							if (project.getName().equals(projectName)) {
 								project.setDone();
 							}
 						}
 						providerGUI.updateProjects(projects);
 						break;
 					case Ontology.ACLMESSAGE_DONE:
+						projectName = contents[0];
+						chatMessage = contents[1];
 						for (Project project : projects) {
 							if (project.getName().equals(projectName)) {
 								project.disposeGUI();
