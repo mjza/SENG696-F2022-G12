@@ -19,7 +19,7 @@ For running the project chase the following steps:
 3. Pass the following run time arguments in the second tab:
    
    ```
-   -agents "controller:ca.ucalagary.seng696.g12.Host"
+   -agents "SystemAgent:ca.ucalagary.seng696.g12.agents.SystemAgent"
    ```
    ![Arguments](./images/image02.JPG)
 
