@@ -28,6 +28,7 @@ import javax.swing.*;
 import ca.ucalagary.seng696.g12.agents.ClientAgent;
 import ca.ucalagary.seng696.g12.agents.EnhancedAgent;
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.dictionary.Chat;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
@@ -68,10 +69,10 @@ public class ProjectGUI {
 		// Register yourself as the connection point
 		project.bindGUI(this);
 		// Set up the JFrame
-		this.jFrame = new JFrame("Project(" + project.getId() + "/" + project.getName() + ") of " + agent.getProvider().getName());
-		
-		this.jFrame.setSize(400, 400);
-
+		this.jFrame = new JFrame(
+				"Project(" + project.getId() + "/" + project.getName() + ") of " + agent.getProvider().getName());
+		this.decorateJFrame(true);
+		// load panel
 		this.jFrame.add(this.getProviderJPanel());
 	}
 
@@ -88,19 +89,45 @@ public class ProjectGUI {
 		// Register yourself as the connection point
 		project.bindGUI(this);
 		// Set up the JFrame
-		this.jFrame = new JFrame("Project(" + project.getId() + "/" + project.getName() + ") of " + agent.getClient().getName());
-		this.jFrame.setSize(400, 400);
-
+		this.jFrame = new JFrame(
+				"Project(" + project.getId() + "/" + project.getName() + ") of " + agent.getClient().getName());
+		this.decorateJFrame(false);
+		// load panel
 		this.jFrame.add(this.getClientJPanel());
+	}
+
+	private void decorateJFrame(boolean isProvider) {
+		// set icon
+		this.jFrame.setIconImage(SystemAgent.getIcon());
+		// Set the size and position of the GUI to the right-hand-side of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(this.jFrame.getGraphicsConfiguration());
+		int taskBarHeight = scnMax.bottom;
+		int width = screenSize.width / 3;
+		int height = (screenSize.height - taskBarHeight) / 2;
+		int offset = isProvider ? 0 : (screenSize.width / 2);
+		int posX = (((screenSize.width / 2) - width) / 2) + offset;
+		int posY = ((screenSize.height - taskBarHeight) - height) / 2;
+		this.jFrame.setSize(width, height);
+		this.jFrame.setLocation(posX, posY);
+		// Do not kill the agent
+		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				super.windowClosing(windowEvent);
+			}
+		});
 	}
 
 	private JPanel getProviderJPanel() {
 		ProviderAgent agent = (ProviderAgent) this.myAgent;
 		Project project = this.project;
-
+		// main panel 
 		JPanel providerJPanel = new JPanel();
 		providerJPanel.setLayout(new BorderLayout());
-
+		// A provider sign
+		providerJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
+		//
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(chatJLabel, BorderLayout.EAST);
@@ -144,13 +171,14 @@ public class ProjectGUI {
 	}
 
 	private JPanel getClientJPanel() {
-
 		ClientAgent agent = (ClientAgent) this.myAgent;
 		Project project = this.project;
-
+		// main panel
 		JPanel clientJPanel = new JPanel();
 		clientJPanel.setLayout(new BorderLayout());
-
+		// A client sign
+		clientJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLUE));
+		//
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(chatJLabel, BorderLayout.EAST);
