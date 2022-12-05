@@ -213,7 +213,7 @@ public class ClientGUI {
 		gbc.gridy++;
 		gbc.weightx = 0;
 		createProjectPanel.add(projectProviderJLabel, gbc);
-		HintTextField projectProviderJTextField = new HintTextField("Select a row in the provider table");
+		JHintTextField projectProviderJTextField = new JHintTextField("Select a row in the provider table");
 		projectProviderJTextField.setEditable(false);
 		projectProviderJLabel.setLabelFor(projectProviderJTextField);
 		gbc.gridx = 1;

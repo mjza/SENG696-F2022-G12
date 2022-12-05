@@ -44,10 +44,68 @@ public class ProjectGUI {
 	JFrame jFrame;
 
 	/** The label. */
-	JLabel label = new JLabel();
+	JLabel chatJLabel = new JLabel();
 
 	/** The j label. */
-	JLabel jLabel = new JLabel("The next label");
+	JLabel projectJLabel = new JLabel();
+
+	/**
+	 * Instantiates a new project GUI.
+	 *
+	 * @param agent   the agent
+	 * @param project the project
+	 */
+	public ProjectGUI(ProviderAgent agent, Project project) {
+
+		project.connectGUI(this);
+
+		jFrame = new JFrame("Welcome " + agent.getLocalName());
+		jFrame.setSize(400, 400);
+
+		JPanel jPanel = new JPanel();
+		jPanel.setLayout(new BorderLayout());
+
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.add(chatJLabel, BorderLayout.EAST);
+		centerPanel.add(projectJLabel, BorderLayout.WEST);
+		jPanel.add(centerPanel, BorderLayout.CENTER);
+
+		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getChats());
+
+		JTextField jTextFieldMessage = new JHintTextField("Message");
+		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
+
+		//jPanel.add(new JButton("Next"),BorderLayout.SOUTH);
+		JButton sendMsgJButton = new JButton("Send");
+		sendMsgJButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String messageText = jTextFieldMessage.getText();
+				project.chatUpdate(messageText);
+				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.PROVIDER_TO_CLIENT);
+				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
+						project.getChats());
+			}
+		});
+		JPanel southPanel = new JPanel();
+		southPanel.setLayout(new BorderLayout());
+		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
+		JButton progressJButton = new JButton("10% progress");
+		southPanel.add(progressJButton, BorderLayout.SOUTH);
+		jPanel.add(southPanel, BorderLayout.SOUTH);
+		progressJButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String messageText = "10";
+				project.setProgress(10);
+				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.REPORTING);
+				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
+						project.getChats());
+			}
+		});
+		this.jFrame.add(jPanel);
+	}
 
 	/**
 	 * Instantiates a new project GUI.
@@ -67,19 +125,18 @@ public class ProjectGUI {
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
-		centerPanel.add(label, BorderLayout.EAST);
-		centerPanel.add(jLabel, BorderLayout.WEST);
+		centerPanel.add(chatJLabel, BorderLayout.EAST);
+		centerPanel.add(projectJLabel, BorderLayout.WEST);
 		jPanel.add(centerPanel, BorderLayout.CENTER);
 
-		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-				project.getChats());
+		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getChats());
 
-		JTextField jTextFieldMessage = new HintTextField("Message");
+		JTextField jTextFieldMessage = new JHintTextField("Message");
 		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
 
 //        jPanel.add(new JButton("Next"),BorderLayout.SOUTH);
-		JButton jButtonSend = new JButton("send");
-		jButtonSend.addActionListener(new ActionListener() {
+		JButton sendMsgJButton = new JButton("Send");
+		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -93,14 +150,14 @@ public class ProjectGUI {
 		});
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
-		southPanel.add(jButtonSend, BorderLayout.NORTH);
-		JButton doneButton = new JButton("Done");
-		southPanel.add(doneButton, BorderLayout.SOUTH);
+		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
+		JButton doneJButton = new JButton("Done");
+		southPanel.add(doneJButton, BorderLayout.SOUTH);
 		jPanel.add(southPanel, BorderLayout.SOUTH);
-		doneButton.addActionListener(new ActionListener() {
+		doneJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String rating = showDialog(project, agent);
+				String rating = showRatingDialog(project, agent);
 				System.out.print(rating);
 				jFrame.dispose();
 				String messageText = "Done";
@@ -124,7 +181,7 @@ public class ProjectGUI {
 		for (String s : messageHistory)
 			text.append(s).append("<br/>");
 		text.append("</html>");
-		label.setText(text.toString());
+		chatJLabel.setText(text.toString());
 	}
 
 	/**
@@ -140,24 +197,24 @@ public class ProjectGUI {
 		text.append("Description: ").append(description).append("<br/>");
 		text.append("Progress: ").append(progress).append("<br/>").append("<br/>").append("<br/>").append("<br/>");
 		text.append("</html>");
-		jLabel.setText(text.toString());
+		projectJLabel.setText(text.toString());
 	}
 
 	/**
-	 * Show dialog.
+	 * Show rating dialog.
 	 *
 	 * @param project the project
 	 * @param agent   the agent
 	 * @return the string
 	 */
-	private String showDialog(Project project, ClientAgent agent) {
+	private String showRatingDialog(Project project, ClientAgent agent) {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
 		frame.setSize(400, 400);
-		HintTextField ratingTextField = new HintTextField("Rating from 1 to 5");
+		JHintTextField ratingTextField = new JHintTextField("Rating from 1 to 5");
 		ratingTextField.setPreferredSize(new Dimension(200, 24));
 
-		HintTextField commentTextField = new HintTextField("Comment");
+		JHintTextField commentTextField = new JHintTextField("Comment");
 		commentTextField.setPreferredSize(new Dimension(200, 24));
 
 		JButton jButton = new JButton("Done");
@@ -184,77 +241,16 @@ public class ProjectGUI {
 	}
 
 	/**
-	 * Instantiates a new project GUI.
-	 *
-	 * @param agent   the agent
-	 * @param project the project
-	 */
-	public ProjectGUI(ProviderAgent agent, Project project) {
-
-		project.connectGUI(this);
-
-		jFrame = new JFrame("Welcome " + agent.getLocalName());
-		jFrame.setSize(400, 400);
-
-		JPanel jPanel = new JPanel();
-		jPanel.setLayout(new BorderLayout());
-
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
-		centerPanel.add(label, BorderLayout.EAST);
-		centerPanel.add(jLabel, BorderLayout.WEST);
-		jPanel.add(centerPanel, BorderLayout.CENTER);
-
-		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-				project.getChats());
-
-		JTextField jTextFieldMessage = new HintTextField("Message");
-		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
-
-//        jPanel.add(new JButton("Next"),BorderLayout.SOUTH);
-		JButton jButtonSend = new JButton("send");
-		jButtonSend.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				String messageText = jTextFieldMessage.getText();
-				project.chatUpdate(messageText);
-				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.PROVIDER_TO_CLIENT);
-				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-						project.getChats());
-
-			}
-		});
-		JPanel southPanel = new JPanel();
-		southPanel.setLayout(new BorderLayout());
-		southPanel.add(jButtonSend, BorderLayout.NORTH);
-		JButton progressButton = new JButton("10% progress");
-		southPanel.add(progressButton, BorderLayout.SOUTH);
-		jPanel.add(southPanel, BorderLayout.SOUTH);
-		progressButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String messageText = "10";
-				project.setProgress(10);
-				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.REPORTING);
-				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-						project.getChats());
-			}
-		});
-		this.jFrame.add(jPanel);
-	}
-
-	/**
 	 * Show GUI.
 	 */
 	public void showGUI() {
-		jFrame.setVisible(true);
+		this.jFrame.setVisible(true);
 	}
 
 	/**
 	 * Dispose GUI.
 	 */
 	public void disposeGUI() {
-		jFrame.dispose();
+		this.jFrame.dispose();
 	}
 }
