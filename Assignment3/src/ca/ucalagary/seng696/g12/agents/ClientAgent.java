@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Project;
@@ -90,19 +92,28 @@ public class ClientAgent extends EnhancedAgent {
 					String projectName, progressText, chatMessage;
 					switch (msg.getPerformative()) {
 					case Ontology.ACLMESSAGE_REFUSE:
+						// Do nothing.
+						// TODO: We can add the project to table and then remove it.
 						break;
 					case Ontology.ACLMESSAGE_ACCEPT:
-						Project project = new Project(contents[0], contents[1], Integer.parseInt(contents[2]),
-								msg.getSender(), myAgent.getAID(), null);
-						reply = new ACLMessage(Ontology.ACLMESSAGE_CHAT);
-						reply.addReceiver(msg.getSender());
-						clientGUI.addProject(project);
+						// extract project data
+						String content = msg.getContent();
+						try {
+							Project project = (Project) Serializer.toObject(content);
+							reply = new ACLMessage(Ontology.ACLMESSAGE_CHAT);
+							reply.addReceiver(msg.getSender());
+							addProject(project);
+						} catch (ClassNotFoundException | IOException e1) {
+							e1.printStackTrace();
+							showDecodingError();
+							return;
+						}
 						break;
 					case (Ontology.ACLMESSAGE_CHAT):
 						projectName = contents[0];
 						chatMessage = contents[1];
 						for (int i = 0; i < projects.size(); i++) {
-							project = projects.get(i);
+							Project project = projects.get(i);
 							if (project.getName().equals(projectName)) {
 								project.chatUpdate(chatMessage);
 							}
@@ -113,7 +124,7 @@ public class ClientAgent extends EnhancedAgent {
 						progressText = contents[1];
 						int progress = Integer.parseInt(progressText);
 						for (int i = 0; i < projects.size(); i++) {
-							project = projects.get(i);
+							Project project = projects.get(i);
 							if (project.getName().equals(projectName)) {
 								project.setProgress(progress);
 							}
@@ -123,6 +134,13 @@ public class ClientAgent extends EnhancedAgent {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Show decoding error.
+	 */
+	public void showDecodingError() {
+		JOptionPane.showMessageDialog(clientGUI.getjFrame(), "Problem in decoding data.", "ERROR", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -207,6 +225,16 @@ public class ClientAgent extends EnhancedAgent {
 	 */
 	public List<Project> getProjects() {
 		return projects;
+	}
+	
+	/**
+	 * Adds the project.
+	 *
+	 * @param project the project
+	 */
+	public void addProject(Project project) {
+		this.projects.add(project);
+		this.clientGUI.updateProjectsJTableData();
 	}
 
 	/**

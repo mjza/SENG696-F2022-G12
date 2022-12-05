@@ -76,7 +76,13 @@ public class GuestGUI {
 		providerPanel.setLayout(new BorderLayout());
 		providerPanel.add(new JLabel("List of Providers:"), BorderLayout.NORTH);
 		String[] columnNames = Provider.getColumns(true);
-		TableModel tableModel = new DefaultTableModel(columnNames, 0);
+		TableModel tableModel = new DefaultTableModel(columnNames, 0){
+			private static final long serialVersionUID = 1L;
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+		};
 		JTable providersJTable = new JTable(tableModel);
 		providersJTable.setFillsViewportHeight(true);
 		this.providersJTable = providersJTable;

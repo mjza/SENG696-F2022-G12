@@ -38,12 +38,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.NumberFormatter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -132,7 +134,14 @@ public class ClientGUI {
 		providerPanel.setLayout(new BorderLayout());
 		providerPanel.add(new JLabel("List of Providers:"), BorderLayout.NORTH);
 		String[] columnNames = Provider.getColumns(false);
-		TableModel tableModel = new DefaultTableModel(columnNames, 0);
+		TableModel tableModel = new DefaultTableModel(columnNames, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		JTable providersJTable = new JTable(tableModel);
 		providersJTable.setFillsViewportHeight(true);
 		this.providersJTable = providersJTable;
@@ -148,13 +157,20 @@ public class ClientGUI {
 		projectPanel.setLayout(new BorderLayout());
 		projectPanel.add(new JLabel("List of Projects:"), BorderLayout.NORTH);
 		String[] projectColumnNames = Project.getColumns(false);
-		TableModel projectTableModel = new DefaultTableModel(projectColumnNames, 0);
-		JTable projectJTable = new JTable(projectTableModel);
-		projectJTable.setFillsViewportHeight(true);
-		this.projectsJTable = projectJTable;
+		TableModel projectTableModel = new DefaultTableModel(projectColumnNames, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		JTable projectsJTable = new JTable(projectTableModel);
+		projectsJTable.setFillsViewportHeight(true);
+		this.projectsJTable = projectsJTable;
 		this.updateProjectsJTableData();
 		// Create the scroll pane and add the table to it.
-		JScrollPane projectScrollPane = new JScrollPane(projectJTable);
+		JScrollPane projectScrollPane = new JScrollPane(projectsJTable);
 		// Add the scroll pane to center of guest panel.
 		projectPanel.add(projectScrollPane, BorderLayout.CENTER);
 
@@ -226,7 +242,15 @@ public class ClientGUI {
 		gbc.gridy++;
 		gbc.weightx = 0;
 		createProjectPanel.add(projectBidJLabel, gbc);
-		JTextField projectBidJTextField = new JTextField();
+		// restrict to digits
+		NumberFormat format = NumberFormat.getInstance();
+	    NumberFormatter formatter = new NumberFormatter(format);
+	    formatter.setValueClass(Integer.class);
+	    formatter.setMinimum(1);
+	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setAllowsInvalid(false);
+	    formatter.setCommitsOnValidEdit(true);
+	    JFormattedTextField projectBidJTextField = new JFormattedTextField(formatter);		
 		projectBidJLabel.setLabelFor(projectBidJTextField);
 		gbc.gridx = 1;
 		gbc.weightx = 1.0;
@@ -267,18 +291,19 @@ public class ClientGUI {
 		providersJTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				JTable source = (JTable) e.getSource();
-				int row = source.getSelectedRow();
-				String providerUserName = (String) source.getModel().getValueAt(row, 2);
-				projectProviderJTextField.setText(providerUserName);
-				selectedProviderAID = clientAgent.getProviderAID(providerUserName);
+				if (source.getRowCount() > 0) {
+					int row = source.getSelectedRow();
+					String providerUserName = (String) source.getModel().getValueAt(row, 2);
+					projectProviderJTextField.setText(providerUserName);
+					selectedProviderAID = clientAgent.getProviderAID(providerUserName);
+				}
 			}
 		});
 		// open project dialog
 		projectsJTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				JTable source = (JTable) e.getSource();
-
-				if (e.getClickCount() == 2) {
+				if (source.getRowCount() > 0 && e.getClickCount() == 2) {
 					int row = source.getSelectedRow();
 					String projectName = (String) source.getModel().getValueAt(row, 1);
 					Project project = clientAgent.getProject(projectName);
@@ -340,7 +365,7 @@ public class ClientGUI {
 	 *
 	 * @param filter the filter
 	 */
-	private void updateProvidersJTableData(String filter) {
+	public void updateProvidersJTableData(String filter) {
 		if (this.providersJTable != null) {
 			List<Provider> providers = clientAgent.getProviders(filter);
 			String[] columnNames = Provider.getColumns(false);
@@ -355,7 +380,7 @@ public class ClientGUI {
 	/**
 	 * Update projects J table data.
 	 */
-	private void updateProjectsJTableData() {
+	public void updateProjectsJTableData() {
 		if (this.projectsJTable != null) {
 			List<Project> projects = clientAgent.getProjects();
 			String[] columnNames = Project.getColumns(false);
@@ -380,6 +405,15 @@ public class ClientGUI {
 	 */
 	public void dispose() {
 		this.jFrame.dispose();
+	}
+
+	/**
+	 * Gets the j frame.
+	 *
+	 * @return the j frame
+	 */
+	public JFrame getjFrame() {
+		return jFrame;
 	}
 
 	/**
