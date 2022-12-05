@@ -289,10 +289,12 @@ public class ProjectGUI {
 		payJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showRatingDialog(project, agent);
 				jFrame.dispose();
+				agent.payMoney(project);
 				String messageText = "Done";
 				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_DONE);
+				RatingGUI ratingGUI = new RatingGUI(agent, project);
+				ratingGUI.showGUI();			
 			}
 		});
 		return clientJPanel;
@@ -330,45 +332,6 @@ public class ProjectGUI {
 			tableModel.setDataVector(stringArray, columnNames);
 			tableModel.fireTableDataChanged();
 		}
-	}
-
-	/**
-	 * Show rating dialog.
-	 *
-	 * @param project the project
-	 * @param agent   the agent
-	 * @return the string
-	 */
-	private String showRatingDialog(Project project, ClientAgent agent) {
-		JFrame frame = new JFrame();
-		JPanel panel = new JPanel();
-		frame.setSize(400, 400);
-		JHintTextField ratingTextField = new JHintTextField("Rating from 1 to 5");
-		ratingTextField.setPreferredSize(new Dimension(200, 24));
-
-		JHintTextField commentTextField = new JHintTextField("Comment");
-		commentTextField.setPreferredSize(new Dimension(200, 24));
-
-		JButton jButton = new JButton("Done");
-
-		jButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				agent.payMoney(project);
-				agent.sendRating(project.getProviderAID(), ratingTextField.getText());
-
-			}
-		});
-
-		panel.add(ratingTextField);
-		panel.add(commentTextField);
-		panel.add(jButton);
-		frame.getContentPane().add(panel);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		return ratingTextField.getText();
 	}
 
 	/**

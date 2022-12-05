@@ -220,4 +220,8 @@ public class ProviderAgent extends EnhancedAgent {
 		takeDown();
 	}
 
+	public void sendRating(AID clientAID, String text) {
+		// TODO Provider must record a comment for a client		
+	}
+
 }
