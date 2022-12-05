@@ -57,7 +57,10 @@ public class ClientAgent extends EnhancedAgent {
 	private Set<AID> providersAID = null;
 
 	/** The client GUI. */
-	ClientGUI clientGUI;
+	private ClientGUI clientGUI;
+
+	/** The client. */
+	private Client client = null;
 
 	/**
 	 * Setup.
@@ -135,12 +138,13 @@ public class ClientAgent extends EnhancedAgent {
 			}
 		});
 	}
-	
+
 	/**
 	 * Show decoding error.
 	 */
 	public void showDecodingError() {
-		JOptionPane.showMessageDialog(clientGUI.getjFrame(), "Problem in decoding data.", "ERROR", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(clientGUI.getjFrame(), "Problem in decoding data.", "ERROR",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -170,8 +174,11 @@ public class ClientAgent extends EnhancedAgent {
 	 * @return the client
 	 */
 	public Client getClient() {
-		String userName = this.getUserName();
-		return SystemAgent.getClient(userName);
+		if (this.client == null) {
+			String userName = this.getUserName();
+			this.client = SystemAgent.getClient(userName);
+		}
+		return this.client;
 	}
 
 	/**
@@ -226,7 +233,7 @@ public class ClientAgent extends EnhancedAgent {
 	public List<Project> getProjects() {
 		return projects;
 	}
-	
+
 	/**
 	 * Adds the project.
 	 *

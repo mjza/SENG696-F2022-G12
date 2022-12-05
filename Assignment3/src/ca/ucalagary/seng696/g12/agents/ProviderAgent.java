@@ -50,13 +50,16 @@ public class ProviderAgent extends EnhancedAgent {
 	private List<Project> projects = new ArrayList<>();
 
 	/** The ratings. */
-	ArrayList<Integer> ratings = new ArrayList<>();
+	private ArrayList<Integer> ratings = new ArrayList<>();
 
 	/** The provider GUI. */
 	public ProviderGUI providerGUI;
 
 	/** The rate. */
 	private double rate = 0.0;
+
+	/** The provider. */
+	private Provider provider = null;
 
 	/**
 	 * Setup.
@@ -170,8 +173,11 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @return the provider
 	 */
 	public Provider getProvider() {
-		String userName = this.getUserName();
-		return SystemAgent.getProvider(userName);
+		if (this.provider == null) {
+			String userName = this.getUserName();
+			this.provider = SystemAgent.getProvider(userName);
+		}
+		return this.provider;
 	}
 
 	/**
@@ -182,7 +188,7 @@ public class ProviderAgent extends EnhancedAgent {
 	public List<Project> getProjects() {
 		return this.projects;
 	}
-	
+
 	/**
 	 * Gets the project.
 	 *
