@@ -76,7 +76,6 @@ public class ProjectGUI {
 		JTextField jTextFieldMessage = new JHintTextField("Message");
 		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
 
-		//jPanel.add(new JButton("Next"),BorderLayout.SOUTH);
 		JButton sendMsgJButton = new JButton("Send");
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
@@ -134,7 +133,6 @@ public class ProjectGUI {
 		JTextField jTextFieldMessage = new JHintTextField("Message");
 		jPanel.add(jTextFieldMessage, BorderLayout.NORTH);
 
-//        jPanel.add(new JButton("Next"),BorderLayout.SOUTH);
 		JButton sendMsgJButton = new JButton("Send");
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override

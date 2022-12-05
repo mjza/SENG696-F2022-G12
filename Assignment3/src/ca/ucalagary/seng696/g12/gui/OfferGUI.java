@@ -126,19 +126,19 @@ public class OfferGUI {
 		offerJPanel.add(titleJLabel, BorderLayout.NORTH);
 		// Body
 		JPanel bodyJPanel = new JPanel();
+		offerJPanel.add(bodyJPanel, BorderLayout.CENTER);
 		bodyJPanel.setLayout(new BorderLayout());
 		bodyJPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		JLabel projectInfoJLabel = new JLabel();
 		String[] columns = Project.getColumns(true);
 		String[] data = project.toArray(true);
-		String output = "<HTML>";
+		String projectDetails = "<HTML>";
 		for (int i = 0; i < columns.length && i < data.length; i++) {
-			output += " " + columns[i] + ": " + data[i] + "<br/>";
+			projectDetails += " <b>" + columns[i] + ":</b><i> " + data[i] + "</i><br/>";
 		}
-		output += "</HTML>";
-		projectInfoJLabel.setText(output);
-		bodyJPanel.add(projectInfoJLabel);
-		offerJPanel.add(bodyJPanel, BorderLayout.CENTER);
+		projectDetails += "</HTML>";
+		projectInfoJLabel.setText(projectDetails);
+		bodyJPanel.add(projectInfoJLabel, BorderLayout.NORTH);		
 		// buttons
 		JPanel buttonsJPanel = new JPanel();
 		offerJPanel.add(buttonsJPanel, BorderLayout.SOUTH);
