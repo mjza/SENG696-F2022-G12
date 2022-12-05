@@ -144,7 +144,7 @@ public class ProjectGUI {
 		// Title
 		JLabel titleJLabel = new JLabel("<<Project Details>>", SwingConstants.CENTER);
 		projectJPanel.add(titleJLabel, BorderLayout.NORTH);
-		projectJPanel.add(projectInformationJLabel, BorderLayout.CENTER);		
+		projectJPanel.add(projectInformationJLabel, BorderLayout.CENTER);
 		this.updateProjectInformation();
 		// A panel for chat table
 		JPanel chatTableJPanel = new JPanel();
@@ -181,18 +181,21 @@ public class ProjectGUI {
 		//
 		JButton progressJButton = new JButton("20% progress");
 		bottomPanel.add(progressJButton, BorderLayout.SOUTH);
-		if(project.isDone()) {
+		if (project.isDone()) {
 			progressJButton.setEnabled(false);
 		}
 		// Event handler for send button
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String chatMessage = messageJTextField.getText();
-				Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);
-				project.addNewChat(chat);
-				agent.sendMessage(project.getClientAID(), chatMessage, project.getId(), Ontology.PROVIDER_TO_CLIENT);
-				updateChatsJTableData();
+				String chatMessage = messageJTextField.getText().trim();
+				if (chatMessage.length() > 0) {
+					messageJTextField.setText("");
+					Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);
+					project.addNewChat(chat);
+					agent.sendMessage(project.getClientAID(), chatMessage, project.getId(),
+							Ontology.PROVIDER_TO_CLIENT);
+				}
 			}
 		});
 		// Event handler for progress
@@ -200,12 +203,13 @@ public class ProjectGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String chatMessage = "20";
-				Chat chat = new Chat(chatMessage + "% progress", agent.getProvider(), project.getClient(), true);				
 				if (project.setProgress(20)) {
+					if (project.isDone()) {
+						progressJButton.setEnabled(false);
+					}
+					Chat chat = new Chat(chatMessage + "% progress", agent.getProvider(), project.getClient(), true);
 					project.addNewChat(chat);
 					agent.sendProgress(project.getClientAID(), chatMessage, project.getId(), Ontology.REPORTING);
-					updateChatsJTableData();
-					updateChatsJTableData();
 				} else {
 					progressJButton.setEnabled(false);
 				}
@@ -271,18 +275,20 @@ public class ProjectGUI {
 		//
 		JButton payJButton = new JButton("Pay after 100%!");
 		bottomPanel.add(payJButton, BorderLayout.SOUTH);
-		if(project.isPaid()) {
+		if (project.isPaid()) {
 			payJButton.setEnabled(false);
 		}
 		// Event handler for send button
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String chatMessage = messageJTextField.getText();
-				Chat chat = new Chat(chatMessage, project.getProvider(), agent.getClient(), true);
-				project.addNewChat(chat);
-				agent.sendMessage(project.getProviderAID(), chatMessage, project.getId(), Ontology.ACLMESSAGE_CHAT);
-				updateChatsJTableData();
+				String chatMessage = messageJTextField.getText().trim();
+				if (chatMessage.length() > 0) {
+					messageJTextField.setText("");
+					Chat chat = new Chat(chatMessage, project.getProvider(), agent.getClient(), true);
+					project.addNewChat(chat);
+					agent.sendMessage(project.getProviderAID(), chatMessage, project.getId(), Ontology.ACLMESSAGE_CHAT);
+				}
 			}
 		});
 		// Event handler for progress
@@ -294,7 +300,7 @@ public class ProjectGUI {
 				String messageText = "Done";
 				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_DONE);
 				RatingGUI ratingGUI = new RatingGUI(agent, project);
-				ratingGUI.showGUI();			
+				ratingGUI.showGUI();
 			}
 		});
 		return clientJPanel;
@@ -308,7 +314,7 @@ public class ProjectGUI {
 	 * @param progress    the progress
 	 */
 	public void updateProjectInformation() {
-		StringBuilder text = new StringBuilder("<html><p>");		
+		StringBuilder text = new StringBuilder("<html><p>");
 		text.append("Id: <i>").append(this.project.getId()).append("</i><br/>");
 		text.append("Name: <i>").append(this.project.getName()).append("</i><br/>");
 		text.append("Description: <i>").append(this.project.getDescription()).append("</i><br/>");

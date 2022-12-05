@@ -244,13 +244,13 @@ public class ClientGUI {
 		createProjectPanel.add(projectBidJLabel, gbc);
 		// restrict to digits
 		NumberFormat format = NumberFormat.getInstance();
-	    NumberFormatter formatter = new NumberFormatter(format);
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(1);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(false);
-	    formatter.setCommitsOnValidEdit(true);
-	    JFormattedTextField projectBidJTextField = new JFormattedTextField(formatter);		
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(1);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(false);
+		formatter.setCommitsOnValidEdit(true);
+		JFormattedTextField projectBidJTextField = new JFormattedTextField(formatter);
 		projectBidJLabel.setLabelFor(projectBidJTextField);
 		gbc.gridx = 1;
 		gbc.weightx = 1.0;
@@ -293,9 +293,11 @@ public class ClientGUI {
 				JTable source = (JTable) e.getSource();
 				if (source.getRowCount() > 0) {
 					int row = source.getSelectedRow();
-					String providerUserName = (String) source.getModel().getValueAt(row, 2);
-					projectProviderJTextField.setText(providerUserName);
-					selectedProviderAID = clientAgent.getProviderAID(providerUserName);
+					if (row >= 0) {
+						String providerUserName = (String) source.getModel().getValueAt(row, 2);
+						projectProviderJTextField.setText(providerUserName);
+						selectedProviderAID = clientAgent.getProviderAID(providerUserName);
+					}
 				}
 			}
 		});
@@ -305,10 +307,12 @@ public class ClientGUI {
 				JTable source = (JTable) e.getSource();
 				if (source.getRowCount() > 0 && e.getClickCount() == 2) {
 					int row = source.getSelectedRow();
-					String projectId = (String) source.getModel().getValueAt(row, 0);					
-					Project project = clientAgent.getProject(Integer.parseInt(projectId));
-					ProjectGUI projectGUI = new ProjectGUI(clientAgent, project);
-					projectGUI.showGUI();
+					if (row >= 0) {
+						String projectId = (String) source.getModel().getValueAt(row, 0);
+						Project project = clientAgent.getProject(Integer.parseInt(projectId));
+						ProjectGUI projectGUI = new ProjectGUI(clientAgent, project);
+						projectGUI.showGUI();
+					}
 				}
 			}
 		});
@@ -323,7 +327,7 @@ public class ClientGUI {
 				}
 				String projectName = projectNameJTextField.getText().trim();
 				String projectDescription = projectDescriptionJTextField.getText().trim();
-				String projectBid = projectBidJTextField.getText().trim().replaceAll("[^0-9]","");
+				String projectBid = projectBidJTextField.getText().trim().replaceAll("[^0-9]", "");
 				Date projectDeadLine = model.getValue();
 				AID clientAID = clientAgent.getAID();
 				AID providerAID = selectedProviderAID;
@@ -349,7 +353,8 @@ public class ClientGUI {
 	 * Show missing data.
 	 */
 	public void showMissingData() {
-		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "Ops: Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "Ops: Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**

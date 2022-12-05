@@ -159,10 +159,12 @@ public class ProviderGUI {
 				JTable source = (JTable) e.getSource();
 				if (source.getRowCount() > 0 && e.getClickCount() == 2) {
 					int row = source.getSelectedRow();
-					String projectId = (String) source.getModel().getValueAt(row, 0);
-					Project project = providerAgent.getProject(Integer.parseInt(projectId));
-					ProjectGUI projectGUI = new ProjectGUI(providerAgent, project);
-					projectGUI.showGUI();
+					if (row >= 0) {
+						String projectId = (String) source.getModel().getValueAt(row, 0);
+						Project project = providerAgent.getProject(Integer.parseInt(projectId));
+						ProjectGUI projectGUI = new ProjectGUI(providerAgent, project);
+						projectGUI.showGUI();
+					}
 				}
 			}
 		});

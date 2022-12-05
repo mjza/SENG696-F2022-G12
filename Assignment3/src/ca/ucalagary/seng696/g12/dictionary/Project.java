@@ -241,7 +241,6 @@ public class Project implements Serializable {
 			this.progress += progressPercentage;
 			if (this.projectGUI != null) {
 				this.projectGUI.updateProjectInformation();
-				this.projectGUI.updateChatsJTableData();
 			}
 			return true;
 		}
@@ -255,8 +254,7 @@ public class Project implements Serializable {
 	 */
 	public void addNewChat(Chat chat) {
 		this.chats.add(chat);
-		if (this.projectGUI != null) {
-			this.projectGUI.updateProjectInformation();
+		if (this.projectGUI != null) {			
 			this.projectGUI.updateChatsJTableData();
 		}
 	}
