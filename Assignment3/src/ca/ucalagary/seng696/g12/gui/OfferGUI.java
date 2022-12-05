@@ -25,6 +25,9 @@ package ca.ucalagary.seng696.g12.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -50,13 +53,13 @@ public class OfferGUI {
 
 	/** The project. */
 	private Project project = null;
-	
+
 	/** The my agent. */
 	private Agent myAgent;
-	
+
 	/** The reply. */
 	private ACLMessage reply;
-	
+
 	/** The message. */
 	private ACLMessage message;
 
@@ -64,7 +67,7 @@ public class OfferGUI {
 	 * Instantiates a new message GUI.
 	 *
 	 * @param myAgent the my agent
-	 * @param message     the msg
+	 * @param message the msg
 	 * @param reply   the reply
 	 */
 	public OfferGUI(Agent myAgent, ACLMessage message, ACLMessage reply) {
@@ -84,6 +87,16 @@ public class OfferGUI {
 		this.jFrame = new JFrame("B2B Match Making System: New offer for(" + myAgent.getLocalName() + ")");
 		// set icon
 		this.jFrame.setIconImage(SystemAgent.getIcon());
+		// Set the size and position of the GUI to the right-hand-side of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(this.jFrame.getGraphicsConfiguration());
+		int taskBarHeight = scnMax.bottom;
+		int width = screenSize.width / 3;
+		int height = (screenSize.height- taskBarHeight)/2 ;
+		int posX = ((screenSize.width / 2) - width)/2;
+		int posY = ((screenSize.height - taskBarHeight) - height)/2;
+		this.jFrame.setSize(width,height);
+		this.jFrame.setLocation(posX, posY);
 		// Do not kill the agent
 		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
@@ -91,10 +104,10 @@ public class OfferGUI {
 				super.windowClosing(windowEvent);
 			}
 		});
-		this.jFrame.setSize(384, 320);
+		//this.jFrame.setSize(384, 320);
 		this.jFrame.add(this.getOfferJPanel());
 	}
-	
+
 	/**
 	 * Gets the offer J panel.
 	 *
@@ -119,7 +132,7 @@ public class OfferGUI {
 		String[] columns = Project.getColumns(true);
 		String[] data = project.toArray(true);
 		String output = "<HTML>";
-		for (int i=0; i<columns.length && i<data.length; i++) {
+		for (int i = 0; i < columns.length && i < data.length; i++) {
 			output += " " + columns[i] + ": " + data[i] + "<br/>";
 		}
 		output += "</HTML>";
@@ -130,20 +143,20 @@ public class OfferGUI {
 		JPanel buttonsJPanel = new JPanel();
 		offerJPanel.add(buttonsJPanel, BorderLayout.SOUTH);
 		JButton jButtonAccept = new JButton("Accept");
-		jButtonAccept.setBackground(new Color(34,139,34));
+		jButtonAccept.setBackground(new Color(34, 139, 34));
 		jButtonAccept.setOpaque(true);
 		JButton jButtonReject = new JButton("Reject");
-		jButtonReject.setBackground(new Color(220,20,60));
+		jButtonReject.setBackground(new Color(220, 20, 60));
 		jButtonReject.setOpaque(true);
 		buttonsJPanel.add(jButtonAccept, BorderLayout.WEST);
 		buttonsJPanel.add(jButtonReject, BorderLayout.EAST);
-		// Handlers 
+		// Handlers
 		jButtonAccept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				reply.setContent(content);
 				reply.setPerformative(Ontology.ACLMESSAGE_ACCEPT);
-				myAgent.send(reply);				
+				myAgent.send(reply);
 				((ProviderAgent) myAgent).addProject(project);
 				dispose();
 			}
