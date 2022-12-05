@@ -90,7 +90,7 @@ public class ProviderAgent extends EnhancedAgent {
 					System.out.println("A new message received for: " + getAID().getName() + ", Performative: "
 							+ msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
-					String projectName, chatMessage;					
+					String projectId, chatMessage;					
 					switch (msg.getPerformative()) {
 					case Ontology.ACLMESSAGE_OFFER:
 						reply = msg.createReply();
@@ -98,30 +98,33 @@ public class ProviderAgent extends EnhancedAgent {
 						msgGUI.showGUI();
 						break;
 					case Ontology.ACLMESSAGE_CHAT:
-						projectName = contents[0];
+						projectId = contents[0];
 						chatMessage = contents[1];
 						for (Project project : projects) {
-							if (project.getName().equals(projectName)) {
+							if (project.getId() == Integer.parseInt(projectId)) {
 								project.chatUpdate(chatMessage);
+								break;
 							}
 						}
 						break;
 					case Ontology.ACLMESSAGE_PAYMENT:
-						projectName = contents[0];
+						projectId = contents[0];
 						chatMessage = contents[1];
 						for (Project project : projects) {
-							if (project.getName().equals(projectName)) {
+							if (project.getId() == Integer.parseInt(projectId)) {
 								project.setDone();
+								break;
 							}
 						}
-						providerGUI.updateProjects(projects);
+						providerGUI.updateProjectsJTableData();
 						break;
 					case Ontology.ACLMESSAGE_DONE:
-						projectName = contents[0];
+						projectId = contents[0];
 						chatMessage = contents[1];
 						for (Project project : projects) {
-							if (project.getName().equals(projectName)) {
+							if (project.getId() == Integer.parseInt(projectId)) {
 								project.disposeGUI();
+								break;
 							}
 						}
 						break;
@@ -138,13 +141,13 @@ public class ProviderAgent extends EnhancedAgent {
 	 *
 	 * @param client         the client
 	 * @param messageText    the message text
-	 * @param projectName    the project name
+	 * @param projectId    the project id
 	 * @param conversationID the conversation ID
 	 */
-	public void sendMessage(AID client, String messageText, String projectName, String conversationID) {
+	public void sendMessage(AID client, String messageText, int projectId, String conversationID) {
 		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_CHAT);
 		message.setConversationId(conversationID);
-		message.setContent(projectName + ":" + messageText);
+		message.setContent(projectId + ":" + messageText);
 		message.addReceiver(client);
 		send(message);
 	}
@@ -190,13 +193,13 @@ public class ProviderAgent extends EnhancedAgent {
 	/**
 	 * Gets the project.
 	 *
-	 * @param projectName the project name
+	 * @param projectId the project id
 	 * @return the project
 	 */
-	public Project getProject(String projectName) {
+	public Project getProject(int projectId) {
 		for (int i = 0; i < projects.size(); i++) {
 			Project project = projects.get(i);
-			if (project.getName().equals(projectName)) {
+			if (project.getId() == projectId) {
 				return project;
 			}
 		}

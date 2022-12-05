@@ -82,7 +82,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				String messageText = jTextFieldMessage.getText();
 				project.chatUpdate(messageText);
-				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.PROVIDER_TO_CLIENT);
+				agent.sendMessage(project.getClientAID(), messageText, project.getId(), Ontology.PROVIDER_TO_CLIENT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 			}
@@ -98,7 +98,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				String messageText = "10";
 				project.setProgress(10);
-				agent.sendMessage(project.getClientAID(), messageText, project.getName(), Ontology.REPORTING);
+				agent.sendMessage(project.getClientAID(), messageText, project.getId(), Ontology.REPORTING);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 			}
@@ -137,13 +137,11 @@ public class ProjectGUI {
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				String messageText = jTextFieldMessage.getText();
 				project.chatUpdate(messageText);
-				agent.sendMessage(project.getProviderAID(), messageText, project.getName(), Ontology.ACLMESSAGE_CHAT);
+				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_CHAT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
-
 			}
 		});
 		JPanel southPanel = new JPanel();
@@ -159,7 +157,7 @@ public class ProjectGUI {
 				System.out.print(rating);
 				jFrame.dispose();
 				String messageText = "Done";
-				agent.sendMessage(project.getProviderAID(), messageText, project.getName(), Ontology.ACLMESSAGE_DONE);
+				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_DONE);
 			}
 		});
 		this.jFrame.add(jPanel);

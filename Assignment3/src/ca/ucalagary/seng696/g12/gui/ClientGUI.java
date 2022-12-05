@@ -305,8 +305,8 @@ public class ClientGUI {
 				JTable source = (JTable) e.getSource();
 				if (source.getRowCount() > 0 && e.getClickCount() == 2) {
 					int row = source.getSelectedRow();
-					String projectName = (String) source.getModel().getValueAt(row, 1);
-					Project project = clientAgent.getProject(projectName);
+					String projectId = (String) source.getModel().getValueAt(row, 0);					
+					Project project = clientAgent.getProject(Integer.parseInt(projectId));
 					ProjectGUI projectGUI = new ProjectGUI(clientAgent, project);
 					projectGUI.showGUI();
 				}
@@ -323,7 +323,7 @@ public class ClientGUI {
 				}
 				String projectName = projectNameJTextField.getText().trim();
 				String projectDescription = projectDescriptionJTextField.getText().trim();
-				String projectBid = projectBidJTextField.getText().trim();
+				String projectBid = projectBidJTextField.getText().trim().replaceAll("[^0-9]","");
 				Date projectDeadLine = model.getValue();
 				AID clientAID = clientAgent.getAID();
 				AID providerAID = selectedProviderAID;
@@ -414,31 +414,6 @@ public class ClientGUI {
 	 */
 	public JFrame getjFrame() {
 		return jFrame;
-	}
-
-	/**
-	 * Adds the project.
-	 *
-	 * @param project the project
-	 */
-	public void addProject(Project project) {
-		// TODO: Add a project in GUI
-		// this.projects.add(project);
-		// projectsListModel.addElement(project.getName());
-	}
-
-	/**
-	 * Update projects.
-	 *
-	 * @param projects the projects
-	 */
-	public void updateProjects(List<Project> projects) {
-		// TODO: Update project table
-		// this.projects = projects;
-		// projectsListModel.clear();
-		// for (Project project : this.projects) {
-		// projectsListModel.addElement(project.getName());
-		// }
 	}
 
 	/**

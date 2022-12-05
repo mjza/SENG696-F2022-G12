@@ -159,8 +159,8 @@ public class ProviderGUI {
 				JTable source = (JTable) e.getSource();
 				if (source.getRowCount() > 0 && e.getClickCount() == 2) {
 					int row = source.getSelectedRow();
-					String projectName = (String) source.getModel().getValueAt(row, 1);
-					Project project = providerAgent.getProject(projectName);
+					String projectId = (String) source.getModel().getValueAt(row, 0);
+					Project project = providerAgent.getProject(Integer.parseInt(projectId));
 					ProjectGUI projectGUI = new ProjectGUI(providerAgent, project);
 					projectGUI.showGUI();
 				}
@@ -201,17 +201,6 @@ public class ProviderGUI {
 	}
 
 	/**
-	 * Adds the project.
-	 *
-	 * @param project the project
-	 */
-	public void addProject(Project project) {
-		// TODO: remove this function
-		// projectsListModel.addElement(project.getName());
-		// this.projects.add(project);
-	}
-
-	/**
 	 * Gets the j frame.
 	 *
 	 * @return the j frame
@@ -226,18 +215,5 @@ public class ProviderGUI {
 	public void updatePremium() {
 		String verb = providerAgent.getProvider().isPremium() ? " " : " not ";
 		premiumJLabel.setText("<<You are" + verb + "a premium user>>");
-	}
-
-	/**
-	 * Update projects.
-	 *
-	 * @param projects the projects
-	 */
-	public void updateProjects(List<Project> projects) {
-		// TODO: check this function
-		// projectsListModel.clear();
-		// for (Project project : this.providerAgent.getProjects()) {
-		// projectsListModel.addElement(project.getName());
-		// }
 	}
 }

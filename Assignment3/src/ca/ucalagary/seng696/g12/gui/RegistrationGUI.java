@@ -24,6 +24,7 @@
 package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 
 import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.databases.DBUtils;
@@ -32,6 +33,7 @@ import ca.ucalagary.seng696.g12.dictionary.User;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 /**
  * The Class RegistrationGUI.
@@ -181,7 +183,15 @@ public class RegistrationGUI {
 		gbc.weightx = 0; // to not fill whole width
 		registerJPanel.add(compensationJLable, gbc);
 		// Compensation textbox
-		JTextField compensationTextField = new JTextField("0.0");
+		// restrict to digits
+		NumberFormat format = NumberFormat.getInstance();
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(1);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(false);
+		formatter.setCommitsOnValidEdit(true);
+		JFormattedTextField compensationTextField = new JFormattedTextField(formatter);
 		compensationJLable.setLabelFor(compensationTextField);
 		gbc.gridx = 1;// set the x location of the grid
 		gbc.weightx = 1; // to fill whole width
@@ -236,7 +246,7 @@ public class RegistrationGUI {
 				String password = passwordTextField.getText().trim();
 				String keywords = keywordsTextField.getText().trim();
 				String website = websiteTextField.getText().trim();
-				String compensation = compensationTextField.getText().trim();
+				String compensation = compensationTextField.getText().trim().replaceAll("[^0-9]", "");
 				String resume = resumeTextArea.getText().trim();
 				Boolean isPremium = premiumCheckBox.isSelected();
 				if (User.CLIENT.equals(type)) {
@@ -247,10 +257,12 @@ public class RegistrationGUI {
 						showMissingData();
 					}
 				} else {
-					if (name != null && userName != null && password != null && keywords != null && website != null && compensation != null && name.length() > 0
-							&& userName.length() > 0 && password.length() > 0 && keywords.length() > 0 && compensation.length() > 0 && website.length() > 0) {
-						RegistrationGUI.this.register(type, name, userName, password, keywords, resume, isPremium, website,
-								compensation);
+					if (name != null && userName != null && password != null && keywords != null && website != null
+							&& compensation != null && name.length() > 0 && userName.length() > 0
+							&& password.length() > 0 && keywords.length() > 0 && compensation.length() > 0
+							&& website.length() > 0) {
+						RegistrationGUI.this.register(type, name, userName, password, keywords, resume, isPremium,
+								website, compensation);
 					} else {
 						showMissingData();
 					}
@@ -308,8 +320,8 @@ public class RegistrationGUI {
 			// add a provider
 			DBUtils.addProvider(name, userName, password, 0);
 			int id = DBUtils.getUserId(userName);
-			Double dCompensation = Double.valueOf(compensation);
-			DBUtils.addResume(id, keywords, resume, isPremium, website, dCompensation);
+			int iCompensation = Integer.parseInt(compensation);
+			DBUtils.addResume(id, keywords, resume, isPremium, website, iCompensation);
 		} else {
 			// add a client
 			DBUtils.addClient(name, userName, password, 0);
@@ -321,7 +333,8 @@ public class RegistrationGUI {
 	 * Show missing data.
 	 */
 	public void showMissingData() {
-		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "Ops: Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "Ops: Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**

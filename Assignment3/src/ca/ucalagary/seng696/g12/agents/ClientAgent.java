@@ -92,11 +92,10 @@ public class ClientAgent extends EnhancedAgent {
 					System.out.println("A new message received for: " + getAID().getName() + ", performative: "
 							+ msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
-					String projectName, progressText, chatMessage;
+					String projectId, progressText, chatMessage;
 					switch (msg.getPerformative()) {
 					case Ontology.ACLMESSAGE_REFUSE:
 						// Do nothing.
-						// TODO: We can add the project to table and then remove it.
 						break;
 					case Ontology.ACLMESSAGE_ACCEPT:
 						// extract project data
@@ -113,23 +112,25 @@ public class ClientAgent extends EnhancedAgent {
 						}
 						break;
 					case (Ontology.ACLMESSAGE_CHAT):
-						projectName = contents[0];
+						projectId = contents[0];
 						chatMessage = contents[1];
 						for (int i = 0; i < projects.size(); i++) {
 							Project project = projects.get(i);
-							if (project.getName().equals(projectName)) {
+							if (project.getId() == Integer.parseInt(projectId)) {
 								project.chatUpdate(chatMessage);
+								break;
 							}
 						}
 						break;
 					case (Ontology.ACLMESSAGE_PROGRESS):
-						projectName = contents[0];
+						projectId = contents[0];
 						progressText = contents[1];
 						int progress = Integer.parseInt(progressText);
 						for (int i = 0; i < projects.size(); i++) {
 							Project project = projects.get(i);
-							if (project.getName().equals(projectName)) {
+							if (project.getId() == Integer.parseInt(projectId)) {
 								project.setProgress(progress);
+								break;
 							}
 						}
 						break;
@@ -247,13 +248,13 @@ public class ClientAgent extends EnhancedAgent {
 	/**
 	 * Gets the project.
 	 *
-	 * @param projectName the project name
+	 * @param projectId the project id
 	 * @return the project
 	 */
-	public Project getProject(String projectName) {
+	public Project getProject(int projectId) {
 		for (int i = 0; i < projects.size(); i++) {
 			Project project = projects.get(i);
-			if (project.getName().equals(projectName)) {
+			if (project.getId() == projectId) {
 				return project;
 			}
 		}
@@ -265,13 +266,13 @@ public class ClientAgent extends EnhancedAgent {
 	 *
 	 * @param provider     the provider
 	 * @param p            the p
-	 * @param projectName  the project name
+	 * @param projectId  the project id
 	 * @param performative the performative
 	 */
-	public void sendMessage(AID provider, String p, String projectName, int performative) {
+	public void sendMessage(AID provider, String p, int projectId, int performative) {
 		ACLMessage message = new ACLMessage(performative);
 		message.setConversationId(Ontology.CLIENT_TO_PROVIDER);
-		message.setContent(projectName + ":" + p);
+		message.setContent(projectId + ":" + p);
 		message.addReceiver(provider);
 		send(message);
 	}
@@ -296,20 +297,19 @@ public class ClientAgent extends EnhancedAgent {
 	 * @param project the project
 	 */
 	public void markProjectAsDone(Project project) {
-		System.out.println("MARKING DONE " + project.getProviderAID().getLocalName());
-
 		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_PAYMENT);
 		message.setConversationId(Ontology.NEGOTIATION);
-		message.setContent(project.getName() + ":" + 70 * project.getBid() / 100);
+		message.setContent(project.getId() + ":" + 70 * project.getBid() / 100);
 		message.addReceiver(project.getProviderAID());
 		send(message);
 		project.setDone();
 		for (Project proj : projects) {
-			if (proj.getName().equals(proj.getName())) {
+			if (proj.getId() == project.getId()) {
 				proj.setDone();
+				break;
 			}
 		}
-		clientGUI.updateProjects(projects);
+		clientGUI.updateProjectsJTableData();
 	}
 
 }
