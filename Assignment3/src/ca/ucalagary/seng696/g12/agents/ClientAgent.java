@@ -35,6 +35,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
+import ca.ucalagary.seng696.g12.dictionary.Chat;
 import ca.ucalagary.seng696.g12.dictionary.Client;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
@@ -117,7 +118,8 @@ public class ClientAgent extends EnhancedAgent {
 						for (int i = 0; i < projects.size(); i++) {
 							Project project = projects.get(i);
 							if (project.getId() == Integer.parseInt(projectId)) {
-								project.chatUpdate(chatMessage);
+								Chat chat = new Chat(chatMessage, project.getProvider(), getClient(), false);
+								project.chatUpdate(chat);
 								break;
 							}
 						}

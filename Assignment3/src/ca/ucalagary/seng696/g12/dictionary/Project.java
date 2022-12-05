@@ -72,7 +72,7 @@ public class Project implements Serializable {
 	private boolean done = false;
 
 	/** The messages history. */
-	private ArrayList<String> chats = new ArrayList<>();
+	private ArrayList<Chat> chats = new ArrayList<>();
 
 	/** The project detail GUI. */
 	private ProjectGUI projectGUI;
@@ -167,7 +167,7 @@ public class Project implements Serializable {
 	 *
 	 * @return the chats
 	 */
-	public ArrayList<String> getChats() {
+	public ArrayList<Chat> getChats() {
 		return this.chats;
 	}
 
@@ -267,7 +267,7 @@ public class Project implements Serializable {
 	 *
 	 * @param chat the chat message
 	 */
-	public void chatUpdate(String chat) {
+	public void chatUpdate(Chat chat) {
 		this.chats.add(chat);
 		if (this.projectGUI != null) {
 			this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),

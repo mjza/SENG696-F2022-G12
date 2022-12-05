@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ClientAgent;
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
+import ca.ucalagary.seng696.g12.dictionary.Chat;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 
@@ -51,7 +52,7 @@ public class ProjectGUI {
 
 	/**
 	 * Instantiates a new project GUI.
-	 *
+	 * It is shown when the user is a Provider
 	 * @param agent   the agent
 	 * @param project the project
 	 */
@@ -80,9 +81,10 @@ public class ProjectGUI {
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String messageText = jTextFieldMessage.getText();
-				project.chatUpdate(messageText);
-				agent.sendMessage(project.getClientAID(), messageText, project.getId(), Ontology.PROVIDER_TO_CLIENT);
+				String chatMessage = jTextFieldMessage.getText();
+				Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);
+				project.chatUpdate(chat);
+				agent.sendMessage(project.getClientAID(), chatMessage, project.getId(), Ontology.PROVIDER_TO_CLIENT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 			}
@@ -96,7 +98,7 @@ public class ProjectGUI {
 		progressJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String messageText = "10";
+				String messageText = "10%";
 				project.setProgress(10);
 				agent.sendMessage(project.getClientAID(), messageText, project.getId(), Ontology.REPORTING);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
@@ -137,9 +139,10 @@ public class ProjectGUI {
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String messageText = jTextFieldMessage.getText();
-				project.chatUpdate(messageText);
-				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_CHAT);
+				String chatMessage = jTextFieldMessage.getText();
+				Chat chat = new Chat(chatMessage, project.getProvider(), agent.getClient(), true);
+				project.chatUpdate(chat);
+				agent.sendMessage(project.getProviderAID(), chatMessage, project.getId(), Ontology.ACLMESSAGE_CHAT);
 				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
 						project.getChats());
 			}
@@ -169,13 +172,13 @@ public class ProjectGUI {
 	 * @param name           the name
 	 * @param description    the description
 	 * @param progress       the progress
-	 * @param messageHistory the message history
+	 * @param chats the message history
 	 */
-	public void updateRightLabel(String name, String description, int progress, ArrayList<String> messageHistory) {
+	public void updateRightLabel(String name, String description, int progress, ArrayList<Chat> chats) {
 		updateLeftLabel(name, description, progress);
 		StringBuilder text = new StringBuilder("<html>");
-		for (String s : messageHistory)
-			text.append(s).append("<br/>");
+		for (Chat chat : chats)
+			text.append(chat.getText()).append("<br/>");
 		text.append("</html>");
 		chatJLabel.setText(text.toString());
 	}

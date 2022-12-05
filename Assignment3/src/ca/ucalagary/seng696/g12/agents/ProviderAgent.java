@@ -30,6 +30,7 @@ import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ucalagary.seng696.g12.dictionary.Chat;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
@@ -102,7 +103,8 @@ public class ProviderAgent extends EnhancedAgent {
 						chatMessage = contents[1];
 						for (Project project : projects) {
 							if (project.getId() == Integer.parseInt(projectId)) {
-								project.chatUpdate(chatMessage);
+								Chat chat = new Chat(chatMessage, getProvider(), project.getClient(), false);
+								project.chatUpdate(chat);
 								break;
 							}
 						}
