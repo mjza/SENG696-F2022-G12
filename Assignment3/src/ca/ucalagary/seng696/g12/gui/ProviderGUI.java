@@ -24,6 +24,9 @@
 package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
 import ca.ucalagary.seng696.g12.agents.SystemAgent;
@@ -34,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -42,16 +46,16 @@ import java.util.List;
 public class ProviderGUI {
 
 	/** The j frame. */
-	JFrame jFrame;
-	
-	/** The projects list model. */
-	DefaultListModel<String> projectsListModel;
-	
+	private JFrame jFrame;
+
+	/** The projects J table. */
+	private JTable projectsJTable;
+
 	/** The premium label. */
-	JLabel premiumLabel;
-	
+	private JLabel premiumJLabel = new JLabel();
+
 	/** The provider agent. */
-	ProviderAgent providerAgent;
+	private ProviderAgent providerAgent;
 
 	/**
 	 * Instantiates a new provider GUI.
@@ -67,10 +71,10 @@ public class ProviderGUI {
 		// Set the size and position of the GUI to the left-hand-side of the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(this.jFrame.getGraphicsConfiguration());
-        int taskBarHeight = scnMax.bottom;
-		this.jFrame.setSize(screenSize.width/2, screenSize.height - taskBarHeight);
+		int taskBarHeight = scnMax.bottom;
+		this.jFrame.setSize(screenSize.width / 2, screenSize.height - taskBarHeight);
 		this.jFrame.setLocation(0, 0);
-		// Kill the agent when user closes the window		
+		// Kill the agent when user closes the window
 		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -81,72 +85,105 @@ public class ProviderGUI {
 		// set the content in jFrame
 		this.jFrame.add(this.getProviderJPanel());
 	}
-	
+
+	/**
+	 * Gets the provider J panel.
+	 *
+	 * @return the provider J panel
+	 */
 	private JPanel getProviderJPanel() {
 		JPanel providerJPanel = new JPanel();
 		providerJPanel.setLayout(new BorderLayout());
-		
+		// A provider sign
 		providerJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
-
-		premiumLabel = new JLabel();
-
+		// Get text for premium status
 		updatePremium();
+		premiumJLabel.setHorizontalAlignment(JLabel.CENTER);
+		premiumJLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		providerJPanel.add(premiumJLabel, BorderLayout.NORTH);
 
-		JPanel jPanelNewMessage = new JPanel();
+		// A panel for projects table
+		JPanel projectPanel = new JPanel();
+		providerJPanel.add(projectPanel, BorderLayout.CENTER);
+		projectPanel.setLayout(new BorderLayout());
+		projectPanel.add(new JLabel("List of Projects:"), BorderLayout.NORTH);
+		String[] projectColumnNames = Project.getColumns(false);
+		TableModel projectTableModel = new DefaultTableModel(projectColumnNames, 0) {
+			private static final long serialVersionUID = 1L;
 
-		jPanelNewMessage.add(premiumLabel, BorderLayout.SOUTH);
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		JTable projectsJTable = new JTable(projectTableModel);
+		projectsJTable.setFillsViewportHeight(true);
+		this.projectsJTable = projectsJTable;
+		this.updateProjectsJTableData();
+		// Create the scroll pane and add the table to it.
+		JScrollPane projectScrollPane = new JScrollPane(projectsJTable);
+		// Add the scroll pane to center of guest panel.
+		projectPanel.add(projectScrollPane, BorderLayout.CENTER);
 
-		providerJPanel.add(jPanelNewMessage, BorderLayout.CENTER);
-
+		// Show upgrade and downgrade buttons
+		JPanel subscriptionJPanel = new JPanel();
+		providerJPanel.add(subscriptionJPanel, BorderLayout.SOUTH);
 		if (!providerAgent.getProvider().isPremium()) {
-			JButton premiumButton = new JButton("Go premium!");
-			premiumButton.addActionListener(new ActionListener() {
+			JButton upgradeButton = new JButton("Upgrade to Premium");
+			upgradeButton.setBackground(new Color(34, 139, 34));
+			upgradeButton.setOpaque(true);
+			upgradeButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (providerAgent.goPremium()) {
-						premiumButton.setVisible(false);
+					if (providerAgent.upgrade2Premium()) {
+						upgradeButton.setVisible(false);
 					}
 				}
 			});
-			jPanelNewMessage.add(premiumButton, BorderLayout.SOUTH);
+			subscriptionJPanel.add(upgradeButton, BorderLayout.CENTER);
 		}
-		JButton withdrawButton = new JButton("Witdraw service agreement");
-		withdrawButton.addActionListener(new ActionListener() {
+		JButton downgradeButton = new JButton("Downgrade to Client");
+		downgradeButton.setBackground(new Color(220, 20, 60));
+		downgradeButton.setOpaque(true);
+		downgradeButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {					
-						providerAgent.withdraw();
+			public void actionPerformed(ActionEvent e) {
+				providerAgent.downgrade2Client();
 			}
 		});
-		jPanelNewMessage.add(withdrawButton, BorderLayout.SOUTH);
-		JPanel leftPanel = new JPanel();
-		leftPanel.setLayout(new BorderLayout());
-		leftPanel.setSize(100, 400);
+		subscriptionJPanel.add(downgradeButton, BorderLayout.CENTER);
 
-		projectsListModel = new DefaultListModel<>();
-
-		for (Project project : this.providerAgent.getProjects()) {
-			projectsListModel.addElement(project.getName());
-		}
-
-		JList<String> projectList = new JList<>(projectsListModel);
-		projectList.setFixedCellHeight(50);
-		projectList.setFixedCellWidth(100);
-
-		projectList.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				JList<?> list = (JList<?>) evt.getSource();
-				if (evt.getClickCount() == 2) {
-					int index = list.locationToIndex(evt.getPoint());
-					ProjectGUI projectDetailGUI = new ProjectGUI(providerAgent, providerAgent.getProjects().get(index));
-					projectDetailGUI.showGUI();
-					System.out.println("Clicked: " + index);
+		// open project dialog
+		projectsJTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				JTable source = (JTable) e.getSource();
+				if (source.getRowCount() > 0 && e.getClickCount() == 2) {
+					int row = source.getSelectedRow();
+					String projectName = (String) source.getModel().getValueAt(row, 1);
+					Project project = providerAgent.getProject(projectName);
+					ProjectGUI projectGUI = new ProjectGUI(providerAgent, project);
+					projectGUI.showGUI();
 				}
 			}
 		});
 
-		leftPanel.add(projectList, BorderLayout.CENTER);
-		providerJPanel.add(leftPanel, BorderLayout.WEST);
 		return providerJPanel;
+	}
+
+	/**
+	 * Update projects J table data.
+	 */
+	public void updateProjectsJTableData() {
+		if (this.projectsJTable != null) {
+			List<Project> projects = providerAgent.getProjects();
+			String[] columnNames = Project.getColumns(false);
+			String[][] stringArray = projects.stream()
+					.sorted(Comparator.comparingLong(Project::getTimestamp).reversed())
+					.map(project -> project.toArray(false)).toArray(String[][]::new);
+			DefaultTableModel tableModel = (DefaultTableModel) this.projectsJTable.getModel();
+			tableModel.setDataVector(stringArray, columnNames);
+			tableModel.fireTableDataChanged();
+		}
 	}
 
 	/**
@@ -169,16 +206,26 @@ public class ProviderGUI {
 	 * @param project the project
 	 */
 	public void addProject(Project project) {
-		//projectsListModel.addElement(project.getName());
-		//this.projects.add(project);
+		// TODO: remove this function
+		// projectsListModel.addElement(project.getName());
+		// this.projects.add(project);
 	}
 
+	/**
+	 * Gets the j frame.
+	 *
+	 * @return the j frame
+	 */
+	public JFrame getjFrame() {
+		return jFrame;
+	}
 
 	/**
 	 * Update premium.
 	 */
 	public void updatePremium() {
-		premiumLabel.setText("You are" + (providerAgent.getProvider().isPremium() ? " " : " not ") + "a premium user");
+		String verb = providerAgent.getProvider().isPremium() ? " " : " not ";
+		premiumJLabel.setText("<<You are" + verb + "a premium user>>");
 	}
 
 	/**
@@ -186,10 +233,11 @@ public class ProviderGUI {
 	 *
 	 * @param projects the projects
 	 */
-	public void updateProjects(List<Project> projects) {		
-		projectsListModel.clear();
-		for (Project project : this.providerAgent.getProjects()) {
-			projectsListModel.addElement(project.getName());
-		}
+	public void updateProjects(List<Project> projects) {
+		// TODO: check this function
+		// projectsListModel.clear();
+		// for (Project project : this.providerAgent.getProjects()) {
+		// projectsListModel.addElement(project.getName());
+		// }
 	}
 }

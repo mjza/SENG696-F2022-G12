@@ -26,7 +26,6 @@ package ca.ucalagary.seng696.g12.agents;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.wrapper.ControllerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class ProviderAgent extends EnhancedAgent {
 	private static final long serialVersionUID = 1L;
 
 	/** The projects. */
-	private List<Project> projects = new ArrayList<>();	
+	private List<Project> projects = new ArrayList<>();
 
 	/** The ratings. */
 	ArrayList<Integer> ratings = new ArrayList<>();
@@ -85,8 +84,8 @@ public class ProviderAgent extends EnhancedAgent {
 				ACLMessage msg, reply = null;
 				msg = myAgent.receive();
 				if (msg != null) {
-					System.out.println(
-							"A new message received for: " + getAID().getName() + ", Performative: " + msg.getPerformative());
+					System.out.println("A new message received for: " + getAID().getName() + ", Performative: "
+							+ msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
 					String projectName, chatMessage;
 					if (msg.getPerformative() == Ontology.ACLMESSAGE_PAYMENT
@@ -131,8 +130,6 @@ public class ProviderAgent extends EnhancedAgent {
 			}
 		});
 
-		
-
 	}
 
 	/**
@@ -176,7 +173,7 @@ public class ProviderAgent extends EnhancedAgent {
 		String userName = this.getUserName();
 		return SystemAgent.getProvider(userName);
 	}
-	
+
 	/**
 	 * Gets the projects.
 	 *
@@ -187,13 +184,29 @@ public class ProviderAgent extends EnhancedAgent {
 	}
 	
 	/**
+	 * Gets the project.
+	 *
+	 * @param projectName the project name
+	 * @return the project
+	 */
+	public Project getProject(String projectName) {
+		for (int i = 0; i < projects.size(); i++) {
+			Project project = projects.get(i);
+			if (project.getName().equals(projectName)) {
+				return project;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Adds the project.
 	 *
 	 * @param project the project
 	 */
 	public void addProject(Project project) {
 		this.projects.add(project);
-		// TODO: update GUI 
+		this.providerGUI.updateProjectsJTableData();
 	}
 
 	/**
@@ -201,27 +214,23 @@ public class ProviderAgent extends EnhancedAgent {
 	 *
 	 * @return the boolean
 	 */
-	public Boolean goPremium() {
-
-		Provider p = getProvider();
-		p.setPremium(true);
+	public Boolean upgrade2Premium() {
+		Provider provider = this.getProvider();
+		provider.setPremium(true);
 		providerGUI.updatePremium();
 		return true;
 	}
 
 	/**
-	 * Withdraw.
-	 * 
-	 * @throws ControllerException
+	 * Downgrade 2 client.
 	 */
-	public void withdraw() {
-		Provider provider = getProvider();
+	public void downgrade2Client() {
+		Provider provider = this.getProvider();
 		providerGUI.dispose();
 		Class<?> agentClass = ClientAgent.class;
 		String agentName = this.generateAgentName(provider.getUsername(), agentClass);
 		this.createAgent(agentName, agentClass);
 		takeDown();
 	}
-	
-	
+
 }
