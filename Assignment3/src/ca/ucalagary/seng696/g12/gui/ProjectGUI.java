@@ -150,7 +150,7 @@ public class ProjectGUI {
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
 		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
-		JButton doneJButton = new JButton("Done");
+		JButton doneJButton = new JButton("Pay after 100%!");
 		southPanel.add(doneJButton, BorderLayout.SOUTH);
 		jPanel.add(southPanel, BorderLayout.SOUTH);
 		doneJButton.addActionListener(new ActionListener() {
@@ -222,8 +222,7 @@ public class ProjectGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				System.out.println("Done" + ratingTextField.getText() + commentTextField.getText());
-				agent.markProjectAsDone(project);
+				agent.payMoney(project);
 				agent.sendRating(project.getProviderAID(), ratingTextField.getText());
 
 			}

@@ -145,24 +145,6 @@ public class Provider extends User {
 	public void setResume(String resume) {
 		this.resume = resume;
 	}
-
-	/**
-	 * Gets the info.
-	 *
-	 * @return the info
-	 */
-	public String getInfo() {
-		String text = "";
-		text += "Name: " + this.getName() + "; \n";
-		text += "Keywords: " + this.getKeywords() + "; \n";
-		text += "Premium: " + (this.isPremium() ? "Yes" : "No") + "; \n";
-		text += "Rating:";
-		for (int i = 0; i < this.getRating(); i++)
-			text += "*";
-		text += " \n";
-		return text;
-	}
-
 	
 	/**
 	 * Gets the columns.

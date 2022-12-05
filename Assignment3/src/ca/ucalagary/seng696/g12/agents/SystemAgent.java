@@ -155,7 +155,7 @@ public class SystemAgent extends EnhancedAgent {
 			 */
 			@Override
 			public void action() {
-				System.out.println("System Agent: " + getAID().getName() + " is ready.");
+				System.out.println("SystemAgent: " + getAID().getName() + " is ready.");
 				// Show the main frame
 				mainGUI = new MainGUI(SystemAgent.this);
 				mainGUI.showGUI();

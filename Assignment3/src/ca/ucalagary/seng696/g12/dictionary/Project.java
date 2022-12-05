@@ -40,10 +40,10 @@ public class Project implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The global nextId. */
 	private static int nextId = 1017;
-	
+
 	/** The id. */
 	private int id;
 
@@ -68,8 +68,8 @@ public class Project implements Serializable {
 	/** The client AID. */
 	private AID clientAID;
 
-	/** The done. */
-	private boolean done = false;
+	/** The paid. */
+	private boolean paid = false;
 
 	/** The messages history. */
 	private ArrayList<Chat> chats = new ArrayList<>();
@@ -84,7 +84,7 @@ public class Project implements Serializable {
 	 * @param description the description
 	 * @param bid         the bid
 	 * @param providerAID the provider AID
-	 * @param clientAID the client AID
+	 * @param clientAID   the client AID
 	 * @param deadline    the deadline
 	 */
 	public Project(String name, String description, int bid, AID providerAID, AID clientAID, Date deadline) {
@@ -147,10 +147,10 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * Sets the done.
+	 * Sets the paid to true.
 	 */
-	public void setDone() {
-		this.done = true;
+	public void setPaid() {
+		this.paid = true;
 	}
 
 	/**
@@ -177,9 +177,6 @@ public class Project implements Serializable {
 	 * @return the name
 	 */
 	public String getName() {
-		if (this.done) {
-			return "" + this.name + " (done)";
-		}
 		return this.name;
 	}
 
@@ -200,23 +197,10 @@ public class Project implements Serializable {
 	public Date getDeadline() {
 		return deadline;
 	}
-	
+
 	public long getTimestamp() {
 		return deadline.getTime();
 	}
-
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
-	public String compact() {
-		if (this.done) {
-			return "" + this.name + " (done)";
-		}
-		return this.name + ":" + this.description + ":" + this.bid + ":" + this.deadline;
-	}
-
 
 	/**
 	 * Gets the rejection message.
@@ -225,7 +209,7 @@ public class Project implements Serializable {
 	 * @return the rejection message
 	 */
 	public String getRejectionMessage(AID sender) {
-		return sender.getLocalName() + " has rejected " + compact();
+		return sender.getLocalName() + " has rejected project id: " + this.getId();
 	}
 
 	/**
@@ -251,15 +235,17 @@ public class Project implements Serializable {
 	 *
 	 * @param progressPercentage the progress percentage
 	 */
-	public void setProgress(int progressPercentage) {
+	public boolean setProgress(int progressPercentage) {
 		int permittedProgress = 100 - this.progress;
 		if (progressPercentage <= permittedProgress) {
 			this.progress += progressPercentage;
+			if (this.projectGUI != null) {
+				this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
+						this.getChats());
+			}
+			return true;
 		}
-		if (this.projectGUI != null) {
-			this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
-					this.getChats());
-		}
+		return false;
 	}
 
 	/**
@@ -352,7 +338,6 @@ public class Project implements Serializable {
 		return isProvider ? providerColumnNames : clientColumnNames;
 	}
 
-
 	/**
 	 * To array.
 	 *
@@ -360,10 +345,12 @@ public class Project implements Serializable {
 	 * @return the string[]
 	 */
 	public String[] toArray(boolean isProvider) {
-		String[] providerData = { String.valueOf(this.getId()), this.getName(), this.getDescription(), String.valueOf(this.getBid()),
-				this.getClientUserName(), this.getDeadline().toString(), (this.isDone() ? "Yes" : "No") };
-		String[] clientData = { String.valueOf(this.getId()), this.getName(), this.getDescription(), String.valueOf(this.getBid()),
-				this.getProviderUserName(), this.getDeadline().toString(), (this.isDone() ? "Yes" : "No") };
+		String[] providerData = { String.valueOf(this.getId()), this.getName(), this.getDescription(),
+				String.valueOf(this.getBid()), this.getClientUserName(), this.getDeadline().toString(),
+				(this.isPaid() ? "Finished and Paid" : (this.isDone() ? "Done" : "In progress")) };
+		String[] clientData = { String.valueOf(this.getId()), this.getName(), this.getDescription(),
+				String.valueOf(this.getBid()), this.getProviderUserName(), this.getDeadline().toString(),
+				(this.isPaid() ? "Finished and Paid" : (this.isDone() ? "Done" : "In progress")) };
 		return isProvider ? providerData : clientData;
 	}
 
@@ -374,5 +361,14 @@ public class Project implements Serializable {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * Checks if is paid.
+	 *
+	 * @return true, if is paid
+	 */
+	public boolean isPaid() {
+		return paid;
 	}
 }

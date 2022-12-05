@@ -294,20 +294,20 @@ public class ClientAgent extends EnhancedAgent {
 	}
 
 	/**
-	 * Mark project done.
+	 * Pay money.
 	 *
 	 * @param project the project
 	 */
-	public void markProjectAsDone(Project project) {
+	public void payMoney(Project project) {
 		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_PAYMENT);
 		message.setConversationId(Ontology.NEGOTIATION);
 		message.setContent(project.getId() + ":" + 70 * project.getBid() / 100);
 		message.addReceiver(project.getProviderAID());
 		send(message);
-		project.setDone();
+		project.setPaid();
 		for (Project proj : projects) {
 			if (proj.getId() == project.getId()) {
-				proj.setDone();
+				proj.setPaid();
 				break;
 			}
 		}

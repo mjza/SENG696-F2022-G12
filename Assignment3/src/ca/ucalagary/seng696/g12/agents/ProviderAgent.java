@@ -50,14 +50,8 @@ public class ProviderAgent extends EnhancedAgent {
 	/** The projects. */
 	private List<Project> projects = new ArrayList<>();
 
-	/** The ratings. */
-	private ArrayList<Integer> ratings = new ArrayList<>();
-
 	/** The provider GUI. */
 	public ProviderGUI providerGUI;
-
-	/** The rate. */
-	private double rate = 0.0;
 
 	/** The provider. */
 	private Provider provider = null;
@@ -114,7 +108,7 @@ public class ProviderAgent extends EnhancedAgent {
 						chatMessage = contents[1];
 						for (Project project : projects) {
 							if (project.getId() == Integer.parseInt(projectId)) {
-								project.setDone();
+								project.setPaid();
 								break;
 							}
 						}
@@ -152,22 +146,6 @@ public class ProviderAgent extends EnhancedAgent {
 		message.setContent(projectId + ":" + messageText);
 		message.addReceiver(client);
 		send(message);
-	}
-
-	/**
-	 * Update rate.
-	 */
-	public void updateRate() {
-		Integer sum = 0;
-		if (!ratings.isEmpty()) {
-			for (Integer mark : ratings) {
-				sum += mark;
-			}
-			rate = sum.doubleValue() / ratings.size();
-		}
-		rate = sum;
-		System.out.println("changed rate to : ");
-		System.out.println(rate);
 	}
 
 	/**

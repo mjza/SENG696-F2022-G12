@@ -23,36 +23,41 @@
  */
 package ca.ucalagary.seng696.g12.dictionary;
 
+import java.util.Date;
+
 /**
  * The Class Chat.
  */
 public class Chat {
-	
+
 	/** The global nextId. */
 	private static int nextId = 3019;
-	
+
 	/** The id. */
 	private int id;
-	
+
 	/** The text. */
 	private String text;
-    
-    /** The sender user. */
-    private User senderUser;
-    
-    /** The receiver user. */
-    private User receiverUser;
-    
-    /** The from me. */
-    private boolean fromMe = false;
-	
+
+	/** The sender user. */
+	private User senderUser;
+
+	/** The receiver user. */
+	private User receiverUser;
+
+	/** The from me. */
+	private boolean fromMe = false;
+
+	/** The timestamp. */
+	private Date timestamp = new Date();
+
 	/**
 	 * Instantiates a new chat.
 	 *
-	 * @param text the text
-	 * @param senderUser the sender user
+	 * @param text         the text
+	 * @param senderUser   the sender user
 	 * @param receiverUser the receiver user
-	 * @param fromMe the from me
+	 * @param fromMe       the from me
 	 */
 	public Chat(String text, User senderUser, User receiverUser, boolean fromMe) {
 		super();
@@ -106,5 +111,36 @@ public class Chat {
 	 */
 	public boolean isFromMe() {
 		return fromMe;
+	}
+
+	/**
+	 * Gets the timestamp.
+	 *
+	 * @return the timestamp
+	 */
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
+	public static String[] getColumns() {
+		String[] columnNames = { "ID", "Sender", "At", "Text" };
+		return columnNames;
+	}
+
+	/**
+	 * To array.
+	 *
+	 * @param isGuest the is guest
+	 * @return the string[]
+	 */
+	public String[] toArray() {
+		String[] data = { String.valueOf(this.getId()), (this.isFromMe() ? "You:" : "They:"), this.getText(),
+				this.getTimestamp().toString() };
+		return data;
 	}
 }

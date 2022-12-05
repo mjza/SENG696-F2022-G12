@@ -283,7 +283,6 @@ public class RegistrationGUI {
 					resumeTextArea.setEnabled(true);
 					premiumCheckBox.setEnabled(true);
 				}
-				System.out.println("Type: " + type);
 			}
 		});
 		jRadioButton2.addActionListener(new ActionListener() {
@@ -297,7 +296,6 @@ public class RegistrationGUI {
 					resumeTextArea.setEnabled(false);
 					premiumCheckBox.setEnabled(false);
 				}
-				System.out.println("Type: " + type);
 			}
 		});
 
