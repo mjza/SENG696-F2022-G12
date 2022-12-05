@@ -70,7 +70,7 @@ public class ProviderAgent extends EnhancedAgent {
 		// register the agent service in yellow page
 		this.registerService("service-provider");
 		// bind a GUI and show it
-		providerGUI = new ProviderGUI(this, projects);
+		providerGUI = new ProviderGUI(this);
 		providerGUI.showGUI();
 		// in a cycle listen for messages
 		this.addBehaviour(new CyclicBehaviour() {
