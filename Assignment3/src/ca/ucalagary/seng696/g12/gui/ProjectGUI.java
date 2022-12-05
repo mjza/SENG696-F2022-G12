@@ -50,9 +50,9 @@ public class ProjectGUI {
 
 	/** The j label. */
 	JLabel projectJLabel = new JLabel();
-	
+
 	Project project = null;
-	
+
 	EnhancedAgent myAgent = null;
 
 	/**
@@ -62,12 +62,16 @@ public class ProjectGUI {
 	 * @param project the project
 	 */
 	public ProjectGUI(ProviderAgent agent, Project project) {
+		// Set class variables
+		this.myAgent = agent;
+		this.project = project;
+		// Register yourself as the connection point
 		project.bindGUI(this);
-
-		this.jFrame = new JFrame("Welcome " + agent.getLocalName());
+		// Set up the JFrame
+		this.jFrame = new JFrame("Project(" + project.getId() + "/" + project.getName() + ") of " + agent.getProvider().getName());
+		
 		this.jFrame.setSize(400, 400);
 
-		
 		this.jFrame.add(this.getProviderJPanel());
 	}
 
@@ -78,20 +82,22 @@ public class ProjectGUI {
 	 * @param project the project
 	 */
 	public ProjectGUI(ClientAgent agent, Project project) {
-		project.bindGUI(this);
+		// Set class variables
 		this.myAgent = agent;
 		this.project = project;
-		this.jFrame = new JFrame("Welcome " + agent.getLocalName());
+		// Register yourself as the connection point
+		project.bindGUI(this);
+		// Set up the JFrame
+		this.jFrame = new JFrame("Project(" + project.getId() + "/" + project.getName() + ") of " + agent.getClient().getName());
 		this.jFrame.setSize(400, 400);
 
-		
 		this.jFrame.add(this.getClientJPanel());
 	}
 
 	private JPanel getProviderJPanel() {
 		ProviderAgent agent = (ProviderAgent) this.myAgent;
 		Project project = this.project;
-		
+
 		JPanel providerJPanel = new JPanel();
 		providerJPanel.setLayout(new BorderLayout());
 
@@ -138,10 +144,10 @@ public class ProjectGUI {
 	}
 
 	private JPanel getClientJPanel() {
-		
+
 		ClientAgent agent = (ClientAgent) this.myAgent;
 		Project project = this.project;
-		
+
 		JPanel clientJPanel = new JPanel();
 		clientJPanel.setLayout(new BorderLayout());
 
