@@ -44,26 +44,26 @@ public class Ontology {
     public final static String PROVIDER_TO_CLIENT = "P2C";
     
     /** The Constant ACLMESSAGE_OFFER. */
-    public final static int ACLMESSAGE_OFFER = 0;
+    public final static int ACLMESSAGE_OFFER = 1000;
     
     /** The Constant ACLMESSAGE_ACCEPT. */
-    public final static int ACLMESSAGE_ACCEPT = 1;
+    public final static int ACLMESSAGE_ACCEPT = 2000;
     
     /** The Constant ACLMESSAGE_REFUSE. */
-    public final static int ACLMESSAGE_REFUSE = 2;
+    public final static int ACLMESSAGE_REFUSE = 3000;
     
     /** The Constant ACLMESSAGE_CHAT. */
-    public final static int ACLMESSAGE_CHAT = 3;
+    public final static int ACLMESSAGE_CHAT = 4000;
     
     /** The Constant ACLMESSAGE_RATE. */
-    public final static int ACLMESSAGE_RATE = 4;
+    public final static int ACLMESSAGE_RATE = 5000;
     
     /** The Constant ACLMESSAGE_PAYMENT. */
-    public final static int ACLMESSAGE_PAYMENT = 5;
+    public final static int ACLMESSAGE_PAYMENT = 6000;
     
     /** The Constant ACLMESSAGE_PROGRESS. */
-    public final static int ACLMESSAGE_PROGRESS = 7;
+    public final static int ACLMESSAGE_PROGRESS = 7000;
     
     /** The Constant ACLMESSAGE_DONE. */
-    public final static int ACLMESSAGE_DONE = 8;
+    public final static int ACLMESSAGE_DONE = 8000;
 }
