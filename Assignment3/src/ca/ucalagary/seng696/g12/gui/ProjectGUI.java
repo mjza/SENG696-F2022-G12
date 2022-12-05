@@ -24,6 +24,8 @@
 package ca.ucalagary.seng696.g12.gui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import ca.ucalagary.seng696.g12.agents.ClientAgent;
 import ca.ucalagary.seng696.g12.agents.EnhancedAgent;
@@ -36,7 +38,8 @@ import ca.ucalagary.seng696.g12.dictionary.Project;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * The Class ProjectGUI.
@@ -44,17 +47,19 @@ import java.util.ArrayList;
 public class ProjectGUI {
 
 	/** The j frame. */
-	JFrame jFrame;
-
-	/** The label. */
-	JLabel chatJLabel = new JLabel();
+	private JFrame jFrame;
 
 	/** The j label. */
-	JLabel projectJLabel = new JLabel();
+	private JLabel projectInformationJLabel = new JLabel();
 
-	Project project = null;
+	/** The projects J table. */
+	private JTable chatsJTable;
 
-	EnhancedAgent myAgent = null;
+	/** The project. */
+	private Project project = null;
+
+	/** The my agent. */
+	private EnhancedAgent myAgent = null;
 
 	/**
 	 * Instantiates a new project GUI. It is shown when the user is a Provider
@@ -96,6 +101,11 @@ public class ProjectGUI {
 		this.jFrame.add(this.getClientJPanel());
 	}
 
+	/**
+	 * Decorate J frame.
+	 *
+	 * @param isProvider the is provider
+	 */
 	private void decorateJFrame(boolean isProvider) {
 		// set icon
 		this.jFrame.setIconImage(SystemAgent.getIcon());
@@ -122,54 +132,93 @@ public class ProjectGUI {
 	private JPanel getProviderJPanel() {
 		ProviderAgent agent = (ProviderAgent) this.myAgent;
 		Project project = this.project;
-		// main panel 
+		// main panel
 		JPanel providerJPanel = new JPanel();
 		providerJPanel.setLayout(new BorderLayout());
 		// A provider sign
 		providerJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
+		// place the project info
+		JPanel projectJPanel = new JPanel();
+		projectJPanel.setLayout(new BorderLayout());
+		providerJPanel.add(projectJPanel, BorderLayout.NORTH);
+		// Title
+		JLabel titleJLabel = new JLabel("<<Project Details>>", SwingConstants.CENTER);
+		projectJPanel.add(titleJLabel, BorderLayout.NORTH);
+		projectJPanel.add(projectInformationJLabel, BorderLayout.CENTER);		
+		this.updateProjectInformation();
+		// A panel for chat table
+		JPanel chatTableJPanel = new JPanel();
+		providerJPanel.add(chatTableJPanel, BorderLayout.CENTER);
+		chatTableJPanel.setLayout(new BorderLayout());
+		chatTableJPanel.add(new JLabel("Chat history:"), BorderLayout.NORTH);
+		String[] chatColumnNames = Chat.getColumns();
+		TableModel chatTableModel = new DefaultTableModel(chatColumnNames, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		JTable chatsJTable = new JTable(chatTableModel);
+		chatsJTable.setFillsViewportHeight(true);
+		this.chatsJTable = chatsJTable;
+		this.updateChatsJTableData();
+		// Create the scroll pane and add the table to it.
+		JScrollPane chatTableScrollPane = new JScrollPane(chatsJTable);
+		// Add the scroll pane to center of guest panel.
+		chatTableJPanel.add(chatTableScrollPane, BorderLayout.CENTER);
+		// New message panel
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
+		providerJPanel.add(bottomPanel, BorderLayout.SOUTH);
 		//
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
-		centerPanel.add(chatJLabel, BorderLayout.EAST);
-		centerPanel.add(projectJLabel, BorderLayout.WEST);
-		providerJPanel.add(centerPanel, BorderLayout.CENTER);
-
-		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getChats());
-
-		JTextField jTextFieldMessage = new JHintTextField("Message");
-		providerJPanel.add(jTextFieldMessage, BorderLayout.NORTH);
-
+		JTextField messageJTextField = new JHintTextField("Message");
+		bottomPanel.add(messageJTextField, BorderLayout.CENTER);
+		//
 		JButton sendMsgJButton = new JButton("Send");
+		bottomPanel.add(sendMsgJButton, BorderLayout.EAST);
+		//
+		JButton progressJButton = new JButton("10% progress");
+		bottomPanel.add(progressJButton, BorderLayout.SOUTH);
+		if(project.isDone()) {
+			progressJButton.setEnabled(false);
+		}
+		// Event handler for send button
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String chatMessage = jTextFieldMessage.getText();
+				String chatMessage = messageJTextField.getText();
 				Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);
 				project.chatUpdate(chat);
 				agent.sendMessage(project.getClientAID(), chatMessage, project.getId(), Ontology.PROVIDER_TO_CLIENT);
-				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-						project.getChats());
+				updateChatsJTableData();
 			}
 		});
-		JPanel southPanel = new JPanel();
-		southPanel.setLayout(new BorderLayout());
-		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
-		JButton progressJButton = new JButton("10% progress");
-		southPanel.add(progressJButton, BorderLayout.SOUTH);
-		providerJPanel.add(southPanel, BorderLayout.SOUTH);
+		// Event handler for progress
 		progressJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String messageText = "10%";
-				project.setProgress(10);
-				agent.sendMessage(project.getClientAID(), messageText, project.getId(), Ontology.REPORTING);
-				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-						project.getChats());
+				String chatMessage = "10% progress";
+				Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);				
+				if (project.setProgress(10)) {
+					project.chatUpdate(chat);
+					agent.sendMessage(project.getClientAID(), chatMessage, project.getId(), Ontology.REPORTING);
+					updateChatsJTableData();
+					updateChatsJTableData();
+				} else {
+					progressJButton.setEnabled(false);
+				}
 			}
 		});
 		return providerJPanel;
 	}
 
+	/**
+	 * Gets the client J panel.
+	 *
+	 * @return the client J panel
+	 */
 	private JPanel getClientJPanel() {
 		ClientAgent agent = (ClientAgent) this.myAgent;
 		Project project = this.project;
@@ -178,41 +227,69 @@ public class ProjectGUI {
 		clientJPanel.setLayout(new BorderLayout());
 		// A client sign
 		clientJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLUE));
+		// place the project info
+		JPanel projectJPanel = new JPanel();
+		projectJPanel.setLayout(new BorderLayout());
+		clientJPanel.add(projectJPanel, BorderLayout.NORTH);
+		// Title
+		JLabel titleJLabel = new JLabel("<<Project Details>>", SwingConstants.CENTER);
+		projectJPanel.add(titleJLabel, BorderLayout.NORTH);
+		projectJPanel.add(projectInformationJLabel, BorderLayout.CENTER);
+		this.updateProjectInformation();
+		// A panel for chat table
+		JPanel chatTableJPanel = new JPanel();
+		clientJPanel.add(chatTableJPanel, BorderLayout.CENTER);
+		chatTableJPanel.setLayout(new BorderLayout());
+		chatTableJPanel.add(new JLabel("Chat history:"), BorderLayout.NORTH);
+		String[] chatColumnNames = Chat.getColumns();
+		TableModel chatTableModel = new DefaultTableModel(chatColumnNames, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		JTable chatsJTable = new JTable(chatTableModel);
+		chatsJTable.setFillsViewportHeight(true);
+		this.chatsJTable = chatsJTable;
+		this.updateChatsJTableData();
+		// Create the scroll pane and add the table to it.
+		JScrollPane chatTableScrollPane = new JScrollPane(chatsJTable);
+		// Add the scroll pane to center of guest panel.
+		chatTableJPanel.add(chatTableScrollPane, BorderLayout.CENTER);
+		// New message panel
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
+		clientJPanel.add(bottomPanel, BorderLayout.SOUTH);
 		//
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
-		centerPanel.add(chatJLabel, BorderLayout.EAST);
-		centerPanel.add(projectJLabel, BorderLayout.WEST);
-		clientJPanel.add(centerPanel, BorderLayout.CENTER);
-
-		updateRightLabel(project.getName(), project.getDescription(), project.getProgress(), project.getChats());
-
-		JTextField jTextFieldMessage = new JHintTextField("Message");
-		clientJPanel.add(jTextFieldMessage, BorderLayout.NORTH);
-
+		JTextField messageJTextField = new JHintTextField("Message");
+		bottomPanel.add(messageJTextField, BorderLayout.CENTER);
+		//
 		JButton sendMsgJButton = new JButton("Send");
+		bottomPanel.add(sendMsgJButton, BorderLayout.EAST);
+		//
+		JButton payJButton = new JButton("Pay after 100%!");
+		bottomPanel.add(payJButton, BorderLayout.SOUTH);
+		if(project.isPaid()) {
+			payJButton.setEnabled(false);
+		}
+		// Event handler for send button
 		sendMsgJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String chatMessage = jTextFieldMessage.getText();
+				String chatMessage = messageJTextField.getText();
 				Chat chat = new Chat(chatMessage, project.getProvider(), agent.getClient(), true);
 				project.chatUpdate(chat);
 				agent.sendMessage(project.getProviderAID(), chatMessage, project.getId(), Ontology.ACLMESSAGE_CHAT);
-				updateRightLabel(project.getName(), project.getDescription(), project.getProgress(),
-						project.getChats());
+				updateChatsJTableData();
 			}
 		});
-		JPanel southPanel = new JPanel();
-		southPanel.setLayout(new BorderLayout());
-		southPanel.add(sendMsgJButton, BorderLayout.NORTH);
-		JButton doneJButton = new JButton("Pay after 100%!");
-		southPanel.add(doneJButton, BorderLayout.SOUTH);
-		clientJPanel.add(southPanel, BorderLayout.SOUTH);
-		doneJButton.addActionListener(new ActionListener() {
+		// Event handler for progress
+		payJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String rating = showRatingDialog(project, agent);
-				System.out.print(rating);
+				showRatingDialog(project, agent);
 				jFrame.dispose();
 				String messageText = "Done";
 				agent.sendMessage(project.getProviderAID(), messageText, project.getId(), Ontology.ACLMESSAGE_DONE);
@@ -222,36 +299,37 @@ public class ProjectGUI {
 	}
 
 	/**
-	 * Update right label.
+	 * Update project information.
 	 *
 	 * @param name        the name
 	 * @param description the description
 	 * @param progress    the progress
-	 * @param chats       the message history
 	 */
-	public void updateRightLabel(String name, String description, int progress, ArrayList<Chat> chats) {
-		updateLeftLabel(name, description, progress);
-		StringBuilder text = new StringBuilder("<html>");
-		for (Chat chat : chats)
-			text.append(chat.getText()).append("<br/>");
-		text.append("</html>");
-		chatJLabel.setText(text.toString());
+	public void updateProjectInformation() {
+		StringBuilder text = new StringBuilder("<html><p>");		
+		text.append("Id: <i>").append(this.project.getId()).append("</i><br/>");
+		text.append("Name: <i>").append(this.project.getName()).append("</i><br/>");
+		text.append("Description: <i>").append(this.project.getDescription()).append("</i><br/>");
+		text.append("Progress: <i>").append(this.project.getProgress()).append("</i><br/>");
+		text.append("Deadline: <i>").append(this.project.getDeadline().toString()).append("</i><br/>");
+		text.append("<hr/>").append("<br/>");
+		text.append("</p></html>");
+		projectInformationJLabel.setText(text.toString());
 	}
 
 	/**
-	 * Update left label.
-	 *
-	 * @param name        the name
-	 * @param description the description
-	 * @param progress    the progress
+	 * Update chats J table data.
 	 */
-	private void updateLeftLabel(String name, String description, int progress) {
-		StringBuilder text = new StringBuilder("<html>");
-		text.append("Name: ").append(name).append("<br/>");
-		text.append("Description: ").append(description).append("<br/>");
-		text.append("Progress: ").append(progress).append("<br/>").append("<br/>").append("<br/>").append("<br/>");
-		text.append("</html>");
-		projectJLabel.setText(text.toString());
+	public void updateChatsJTableData() {
+		if (this.chatsJTable != null) {
+			List<Chat> chats = this.project.getChats();
+			String[] columnNames = Chat.getColumns();
+			String[][] stringArray = chats.stream().sorted(Comparator.comparingLong(Chat::getTimestamp).reversed())
+					.map(chat -> chat.toArray()).toArray(String[][]::new);
+			DefaultTableModel tableModel = (DefaultTableModel) this.chatsJTable.getModel();
+			tableModel.setDataVector(stringArray, columnNames);
+			tableModel.fireTableDataChanged();
+		}
 	}
 
 	/**

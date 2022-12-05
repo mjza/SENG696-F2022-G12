@@ -240,8 +240,8 @@ public class Project implements Serializable {
 		if (progressPercentage <= permittedProgress) {
 			this.progress += progressPercentage;
 			if (this.projectGUI != null) {
-				this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
-						this.getChats());
+				this.projectGUI.updateProjectInformation();
+				this.projectGUI.updateChatsJTableData();
 			}
 			return true;
 		}
@@ -256,8 +256,7 @@ public class Project implements Serializable {
 	public void chatUpdate(Chat chat) {
 		this.chats.add(chat);
 		if (this.projectGUI != null) {
-			this.projectGUI.updateRightLabel(this.getName(), this.getDescription(), this.getProgress(),
-					this.getChats());
+			this.projectGUI.updateChatsJTableData();
 		}
 	}
 
@@ -315,6 +314,15 @@ public class Project implements Serializable {
 	 */
 	public void bindGUI(ProjectGUI projectGUI) {
 		this.projectGUI = projectGUI;
+	}
+	
+	/**
+	 * Gets the project GUI.
+	 *
+	 * @return the project GUI
+	 */
+	public ProjectGUI getProjectGUI() {
+		return this.projectGUI;
 	}
 
 	/**

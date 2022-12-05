@@ -118,8 +118,17 @@ public class Chat {
 	 *
 	 * @return the timestamp
 	 */
-	public Date getTimestamp() {
-		return timestamp;
+	public long getTimestamp() {
+		return timestamp.getTime();
+	}
+	
+	/**
+	 * Gets the timestamp as Date.
+	 *
+	 * @return the timestamp as Date
+	 */
+	public Date getDateTime() {
+		return this.timestamp;
 	}
 
 	/**
@@ -139,8 +148,8 @@ public class Chat {
 	 * @return the string[]
 	 */
 	public String[] toArray() {
-		String[] data = { String.valueOf(this.getId()), (this.isFromMe() ? "You:" : "They:"), this.getText(),
-				this.getTimestamp().toString() };
+		String[] data = { String.valueOf(this.getId()), (this.isFromMe() ? "You" : "They"), this.getDateTime().toString(), this.getText()
+				 };
 		return data;
 	}
 }

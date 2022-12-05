@@ -132,6 +132,10 @@ public class ClientAgent extends EnhancedAgent {
 							Project project = projects.get(i);
 							if (project.getId() == Integer.parseInt(projectId)) {
 								project.setProgress(progress);
+								if (project.getProjectGUI() != null) {
+									project.getProjectGUI().updateProjectInformation();
+									project.getProjectGUI().updateChatsJTableData();
+								}
 								break;
 							}
 						}
@@ -268,7 +272,7 @@ public class ClientAgent extends EnhancedAgent {
 	 *
 	 * @param provider     the provider
 	 * @param p            the p
-	 * @param projectId  the project id
+	 * @param projectId    the project id
 	 * @param performative the performative
 	 */
 	public void sendMessage(AID provider, String p, int projectId, int performative) {
