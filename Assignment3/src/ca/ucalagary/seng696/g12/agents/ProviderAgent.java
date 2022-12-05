@@ -162,6 +162,9 @@ public class ProviderAgent extends EnhancedAgent {
 		message.setContent(projectId + ":" + messageText);
 		message.addReceiver(client);
 		send(message);
+		if(providerGUI != null) {
+			providerGUI.updateProjectsJTableData();
+		}
 	}
 
 	/**

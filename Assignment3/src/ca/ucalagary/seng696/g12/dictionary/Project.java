@@ -254,7 +254,7 @@ public class Project implements Serializable {
 	 */
 	public void addNewChat(Chat chat) {
 		this.chats.add(chat);
-		if (this.projectGUI != null) {			
+		if (this.projectGUI != null) {
 			this.projectGUI.updateChatsJTableData();
 		}
 	}
@@ -314,7 +314,7 @@ public class Project implements Serializable {
 	public void bindGUI(ProjectGUI projectGUI) {
 		this.projectGUI = projectGUI;
 	}
-	
+
 	/**
 	 * Gets the project GUI.
 	 *
@@ -354,10 +354,12 @@ public class Project implements Serializable {
 	public String[] toArray(boolean isProvider) {
 		String[] providerData = { String.valueOf(this.getId()), this.getName(), this.getDescription(),
 				String.valueOf(this.getBid()), this.getClientUserName(), this.getDeadline().toString(),
-				(this.isPaid() ? "Finished and Paid" : (this.isDone() ? "Done" : "In progress")) };
+				(this.isPaid() ? "Finished and Paid"
+						: (this.isDone() ? "Done" : "In progress(" + this.getProgress() + "%)")) };
 		String[] clientData = { String.valueOf(this.getId()), this.getName(), this.getDescription(),
 				String.valueOf(this.getBid()), this.getProviderUserName(), this.getDeadline().toString(),
-				(this.isPaid() ? "Finished and Paid" : (this.isDone() ? "Done" : "In progress")) };
+				(this.isPaid() ? "Finished and Paid"
+						: (this.isDone() ? "Done" : "In progress(" + this.getProgress() + "%)")) };
 		return isProvider ? providerData : clientData;
 	}
 
