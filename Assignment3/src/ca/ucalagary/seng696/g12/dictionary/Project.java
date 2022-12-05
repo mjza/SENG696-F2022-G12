@@ -33,7 +33,6 @@ import java.util.Date;
 import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.gui.ProjectGUI;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Project.
  */

@@ -273,11 +273,11 @@ public class ClientGUI {
 				selectedProviderAID = clientAgent.getProviderAID(providerUserName);
 			}
 		});
-		
+		// open project dialog
 		projectsJTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				JTable source = (JTable) e.getSource();
-				
+
 				if (e.getClickCount() == 2) {
 					int row = source.getSelectedRow();
 					String projectName = (String) source.getModel().getValueAt(row, 1);
@@ -287,12 +287,13 @@ public class ClientGUI {
 				}
 			}
 		});
-		
+
 		// submit button
 		createProjectJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (selectedProviderAID == null) {
+					showSelectAProvider();
 					return;
 				}
 				String projectName = projectNameJTextField.getText().trim();
@@ -324,6 +325,14 @@ public class ClientGUI {
 	 */
 	public void showMissingData() {
 		JOptionPane.showMessageDialog(jFrame, "Please fill all active textboxes.", "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
+
+	/**
+	 * Show select A provider.
+	 */
+	public void showSelectAProvider() {
+		JOptionPane.showMessageDialog(jFrame, "Please select a provider in the provider table first.", "ERROR",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -360,172 +369,6 @@ public class ClientGUI {
 	}
 
 	/**
-	 * Gets the client J panel.
-	 *
-	 * @return the client J panel
-	 */
-/*	
-	public JPanel getClientJPanel2() {
-
-		Set<AID> providers = null ; //= clientAgent.getProviders();
-
-		JPanel clientJPanel = new JPanel();
-		clientJPanel.setLayout(new BorderLayout());
-		clientJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLUE));
-
-		JPanel leftPanel = new JPanel();
-		leftPanel.setLayout(new BorderLayout());
-		leftPanel.setSize(600, 600);
-
-		providersList = new DefaultListModel<>();
-
-		for (AID provider : providers) {
-			Provider provider1 = SystemAgent.getProvider(provider.getLocalName().split(":")[1]);
-			currentProviders.add(provider1);
-			String text = provider1.getInfo();
-			providersList.addElement(text);
-		}
-		JList<String> list = new JList<>(providersList);
-
-		list.setCellRenderer(new ListCellRenderer(currentProviders));
-
-		list.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					System.out.println(list.getSelectedIndex());
-					for (AID provider : providers) {
-						Provider currentProvider = SystemAgent.getProvider(provider.getLocalName().split(":")[1]);
-						if (currentProvider.getInfo().equals(list.getSelectedValue())) {
-							selectedProvider = provider;
-						}
-					}
-				}
-			}
-		});
-
-		JPanel providerPanel = new JPanel();
-		providerPanel.setLayout(new BorderLayout());
-		providerPanel.add(new JLabel("Providers:"), BorderLayout.NORTH);
-		providerPanel.add(list, BorderLayout.CENTER);
-		leftPanel.add(providerPanel, BorderLayout.SOUTH);
-
-		HintTextField searchTextField = new HintTextField("Search Provider");
-		searchTextField.setSize(new Dimension(200, 24));
-		leftPanel.add(searchTextField, BorderLayout.NORTH);
-		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {
-				searchProviders(e);
-			}
-
-			public void removeUpdate(DocumentEvent e) {
-				searchProviders(e);
-			}
-
-			public void insertUpdate(DocumentEvent e) {
-				searchProviders(e);
-			}
-
-			private void searchProviders(DocumentEvent e) {
-				String searchedText = searchTextField.getText();
-				if (searchedText.isEmpty()) {
-					providersList.removeAllElements();
-					for (Provider provider : currentProviders) {
-						providersList.addElement(provider.getInfo());
-					}
-				} else {
-					providersList.removeAllElements();
-					List<Provider> searchedProviders = SystemAgent.searchProvider(searchedText);
-					for (Provider provider : searchedProviders) {
-						if (provider.isPremium()) {
-						}
-						providersList.addElement(provider.getInfo());
-					}
-				}
-			}
-		});
-
-		projectsListModel = new DefaultListModel<>();
-
-		for (Project project : this.projects) {
-			projectsListModel.addElement(project.getName());
-		}
-
-		JList<String> projectList = new JList<>(projectsListModel);
-
-		projectList.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				JList<?> list = (JList<?>) evt.getSource();
-				if (evt.getClickCount() == 2) {
-					int index = list.locationToIndex(evt.getPoint());
-					ProjectGUI projectDetailGUI = new ProjectGUI(clientAgent, ClientGUI.this.projects.get(index));
-					projectDetailGUI.showGUI();
-					System.out.println("Clicked: " + index);
-				}
-			}
-		});
-		JPanel projectPanel = new JPanel();
-		projectPanel.setLayout(new BorderLayout());
-		projectPanel.add(new JLabel("Projects"), BorderLayout.NORTH);
-		projectPanel.add(projectList, BorderLayout.CENTER);
-		leftPanel.add(projectPanel, BorderLayout.CENTER);
-		clientJPanel.add(leftPanel, BorderLayout.WEST);
-
-		JTextArea jTextAreaDescription = new JTextArea("Project Description");
-		jTextAreaDescription.setRows(20);
-		jTextAreaDescription.setColumns(20);
-
-		JPanel jPanel1 = new JPanel();
-		jPanel1.setLayout(new BorderLayout());
-
-		JTextField jTextFieldName = new HintTextField("Name");
-		jPanel1.add(jTextFieldName, BorderLayout.NORTH);
-		jPanel1.add(jTextAreaDescription, BorderLayout.CENTER);
-
-		clientJPanel.add(jPanel1, BorderLayout.CENTER);
-
-		HintTextField bid = new HintTextField("BID:");
-		bid.setPreferredSize(new Dimension(200, 24));
-		JButton jButtonSend = new JButton("Create");
-
-		JPanel jPanelNewMessage = new JPanel();
-		jPanelNewMessage.add(bid, BorderLayout.CENTER);
-		jPanelNewMessage.add(jButtonSend, BorderLayout.WEST);
-
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		datePanel.setPreferredSize(new Dimension(200, 200));
-		jPanelNewMessage.add(datePanel, BorderLayout.SOUTH);
-
-		clientJPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
-
-		jButtonSend.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (selectedProvider == null) {
-					return;
-				}
-				Project project = new Project(jTextFieldName.getText(), jTextAreaDescription.getText(),
-						Integer.parseInt(bid.getText()), selectedProvider, clientAgent.getAID(), model.getValue());
-				System.out.println(jTextFieldName.getText() + "  " + project.compact());
-				clientAgent.sendProposal(project, selectedProvider);
-			}
-		});
-
-		jPanelNewMessage.add(bid, BorderLayout.CENTER);
-		jPanelNewMessage.add(jButtonSend, BorderLayout.SOUTH);
-
-		clientJPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
-
-		return clientJPanel;
-
-	}
-*/
-	/**
 	 * Show GUI.
 	 */
 	public void showGUI() {
@@ -545,7 +388,7 @@ public class ClientGUI {
 	 * @param project the project
 	 */
 	public void addProject(Project project) {
-		System.out.println(project.compact());
+		// TODO: Add a project in GUI
 		// this.projects.add(project);
 		// projectsListModel.addElement(project.getName());
 	}
@@ -556,6 +399,7 @@ public class ClientGUI {
 	 * @param projects the projects
 	 */
 	public void updateProjects(List<Project> projects) {
+		// TODO: Update project table
 		// this.projects = projects;
 		// projectsListModel.clear();
 		// for (Project project : this.projects) {
@@ -563,6 +407,11 @@ public class ClientGUI {
 		// }
 	}
 
+	/**
+	 * The main method just for test.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		ClientGUI clientGUI = new ClientGUI(new ClientAgent());
 		clientGUI.showGUI();

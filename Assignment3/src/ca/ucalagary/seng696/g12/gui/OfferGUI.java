@@ -24,14 +24,16 @@
 package ca.ucalagary.seng696.g12.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Serializer;
@@ -44,23 +46,33 @@ import jade.lang.acl.ACLMessage;
 public class OfferGUI {
 
 	/** The j frame. */
-	JFrame jFrame;
-
-	/** The j text area messages. */
-	JTextArea jTextAreaMessages;
+	private JFrame jFrame;
 
 	/** The project. */
-	Project project = null;
+	private Project project = null;
+	
+	/** The my agent. */
+	private Agent myAgent;
+	
+	/** The reply. */
+	private ACLMessage reply;
+	
+	/** The message. */
+	private ACLMessage message;
 
 	/**
 	 * Instantiates a new message GUI.
 	 *
 	 * @param myAgent the my agent
+	 * @param message     the msg
 	 * @param reply   the reply
-	 * @param msg     the msg
 	 */
-	public OfferGUI(Agent myAgent, ACLMessage reply, ACLMessage msg) {
-		String content = msg.getContent();
+	public OfferGUI(Agent myAgent, ACLMessage message, ACLMessage reply) {
+		this.myAgent = myAgent;
+		this.reply = reply;
+		this.message = message;
+		// extract project data
+		String content = message.getContent();
 		try {
 			project = (Project) Serializer.toObject(content);
 		} catch (ClassNotFoundException | IOException e1) {
@@ -68,20 +80,42 @@ public class OfferGUI {
 			this.showDecodingError();
 			return;
 		}
-		jFrame = new JFrame("Proposal (" + myAgent.getLocalName() + ")");
-
+		// Initiate the jFrame
+		this.jFrame = new JFrame("B2B Match Making System: New offer for(" + myAgent.getLocalName() + ")");
+		// set icon
+		this.jFrame.setIconImage(SystemAgent.getIcon());
+		// Do not kill the agent
 		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				super.windowClosing(windowEvent);
 			}
 		});
-
-		jFrame.setSize(600, 400);
-		JPanel jPanel = new JPanel();
-		jPanel.setLayout(new BorderLayout());
-
-		JLabel jLabel = new JLabel();
+		this.jFrame.setSize(384, 320);
+		this.jFrame.add(this.getOfferJPanel());
+	}
+	
+	/**
+	 * Gets the offer J panel.
+	 *
+	 * @return the offer J panel
+	 */
+	private JPanel getOfferJPanel() {
+		// Extract content
+		String content = message.getContent();
+		// Create jPanel
+		JPanel offerJPanel = new JPanel();
+		offerJPanel.setLayout(new BorderLayout());
+		// A sign for providers
+		offerJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
+		// Title
+		JLabel titleJLabel = new JLabel("<<Offer Details>>", SwingConstants.CENTER);
+		offerJPanel.add(titleJLabel, BorderLayout.NORTH);
+		// Body
+		JPanel bodyJPanel = new JPanel();
+		bodyJPanel.setLayout(new BorderLayout());
+		bodyJPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		JLabel projectInfoJLabel = new JLabel();
 		String[] columns = Project.getColumns(true);
 		String[] data = project.toArray(true);
 		String output = "<HTML>";
@@ -89,21 +123,28 @@ public class OfferGUI {
 			output += " " + columns[i] + ": " + data[i] + "<br/>";
 		}
 		output += "</HTML>";
-		jLabel.setText(output);
-		jLabel.setSize(new Dimension(20, 20));
-		jPanel.add(jLabel, BorderLayout.CENTER);
-
-		JPanel jPanelNewMessage = new JPanel();
-
+		projectInfoJLabel.setText(output);
+		bodyJPanel.add(projectInfoJLabel);
+		offerJPanel.add(bodyJPanel, BorderLayout.CENTER);
+		// buttons
+		JPanel buttonsJPanel = new JPanel();
+		offerJPanel.add(buttonsJPanel, BorderLayout.SOUTH);
 		JButton jButtonAccept = new JButton("Accept");
+		jButtonAccept.setBackground(new Color(34,139,34));
+		jButtonAccept.setOpaque(true);
 		JButton jButtonReject = new JButton("Reject");
+		jButtonReject.setBackground(new Color(220,20,60));
+		jButtonReject.setOpaque(true);
+		buttonsJPanel.add(jButtonAccept, BorderLayout.WEST);
+		buttonsJPanel.add(jButtonReject, BorderLayout.EAST);
+		// Handlers 
 		jButtonAccept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				reply.setContent(content);
 				reply.setPerformative(Ontology.ACLMESSAGE_ACCEPT);
 				myAgent.send(reply);				
-				((ProviderAgent) myAgent).providerGUI.addProject(project);
+				((ProviderAgent) myAgent).addProject(project);
 				dispose();
 			}
 		});
@@ -116,27 +157,15 @@ public class OfferGUI {
 				dispose();
 			}
 		});
-		jPanelNewMessage.add(jButtonAccept, BorderLayout.WEST);
-		jPanelNewMessage.add(jButtonReject, BorderLayout.EAST);
-
-		jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
-		jFrame.add(jPanel);
-	}
-
-	/**
-	 * Show message.
-	 *
-	 * @param message the message
-	 */
-	public void showMessage(String message) {
-		jTextAreaMessages.setText(message);
+		//
+		return offerJPanel;
 	}
 
 	/**
 	 * Show GUI.
 	 */
 	public void showGUI() {
-		jFrame.setVisible(true);
+		this.jFrame.setVisible(true);
 	}
 
 	/**
@@ -146,6 +175,9 @@ public class OfferGUI {
 		this.jFrame.dispose();
 	}
 
+	/**
+	 * Show decoding error.
+	 */
 	public void showDecodingError() {
 		JOptionPane.showMessageDialog(jFrame, "Problem in decoding data.", "ERROR", JOptionPane.ERROR_MESSAGE);
 	}

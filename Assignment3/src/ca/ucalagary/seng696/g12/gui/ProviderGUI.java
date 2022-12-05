@@ -83,10 +83,10 @@ public class ProviderGUI {
 	}
 	
 	private JPanel getProviderJPanel() {
-		JPanel jPanel = new JPanel();
-		jPanel.setLayout(new BorderLayout());
+		JPanel providerJPanel = new JPanel();
+		providerJPanel.setLayout(new BorderLayout());
 		
-		jPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
+		providerJPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GREEN));
 
 		premiumLabel = new JLabel();
 
@@ -96,7 +96,7 @@ public class ProviderGUI {
 
 		jPanelNewMessage.add(premiumLabel, BorderLayout.SOUTH);
 
-		jPanel.add(jPanelNewMessage, BorderLayout.CENTER);
+		providerJPanel.add(jPanelNewMessage, BorderLayout.CENTER);
 
 		if (!providerAgent.getProvider().isPremium()) {
 			JButton premiumButton = new JButton("Go premium!");
@@ -145,8 +145,8 @@ public class ProviderGUI {
 		});
 
 		leftPanel.add(projectList, BorderLayout.CENTER);
-		jPanel.add(leftPanel, BorderLayout.WEST);
-		return jPanel;
+		providerJPanel.add(leftPanel, BorderLayout.WEST);
+		return providerJPanel;
 	}
 
 	/**

@@ -48,9 +48,7 @@ public class ProviderAgent extends EnhancedAgent {
 	private static final long serialVersionUID = 1L;
 
 	/** The projects. */
-	private List<Project> projects = new ArrayList<>();
-
-	
+	private List<Project> projects = new ArrayList<>();	
 
 	/** The ratings. */
 	ArrayList<Integer> ratings = new ArrayList<>();
@@ -102,7 +100,7 @@ public class ProviderAgent extends EnhancedAgent {
 					switch (msg.getPerformative()) {
 					case Ontology.ACLMESSAGE_OFFER:
 						reply = msg.createReply();
-						OfferGUI msgGUI = new OfferGUI(myAgent, reply, msg);
+						OfferGUI msgGUI = new OfferGUI(myAgent, msg, reply);
 						msgGUI.showGUI();
 						break;
 					case Ontology.ACLMESSAGE_CHAT:
@@ -185,7 +183,17 @@ public class ProviderAgent extends EnhancedAgent {
 	 * @return the projects
 	 */
 	public List<Project> getProjects() {
-		return projects;
+		return this.projects;
+	}
+	
+	/**
+	 * Adds the project.
+	 *
+	 * @param project the project
+	 */
+	public void addProject(Project project) {
+		this.projects.add(project);
+		// TODO: update GUI 
 	}
 
 	/**

@@ -26,7 +26,6 @@ package ca.ucalagary.seng696.g12.dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Provider.
  */
