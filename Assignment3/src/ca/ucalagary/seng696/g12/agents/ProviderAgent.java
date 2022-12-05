@@ -98,7 +98,7 @@ public class ProviderAgent extends EnhancedAgent {
 						for (Project project : projects) {
 							if (project.getId() == Integer.parseInt(projectId)) {
 								Chat chat = new Chat(chatMessage, getProvider(), project.getClient(), false);
-								project.chatUpdate(chat);
+								project.addNewChat(chat);
 								break;
 							}
 						}
@@ -142,6 +142,22 @@ public class ProviderAgent extends EnhancedAgent {
 	 */
 	public void sendMessage(AID client, String messageText, int projectId, String conversationID) {
 		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_CHAT);
+		message.setConversationId(conversationID);
+		message.setContent(projectId + ":" + messageText);
+		message.addReceiver(client);
+		send(message);
+	}
+	
+	/**
+	 * Send progress.
+	 *
+	 * @param client         the client
+	 * @param messageText    the message text
+	 * @param projectId    the project id
+	 * @param conversationID the conversation ID
+	 */
+	public void sendProgress(AID client, String messageText, int projectId, String conversationID) {
+		ACLMessage message = new ACLMessage(Ontology.ACLMESSAGE_PROGRESS);
 		message.setConversationId(conversationID);
 		message.setContent(projectId + ":" + messageText);
 		message.addReceiver(client);

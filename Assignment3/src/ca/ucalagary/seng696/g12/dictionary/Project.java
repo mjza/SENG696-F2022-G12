@@ -253,9 +253,10 @@ public class Project implements Serializable {
 	 *
 	 * @param chat the chat message
 	 */
-	public void chatUpdate(Chat chat) {
+	public void addNewChat(Chat chat) {
 		this.chats.add(chat);
 		if (this.projectGUI != null) {
+			this.projectGUI.updateProjectInformation();
 			this.projectGUI.updateChatsJTableData();
 		}
 	}

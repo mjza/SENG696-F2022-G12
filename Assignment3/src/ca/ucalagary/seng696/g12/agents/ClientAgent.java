@@ -119,7 +119,7 @@ public class ClientAgent extends EnhancedAgent {
 							Project project = projects.get(i);
 							if (project.getId() == Integer.parseInt(projectId)) {
 								Chat chat = new Chat(chatMessage, project.getProvider(), getClient(), false);
-								project.chatUpdate(chat);
+								project.addNewChat(chat);
 								break;
 							}
 						}
@@ -132,9 +132,10 @@ public class ClientAgent extends EnhancedAgent {
 							Project project = projects.get(i);
 							if (project.getId() == Integer.parseInt(projectId)) {
 								project.setProgress(progress);
-								if (project.getProjectGUI() != null) {
-									project.getProjectGUI().updateProjectInformation();
-									project.getProjectGUI().updateChatsJTableData();
+								Chat chat = new Chat(progressText + "% progress", project.getProvider(), getClient(), false);
+								project.addNewChat(chat);								
+								if(clientGUI != null) {
+									clientGUI.updateProjectsJTableData();
 								}
 								break;
 							}

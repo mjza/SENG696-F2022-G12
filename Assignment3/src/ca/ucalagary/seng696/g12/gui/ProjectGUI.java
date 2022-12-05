@@ -179,7 +179,7 @@ public class ProjectGUI {
 		JButton sendMsgJButton = new JButton("Send");
 		bottomPanel.add(sendMsgJButton, BorderLayout.EAST);
 		//
-		JButton progressJButton = new JButton("10% progress");
+		JButton progressJButton = new JButton("20% progress");
 		bottomPanel.add(progressJButton, BorderLayout.SOUTH);
 		if(project.isDone()) {
 			progressJButton.setEnabled(false);
@@ -190,7 +190,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				String chatMessage = messageJTextField.getText();
 				Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);
-				project.chatUpdate(chat);
+				project.addNewChat(chat);
 				agent.sendMessage(project.getClientAID(), chatMessage, project.getId(), Ontology.PROVIDER_TO_CLIENT);
 				updateChatsJTableData();
 			}
@@ -199,11 +199,11 @@ public class ProjectGUI {
 		progressJButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String chatMessage = "10% progress";
-				Chat chat = new Chat(chatMessage, agent.getProvider(), project.getClient(), true);				
-				if (project.setProgress(10)) {
-					project.chatUpdate(chat);
-					agent.sendMessage(project.getClientAID(), chatMessage, project.getId(), Ontology.REPORTING);
+				String chatMessage = "20";
+				Chat chat = new Chat(chatMessage + "% progress", agent.getProvider(), project.getClient(), true);				
+				if (project.setProgress(20)) {
+					project.addNewChat(chat);
+					agent.sendProgress(project.getClientAID(), chatMessage, project.getId(), Ontology.REPORTING);
 					updateChatsJTableData();
 					updateChatsJTableData();
 				} else {
@@ -280,7 +280,7 @@ public class ProjectGUI {
 			public void actionPerformed(ActionEvent e) {
 				String chatMessage = messageJTextField.getText();
 				Chat chat = new Chat(chatMessage, project.getProvider(), agent.getClient(), true);
-				project.chatUpdate(chat);
+				project.addNewChat(chat);
 				agent.sendMessage(project.getProviderAID(), chatMessage, project.getId(), Ontology.ACLMESSAGE_CHAT);
 				updateChatsJTableData();
 			}
