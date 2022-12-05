@@ -51,6 +51,7 @@ public class ClientAgent extends EnhancedAgent {
 	/** The projects. */
 	protected List<Project> projects = new ArrayList<>();
 
+	/** The providers AID. */
 	private Set<AID> providersAID = null;
 
 	/** The client GUI. */
@@ -64,12 +65,11 @@ public class ClientAgent extends EnhancedAgent {
 		System.out.println("Client Agent: " + getAID().getName() + " is ready.");
 		// register the agent service in yellow page
 		this.registerService("service-consumer");
-		// update list of providers 
+		// update list of providers
 		this.updateProviders();
 		// bind a GUI and show it
 		clientGUI = new ClientGUI(this);
 		clientGUI.showGUI();
-		// addBehaviour(new MessageHandlingBehaviour(this));
 		// in a cycle listen for messages
 		addBehaviour(new CyclicBehaviour() {
 			/**
@@ -182,7 +182,7 @@ public class ClientAgent extends EnhancedAgent {
 			}
 		return providers;
 	}
-	
+
 	/**
 	 * Gets the provider AID.
 	 *
@@ -207,6 +207,22 @@ public class ClientAgent extends EnhancedAgent {
 	 */
 	public List<Project> getProjects() {
 		return projects;
+	}
+
+	/**
+	 * Gets the project.
+	 *
+	 * @param projectName the project name
+	 * @return the project
+	 */
+	public Project getProject(String projectName) {
+		for (int i = 0; i < projects.size(); i++) {
+			Project project = projects.get(i);
+			if (project.getName().equals(projectName)) {
+				return project;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -253,10 +269,9 @@ public class ClientAgent extends EnhancedAgent {
 		message.addReceiver(project.getProviderAID());
 		send(message);
 		project.setDone();
-		for (Project p : projects) {
-			if (p.getName().equals(project.getName())) {
-				System.out.println("FOUND DONE PROJECT");
-				p.setDone();
+		for (Project proj : projects) {
+			if (proj.getName().equals(proj.getName())) {
+				proj.setDone();
 			}
 		}
 		clientGUI.updateProjects(projects);

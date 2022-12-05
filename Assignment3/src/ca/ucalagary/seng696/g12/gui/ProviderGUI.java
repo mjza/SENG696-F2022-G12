@@ -26,6 +26,7 @@ package ca.ucalagary.seng696.g12.gui;
 import javax.swing.*;
 
 import ca.ucalagary.seng696.g12.agents.ProviderAgent;
+import ca.ucalagary.seng696.g12.agents.SystemAgent;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 
 import java.awt.*;
@@ -46,39 +47,42 @@ public class ProviderGUI {
 	/** The projects list model. */
 	DefaultListModel<String> projectsListModel;
 	
-	/** The projects. */
-	List<Project> projects;
-	
-	
 	/** The premium label. */
 	JLabel premiumLabel;
 	
-	/** The my agent. */
-	ProviderAgent myAgent;
+	/** The provider agent. */
+	ProviderAgent providerAgent;
 
 	/**
 	 * Instantiates a new provider GUI.
 	 *
-	 * @param myAgent the my agent
-	 * @param projects the projects
+	 * @param providerAgent the my agent
 	 */
-	public ProviderGUI(ProviderAgent myAgent, List<Project> projects) {
-		this.myAgent = myAgent;
-		jFrame = new JFrame("Welcome " + myAgent.getLocalName());
-
+	public ProviderGUI(ProviderAgent providerAgent) {
+		this.providerAgent = providerAgent;
+		// Initiate the jFrame
+		this.jFrame = new JFrame("B2B Match Making System: " + providerAgent.getLocalName());
+		// set icon
+		this.jFrame.setIconImage(SystemAgent.getIcon());
+		// Set the size and position of the GUI to the left-hand-side of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(this.jFrame.getGraphicsConfiguration());
+        int taskBarHeight = scnMax.bottom;
+		this.jFrame.setSize(screenSize.width/2, screenSize.height - taskBarHeight);
+		this.jFrame.setLocation(0, 0);
+		// Kill the agent when user closes the window		
 		this.jFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				super.windowClosing(windowEvent);
-				myAgent.killAgent();
+				providerAgent.killAgent();
 			}
 		});
-		this.projects = projects;
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(jFrame.getGraphicsConfiguration());
-        int taskBarHeight = scnMax.bottom;
-		jFrame.setSize(screenSize.width/2, screenSize.height - taskBarHeight);
-		jFrame.setLocation(0, 0);
+		// set the content in jFrame
+		this.jFrame.add(this.getProviderJPanel());
+	}
+	
+	private JPanel getProviderJPanel() {
 		JPanel jPanel = new JPanel();
 		jPanel.setLayout(new BorderLayout());
 		
@@ -94,12 +98,12 @@ public class ProviderGUI {
 
 		jPanel.add(jPanelNewMessage, BorderLayout.CENTER);
 
-		if (!myAgent.getProvider().isPremium()) {
+		if (!providerAgent.getProvider().isPremium()) {
 			JButton premiumButton = new JButton("Go premium!");
 			premiumButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (myAgent.goPremium()) {
+					if (providerAgent.goPremium()) {
 						premiumButton.setVisible(false);
 					}
 				}
@@ -110,7 +114,7 @@ public class ProviderGUI {
 		withdrawButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {					
-						myAgent.withdraw();
+						providerAgent.withdraw();
 			}
 		});
 		jPanelNewMessage.add(withdrawButton, BorderLayout.SOUTH);
@@ -120,7 +124,7 @@ public class ProviderGUI {
 
 		projectsListModel = new DefaultListModel<>();
 
-		for (Project project : this.projects) {
+		for (Project project : this.providerAgent.getProjects()) {
 			projectsListModel.addElement(project.getName());
 		}
 
@@ -133,7 +137,7 @@ public class ProviderGUI {
 				JList<?> list = (JList<?>) evt.getSource();
 				if (evt.getClickCount() == 2) {
 					int index = list.locationToIndex(evt.getPoint());
-					ProjectGUI projectDetailGUI = new ProjectGUI(myAgent, projects.get(index));
+					ProjectGUI projectDetailGUI = new ProjectGUI(providerAgent, providerAgent.getProjects().get(index));
 					projectDetailGUI.showGUI();
 					System.out.println("Clicked: " + index);
 				}
@@ -142,8 +146,7 @@ public class ProviderGUI {
 
 		leftPanel.add(projectList, BorderLayout.CENTER);
 		jPanel.add(leftPanel, BorderLayout.WEST);
-
-		jFrame.add(jPanel);
+		return jPanel;
 	}
 
 	/**
@@ -166,8 +169,8 @@ public class ProviderGUI {
 	 * @param project the project
 	 */
 	public void addProject(Project project) {
-		projectsListModel.addElement(project.getName());
-		this.projects.add(project);
+		//projectsListModel.addElement(project.getName());
+		//this.projects.add(project);
 	}
 
 
@@ -175,7 +178,7 @@ public class ProviderGUI {
 	 * Update premium.
 	 */
 	public void updatePremium() {
-		premiumLabel.setText("You are" + (myAgent.getProvider().isPremium() ? " " : " not ") + "a premium user");
+		premiumLabel.setText("You are" + (providerAgent.getProvider().isPremium() ? " " : " not ") + "a premium user");
 	}
 
 	/**
@@ -183,11 +186,9 @@ public class ProviderGUI {
 	 *
 	 * @param projects the projects
 	 */
-	public void updateProjects(List<Project> projects) {
-		System.out.println("UPDATING PROJECTS");
-		this.projects = projects;
+	public void updateProjects(List<Project> projects) {		
 		projectsListModel.clear();
-		for (Project project : this.projects) {
+		for (Project project : this.providerAgent.getProjects()) {
 			projectsListModel.addElement(project.getName());
 		}
 	}

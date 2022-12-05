@@ -34,7 +34,7 @@ import java.util.List;
 import ca.ucalagary.seng696.g12.dictionary.Ontology;
 import ca.ucalagary.seng696.g12.dictionary.Project;
 import ca.ucalagary.seng696.g12.dictionary.Provider;
-import ca.ucalagary.seng696.g12.gui.MessageGUI;
+import ca.ucalagary.seng696.g12.gui.OfferGUI;
 import ca.ucalagary.seng696.g12.gui.ProviderGUI;
 
 /**
@@ -49,6 +49,8 @@ public class ProviderAgent extends EnhancedAgent {
 
 	/** The projects. */
 	private List<Project> projects = new ArrayList<>();
+
+	
 
 	/** The ratings. */
 	ArrayList<Integer> ratings = new ArrayList<>();
@@ -67,7 +69,9 @@ public class ProviderAgent extends EnhancedAgent {
 		System.out.println("Provider Agent: " + getAID().getName() + " is ready.");
 		// register the agent service in yellow page
 		this.registerService("service-provider");
-		// addBehaviour(new MessageHandlingBehaviour(this));
+		// bind a GUI and show it
+		providerGUI = new ProviderGUI(this, projects);
+		providerGUI.showGUI();
 		// in a cycle listen for messages
 		this.addBehaviour(new CyclicBehaviour() {
 			/**
@@ -84,7 +88,7 @@ public class ProviderAgent extends EnhancedAgent {
 				msg = myAgent.receive();
 				if (msg != null) {
 					System.out.println(
-							"A new message received for provider:" + getAID().getName() + " " + msg.getPerformative());
+							"A new message received for: " + getAID().getName() + ", Performative: " + msg.getPerformative());
 					String contents[] = msg.getContent().split(":");
 					String projectName, chatMessage;
 					if (msg.getPerformative() == Ontology.ACLMESSAGE_PAYMENT
@@ -98,7 +102,7 @@ public class ProviderAgent extends EnhancedAgent {
 					switch (msg.getPerformative()) {
 					case Ontology.ACLMESSAGE_OFFER:
 						reply = msg.createReply();
-						MessageGUI msgGUI = new MessageGUI(myAgent, reply, msg, true);
+						OfferGUI msgGUI = new OfferGUI(myAgent, reply, msg);
 						msgGUI.showGUI();
 						break;
 					case Ontology.ACLMESSAGE_CHAT:
@@ -129,8 +133,7 @@ public class ProviderAgent extends EnhancedAgent {
 			}
 		});
 
-		providerGUI = new ProviderGUI(this, projects);
-		providerGUI.showGUI();
+		
 
 	}
 
@@ -175,6 +178,15 @@ public class ProviderAgent extends EnhancedAgent {
 		String userName = this.getUserName();
 		return SystemAgent.getProvider(userName);
 	}
+	
+	/**
+	 * Gets the projects.
+	 *
+	 * @return the projects
+	 */
+	public List<Project> getProjects() {
+		return projects;
+	}
 
 	/**
 	 * Go premium.
@@ -202,4 +214,6 @@ public class ProviderAgent extends EnhancedAgent {
 		this.createAgent(agentName, agentClass);
 		takeDown();
 	}
+	
+	
 }

@@ -41,26 +41,26 @@ import jade.lang.acl.ACLMessage;
 /**
  * The Class MessageGUI.
  */
-public class MessageGUI {
+public class OfferGUI {
 
 	/** The j frame. */
 	JFrame jFrame;
-	
+
 	/** The j text area messages. */
 	JTextArea jTextAreaMessages;
-	
+
+	/** The project. */
 	Project project = null;
 
 	/**
 	 * Instantiates a new message GUI.
 	 *
 	 * @param myAgent the my agent
-	 * @param reply the reply
-	 * @param msg the msg
-	 * @param isProposal the is proposal
+	 * @param reply   the reply
+	 * @param msg     the msg
 	 */
-	public MessageGUI(Agent myAgent, ACLMessage reply, ACLMessage msg, Boolean isProposal) {
-		String content = msg.getContent();		
+	public OfferGUI(Agent myAgent, ACLMessage reply, ACLMessage msg) {
+		String content = msg.getContent();
 		try {
 			project = (Project) Serializer.toObject(content);
 		} catch (ClassNotFoundException | IOException e1) {
@@ -82,10 +82,11 @@ public class MessageGUI {
 		jPanel.setLayout(new BorderLayout());
 
 		JLabel jLabel = new JLabel();
-		String[] text = content.split(":");
+		String[] columns = Project.getColumns(true);
+		String[] data = project.toArray(true);
 		String output = "<HTML>";
-		for (String string : text) {
-			output += " " + string + "<br/>";
+		for (int i=0; i<columns.length && i<data.length; i++) {
+			output += " " + columns[i] + ": " + data[i] + "<br/>";
 		}
 		output += "</HTML>";
 		jLabel.setText(output);
@@ -93,49 +94,31 @@ public class MessageGUI {
 		jPanel.add(jLabel, BorderLayout.CENTER);
 
 		JPanel jPanelNewMessage = new JPanel();
-		if (isProposal) {
-			JButton jButtonAccept = new JButton("Accept");
-			JButton jButtonReject = new JButton("Reject");
-			jButtonAccept.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					reply.setContent(content);
-					reply.setPerformative(Ontology.ACLMESSAGE_ACCEPT);
-					myAgent.send(reply);
-					String c[] = content.split(":");
-					Project project = new Project(c[0], c[1], Integer.parseInt(c[2]), myAgent.getAID(), msg.getSender(),
-							null);
-					((ProviderAgent) myAgent).providerGUI.addProject(project);
-					dispose();
-				}
-			});
-			jButtonReject.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					reply.setContent(content);
-					reply.setPerformative(Ontology.ACLMESSAGE_REFUSE);
-					myAgent.send(reply);
-					dispose();
-				}
-			});
-			jPanelNewMessage.add(jButtonAccept, BorderLayout.WEST);
-			jPanelNewMessage.add(jButtonReject, BorderLayout.EAST);
-		} else if (reply != null) {
-			HintTextField newMessage = new HintTextField("Reply:");
-			newMessage.setPreferredSize(new Dimension(300, 30));
-			JButton jButtonSend = new JButton("Send");
-			jButtonSend.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					reply.setContent(content + "\n" + newMessage.getText());
-					myAgent.send(reply);
-				}
-			});
 
-			jPanelNewMessage.add(newMessage, BorderLayout.CENTER);
-			jPanelNewMessage.add(jButtonSend, BorderLayout.SOUTH);
-//	        myAgent.openProject(selectProject);
-		}
+		JButton jButtonAccept = new JButton("Accept");
+		JButton jButtonReject = new JButton("Reject");
+		jButtonAccept.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				reply.setContent(content);
+				reply.setPerformative(Ontology.ACLMESSAGE_ACCEPT);
+				myAgent.send(reply);				
+				((ProviderAgent) myAgent).providerGUI.addProject(project);
+				dispose();
+			}
+		});
+		jButtonReject.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				reply.setContent(content);
+				reply.setPerformative(Ontology.ACLMESSAGE_REFUSE);
+				myAgent.send(reply);
+				dispose();
+			}
+		});
+		jPanelNewMessage.add(jButtonAccept, BorderLayout.WEST);
+		jPanelNewMessage.add(jButtonReject, BorderLayout.EAST);
+
 		jPanel.add(jPanelNewMessage, BorderLayout.SOUTH);
 		jFrame.add(jPanel);
 	}
@@ -162,11 +145,9 @@ public class MessageGUI {
 	public void dispose() {
 		this.jFrame.dispose();
 	}
-	
-	public void showDecodingError() {
-        JOptionPane.showMessageDialog(jFrame, "Problem in decoding data.", "ERROR",
-                JOptionPane.ERROR_MESSAGE);
-    }
 
+	public void showDecodingError() {
+		JOptionPane.showMessageDialog(jFrame, "Problem in decoding data.", "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
 
 }

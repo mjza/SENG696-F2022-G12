@@ -41,6 +41,12 @@ public class Project implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The global nextId. */
+	private static int nextId = 1017;
+	
+	/** The id. */
+	private int id;
 
 	/** The name. */
 	private String name;
@@ -83,6 +89,7 @@ public class Project implements Serializable {
 	 * @param deadline    the deadline
 	 */
 	public Project(String name, String description, int bid, AID providerAID, AID clientAID, Date deadline) {
+		this.id = ++Project.nextId;
 		this.name = name;
 		this.bid = bid;
 		this.description = description;
@@ -105,6 +112,7 @@ public class Project implements Serializable {
 	 */
 	public Project(String name, String description, int bid, String provider, String client, Date deadline)
 			throws ClassNotFoundException, IOException {
+		this.id = ++Project.nextId;
 		this.name = name;
 		this.bid = bid;
 		this.description = description;
@@ -210,14 +218,6 @@ public class Project implements Serializable {
 		return this.name + ":" + this.description + ":" + this.bid + ":" + this.deadline;
 	}
 
-	/**
-	 * Gets the contract.
-	 *
-	 * @return the contract
-	 */
-	public String getContract() {
-		return "Contract for project: " + compact();
-	}
 
 	/**
 	 * Gets the rejection message.
@@ -348,8 +348,8 @@ public class Project implements Serializable {
 	 * @return the columns
 	 */
 	public static String[] getColumns(boolean isProvider) {
-		String[] providerColumnNames = { "Name", "Description", "Bid", "Client", "Deadline", "Done" };
-		String[] clientColumnNames = { "Name", "Description", "Bid", "Provider", "Deadline", "Done" };
+		String[] providerColumnNames = { "ID", "Name", "Description", "Bid", "Client", "Deadline", "Status" };
+		String[] clientColumnNames = { "ID", "Name", "Description", "Bid", "Provider", "Deadline", "Status" };
 		return isProvider ? providerColumnNames : clientColumnNames;
 	}
 
@@ -361,10 +361,19 @@ public class Project implements Serializable {
 	 * @return the string[]
 	 */
 	public String[] toArray(boolean isProvider) {
-		String[] providerData = { this.getName(), this.getDescription(), String.valueOf(this.getBid()),
+		String[] providerData = { String.valueOf(this.getId()), this.getName(), this.getDescription(), String.valueOf(this.getBid()),
 				this.getClientUserName(), this.getDeadline().toString(), (this.isDone() ? "Yes" : "No") };
-		String[] clientData = { this.getName(), this.getDescription(), String.valueOf(this.getBid()),
+		String[] clientData = { String.valueOf(this.getId()), this.getName(), this.getDescription(), String.valueOf(this.getBid()),
 				this.getProviderUserName(), this.getDeadline().toString(), (this.isDone() ? "Yes" : "No") };
 		return isProvider ? providerData : clientData;
+	}
+
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
 	}
 }
